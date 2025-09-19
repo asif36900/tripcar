@@ -1,0 +1,112 @@
+"use client"
+
+import { useState } from "react"
+import { User, Phone, Mail, ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import type { BookingData } from "@/app/booking/page"
+
+interface BookingStep1Props {
+  bookingData: BookingData
+  updateBookingData: (data: Partial<BookingData>) => void
+  nextStep: () => void
+}
+
+export default function BookingStep1({ bookingData, updateBookingData, nextStep }: BookingStep1Props) {
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!bookingData.fullName.trim()) {
+      newErrors.fullName = "Full name is required"
+    }
+
+    if (!bookingData.mobile.trim()) {
+      newErrors.mobile = "Mobile number is required"
+    } else if (!/^\+?[\d\s-()]{10,}$/.test(bookingData.mobile)) {
+      newErrors.mobile = "Please enter a valid mobile number"
+    }
+
+    if (!bookingData.email.trim()) {
+      newErrors.email = "Email is required"
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bookingData.email)) {
+      newErrors.email = "Please enter a valid email address"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleNext = () => {
+    if (validateForm()) {
+      nextStep()
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Personal Information</h2>
+        <p className="text-gray-600">Please provide your contact details for booking confirmation</p>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="fullName" className="text-sm font-medium text-gray-700 mb-2 block">
+            <User className="w-4 h-4 inline mr-1" />
+            Full Name *
+          </Label>
+          <Input
+            id="fullName"
+            value={bookingData.fullName}
+            onChange={(e) => updateBookingData({ fullName: e.target.value })}
+            placeholder="Enter your full name"
+            className={errors.fullName ? "border-red-500" : ""}
+          />
+          {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="mobile" className="text-sm font-medium text-gray-700 mb-2 block">
+            <Phone className="w-4 h-4 inline mr-1" />
+            Mobile Number *
+          </Label>
+          <Input
+            id="mobile"
+            value={bookingData.mobile}
+            onChange={(e) => updateBookingData({ mobile: e.target.value })}
+            placeholder="+91 98765 43210"
+            className={errors.mobile ? "border-red-500" : ""}
+          />
+          {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-2 block">
+            <Mail className="w-4 h-4 inline mr-1" />
+            Email Address *
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            value={bookingData.email}
+            onChange={(e) => updateBookingData({ email: e.target.value })}
+            placeholder="your.email@example.com"
+            className={errors.email ? "border-red-500" : ""}
+          />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+        </div>
+      </div>
+
+      <div className="flex justify-end pt-6">
+        <Button onClick={handleNext} className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
+          {/* Continue to Trip Details */}
+          Next
+          <ArrowRight className="w-4 h-4 ml-2" />
+        </Button>
+      </div>
+    </div>
+  )
+}

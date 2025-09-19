@@ -2,9 +2,9 @@
 
 import type { Metadata } from "next"
 import { motion } from "framer-motion"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { FileText, Car, CreditCard, Shield, AlertTriangle, Phone } from "lucide-react"
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
 
 // export const metadata: Metadata = {
 //   title: "Terms & Conditions - Luxury Car Rental Agreement & Policies",
@@ -90,7 +90,7 @@ export default function TermsConditionsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-12 overflow-hidden">
@@ -185,7 +185,7 @@ export default function TermsConditionsPage() {
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center"
+              className="bg-yellow-400 border border-primary/20 rounded-2xl p-8 text-center"
             >
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Phone className="w-8 h-8 text-primary" />

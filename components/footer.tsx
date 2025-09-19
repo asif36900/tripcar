@@ -1,135 +1,204 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Link from "next/link"
-import { Car, Mail, Phone, MapPin } from "lucide-react"
+import { Car, Phone, Mail, MapPin, Facebook, Twitter, Instagram, MessageCircle } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { motion } from "framer-motion"
 
-export function Footer() {
+export default function Footer() {
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "5267214392"
+    const message = "Hello! I would like to book a taxi. Can you help me?"
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, "_blank")
+  }
+
   return (
-    <motion.footer
-      initial={{ y: 100, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-      className="bg-background border-t border-border py-16"
-    >
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-white relative overflow-hidden">
+      {/* Main Footer Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
-                <Car className="w-5 h-5 text-primary-foreground" />
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="bg-yellow-400 p-2 rounded-lg">
+                <Car className="w-6 h-6 text-black" />
               </div>
-              <span className="text-2xl font-black text-foreground">TRIPCAR</span>
+              <span className="text-2xl font-bold">Easy Travel</span>
             </div>
-            <p className="text-muted-foreground mb-6 leading-relaxed">
-              Premium luxury car rental service offering exceptional vehicles and unmatched customer experience across
-              major cities.
+            <p className="text-gray-300 mb-4">
+              We successfully cope with tasks of varying complexity, provide long-term guarantees and regularly master
+              new technologies.
             </p>
-            <div className="flex space-x-1 mb-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-2 h-2 bg-primary rounded-full"></div>
-              ))}
-              <span className="text-xs text-muted-foreground ml-2">4.9/5 Rating</span>
+            <div className="bg-yellow-400 text-black px-4 py-2 rounded-lg inline-flex items-center">
+              <Phone className="w-4 h-4 mr-2" />
+              <span className="font-semibold">5267-214-392</span>
             </div>
           </div>
 
           <div>
-            <h4 className="font-bold text-foreground mb-4">COMPANY</h4>
-            <ul className="space-y-3 text-muted-foreground">
+            <h3 className="text-lg font-semibold mb-4 text-yellow-400">Useful Links</h3>
+            <ul className="space-y-2 text-gray-300">
               <li>
-                <Link href="/about" className="hover:text-primary transition-colors flex items-center space-x-2">
-                  <span>About Us</span>
+                <Link href="/about" className="hover:text-yellow-400 transition-colors">
+                  About Company
                 </Link>
               </li>
               <li>
-                <Link href="/cars" className="hover:text-primary transition-colors flex items-center space-x-2">
-                  <span>Our Fleet</span>
+                <Link href="/services" className="hover:text-yellow-400 transition-colors">
+                  Our Services
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-primary transition-colors flex items-center space-x-2">
-                  <span>Contact Us</span>
+                <Link href="/contact" className="hover:text-yellow-400 transition-colors">
+                  Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/booking" className="hover:text-primary transition-colors flex items-center space-x-2">
-                  <span>Book Now</span>
+                <Link href="/privacy" className="hover:text-yellow-400 transition-colors">
+                  Privacy and Policy
                 </Link>
               </li>
+              <li>
+                <Link href="/terms" className="hover:text-yellow-400 transition-colors">
+                  Terms of Use
+                </Link>
+              </li>
+              {/* <li>
+                <Link href="/faq" className="hover:text-yellow-400 transition-colors">
+                  FAQ
+                </Link>
+              </li> */}
             </ul>
           </div>
 
+          {/* Newsletter & Contact */}
           <div>
-            <h4 className="font-bold text-foreground mb-4">SERVICES</h4>
-            <ul className="space-y-3 text-muted-foreground">
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Luxury Car Rental
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Chauffeur Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Airport Transfers
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Corporate Solutions
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-foreground mb-4">CONTACT & LEGAL</h4>
-            <ul className="space-y-3 text-muted-foreground">
-              <li className="flex items-center space-x-2">
-                <Phone className="w-4 h-4 text-primary" />
-                <span>+1 (555) 123-4567</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <Mail className="w-4 h-4 text-primary" />
-                <span>info@tripcar.com</span>
-              </li>
-              <li className="flex items-start space-x-2">
-                <MapPin className="w-4 h-4 text-primary mt-0.5" />
-                <span>
-                  123 Luxury Drive
-                  <br />
-                  Premium City, PC 12345
-                </span>
-              </li>
-              <li className="pt-2 border-t border-border/50">
-                <Link href="/privacy" className="hover:text-primary transition-colors block mb-2">
-                  Privacy Policy
-                </Link>
-                <Link href="/terms" className="hover:text-primary transition-colors block">
-                  Terms & Conditions
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-border mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0">
-            <p className="text-muted-foreground text-sm">&copy; 2024 TRIPCAR. All rights reserved.</p>
-            {/* <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <span>Available 24/7</span>
-              <span>•</span>
-              <span>Luxury Car Rental</span>
-              <span>•</span>
-              <span>Premium Service</span>
-            </div> */}
+            <h3 className="text-lg font-semibold mb-4 text-yellow-400">Newsletter Signup</h3>
+            <div className="space-y-4">
+              <div className="flex items-center text-gray-300">
+                <MapPin className="w-4 h-4 mr-2 text-yellow-400" />
+                <div>
+                  <p className="font-medium">Location:</p>
+                  <p className="text-sm">153 Williamson Plaza, Maggieberg, MT 09514</p>
+                </div>
+              </div>
+              <div className="flex items-center text-gray-300">
+                <Mail className="w-4 h-4 mr-2 text-yellow-400" />
+                <div>
+                  <p className="font-medium">Join Us:</p>
+                  <p className="text-sm">info@easytravel.com</p>
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Input
+                  placeholder="Your email address"
+                  className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+                />
+                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black">Subscribe</Button>
+              </div>
+              <p className="text-sm text-gray-400">Get the latest updates and offers for business services yearly.</p>
+            </div>
           </div>
         </div>
       </div>
-    </motion.footer>
+
+      {/* <div className="relative h-96 bg-gradient-to-t from-gray-800 to-gray-900 overflow-hidden">
+        <div className="relative w-full h-auto flex items-end justify-center">
+          <motion.img
+            src="/footer-buildings.png"
+            alt="City Buildings"
+            className="w-full"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          />
+        </div>
+
+        <motion.div
+          className="absolute bottom-8 w-8 h-4 bg-yellow-400 rounded-sm"
+          animate={{
+            x: [-50, 850],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
+          }}
+        >
+          <div className="w-full h-full bg-yellow-400 rounded-sm relative">
+            <div className="absolute top-1 left-1 w-2 h-2 bg-black rounded-full"></div>
+            <div className="absolute top-1 right-1 w-2 h-2 bg-black rounded-full"></div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="absolute bottom-8 w-8 h-4 bg-blue-500 rounded-sm"
+          animate={{
+            x: [850, -50],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
+            delay: 2,
+          }}
+        >
+          <div className="w-full h-full bg-blue-500 rounded-sm relative">
+            <div className="absolute top-1 left-1 w-2 h-2 bg-black rounded-full"></div>
+            <div className="absolute top-1 right-1 w-2 h-2 bg-black rounded-full"></div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="absolute bottom-8 w-8 h-4 bg-red-500 rounded-sm"
+          animate={{
+            x: [-50, 850],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
+            delay: 4,
+          }}
+        >
+          <div className="w-full h-full bg-red-500 rounded-sm relative">
+            <div className="absolute top-1 left-1 w-2 h-2 bg-black rounded-full"></div>
+            <div className="absolute top-1 right-1 w-2 h-2 bg-black rounded-full"></div>
+          </div>
+        </motion.div>
+      </div> */}
+
+      {/* Bottom Footer */}
+      <div className="border-t border-gray-800 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-sm">© Copyright 2025 Easy Travel. All Rights Reserved.</p>
+            <div className="flex space-x-4 mt-4 md:mt-0">
+              <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                <Facebook className="w-5 h-5" />
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                <Twitter className="w-5 h-5" />
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                <Instagram className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <motion.div className="fixed bottom-6 right-6 z-50" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+        <Button
+          size="lg"
+          className="bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 shadow-lg"
+          onClick={handleWhatsAppClick}
+        >
+          <MessageCircle className="w-6 h-6" />
+        </Button>
+      </motion.div>
+    </footer>
   )
 }
