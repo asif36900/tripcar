@@ -128,7 +128,7 @@ export default function BookingSidebar({ bookingData, currentStep }: BookingSide
           <div className="text-center space-y-2">
             <h4 className="font-semibold text-sm">Need Help?</h4>
             <p className="text-xs text-gray-600">Our support team is available 24/7</p>
-            <p className="text-sm font-semibold text-yellow-600">5267-214-392</p>
+            <p className="text-sm font-semibold text-yellow-600">+916296443245</p>
           </div>
         </CardContent>
       </Card>

@@ -1,10 +1,11 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
-import { Analytics } from "@vercel/analytics/next"
-import { Suspense } from "react"
+// import { GeistSans } from "geist/font/sans"
+// import { GeistMono } from "geist/font/mono"
+// import { Analytics } from "@vercel/analytics/next"
+// import { Suspense } from "react"
 import "./globals.css"
+import ClientWrapper from "./clientWarpper";
 
 export const metadata: Metadata = {
   title: "Easy Travel - Your Trusted Taxi Service",
@@ -20,10 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      {/* <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
-      </body>
+      </body> */}
+      <ClientWrapper>
+        {children}
+      </ClientWrapper>
     </html>
   )
 }

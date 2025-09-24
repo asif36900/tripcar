@@ -8,7 +8,7 @@ import { motion } from "framer-motion"
 
 export default function Footer() {
   const handleWhatsAppClick = () => {
-    const phoneNumber = "5267214392"
+    const phoneNumber = "+916296443245"
     const message = "Hello! I would like to book a taxi. Can you help me?"
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")
@@ -33,7 +33,7 @@ export default function Footer() {
             </p>
             <div className="bg-yellow-400 text-black px-4 py-2 rounded-lg inline-flex items-center">
               <Phone className="w-4 h-4 mr-2" />
-              <span className="font-semibold">5267-214-392</span>
+              <span className="font-semibold">+916296443245</span>
             </div>
           </div>
 
@@ -81,7 +81,7 @@ export default function Footer() {
                 <MapPin className="w-4 h-4 mr-2 text-yellow-400" />
                 <div>
                   <p className="font-medium">Location:</p>
-                  <p className="text-sm">153 Williamson Plaza, Maggieberg, MT 09514</p>
+                  <p className="text-sm">Kolkata, India</p>
                 </div>
               </div>
               <div className="flex items-center text-gray-300">

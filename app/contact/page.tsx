@@ -199,7 +199,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-1">Visit anytime</h4>
-                      <p className="text-gray-600">66 broklyn golden street. New York</p>
+                      <p className="text-gray-600">Kolkata, India</p>
                     </div>
                   </div>
                 </div>
@@ -238,7 +238,7 @@ export default function ContactPage() {
                   <Phone className="w-8 h-8 text-black" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Call For Taxi</h3>
-                <p className="text-2xl font-bold text-yellow-400">5267-214-392</p>
+                <p className="text-2xl font-bold text-yellow-400">+916296443245</p>
               </motion.div>
 
               <motion.div

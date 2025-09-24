@@ -11,6 +11,7 @@ import { Autoplay, Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
+import Link from "next/link"
 
 export default function HomePage() {
   return (
@@ -46,13 +47,15 @@ export default function HomePage() {
                   master new technologies.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button
-                    size="lg"
-                    className="bg-yellow-400 text-black hover:bg-yellow-500 font-semibold px-8 py-4 text-lg"
-                  >
-                    <Phone className="w-5 h-5 mr-2" />
-                    Call For Taxi
-                  </Button>
+                  <a href="tel:+916296443245">
+                    <Button
+                      size="lg"
+                      className="bg-yellow-400 text-black hover:bg-yellow-500 font-semibold px-8 py-4 text-lg"
+                    >
+                      <Phone className="w-5 h-5 mr-2" />
+                      Call For Taxi
+                    </Button>
+                  </a>
                 </div>
               </motion.div>
 
@@ -65,7 +68,7 @@ export default function HomePage() {
                 >
                   <div className="bg-yellow-400 text-black py-6 px-10 rounded-lg shadow-2xl max-w-md">
                     <h3 className="text-xl font-bold mb-2">Call For Taxi</h3>
-                    <p className="text-2xl font-bold">5267-214-392</p>
+                    <p className="text-2xl font-bold">+916296443245</p>
                   </div>
                 </motion.div>
               </div>
@@ -406,9 +409,11 @@ export default function HomePage() {
                             <p className="text-sm text-gray-500">Duration</p>
                           </div>
                         </div>
+                        <Link href={'/booking'}>
                         <Button className="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
                           Book Now
                         </Button>
+                        </Link>
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -554,17 +559,20 @@ export default function HomePage() {
                 Experience the best taxi service in the city. Book now and travel with confidence.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold">
-                  <Phone className="w-5 h-5 mr-2" />
-                  Call: 5267-214-392
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-black bg-transparent"
-                >
-                  Book Online
-                </Button>
+                <a href="tel:+916296443245">
+                  <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold">
+                    <Phone className="w-5 h-5 mr-2" />
+                    Call: +916296443245
+                  </Button>
+                </a>
+                <Link href={'/booking'}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-white text-white hover:bg-white hover:text-black bg-transparent"
+                  >
+                    Book Online
+                  </Button></Link>
               </div>
             </motion.div>
           </div>

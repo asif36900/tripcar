@@ -1,10 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import {CheckCircle, Shield, Clock, Star, ArrowRight } from "lucide-react"
+import { CheckCircle, Shield, Clock, Star, ArrowRight } from "lucide-react"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default function ServicesPage() {
 
@@ -110,11 +111,12 @@ export default function ServicesPage() {
                         ))}
                       </ul>
                     </div> */}
-
-                    <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                      Book Now
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={'/booking'}>
+                      <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                        Book Now
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
                   </motion.div>
                 </div>
               </div>
@@ -175,11 +177,13 @@ export default function ServicesPage() {
                         ))}
                       </ul>
                     </div> */}
-
-                    <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                      Book Now
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={'/booking'}><Link href={'/booking'}>
+                      <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                        Book Now
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
+                    </Link>
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: -50 }}
@@ -263,11 +267,12 @@ export default function ServicesPage() {
                         ))}
                       </ul>
                     </div> */}
-
-                    <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                      Book Now
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={'/booking'}>
+                      <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                        Book Now
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
                   </motion.div>
                 </div>
               </div>
@@ -328,11 +333,12 @@ export default function ServicesPage() {
                         ))}
                       </ul>
                     </div> */}
-
-                    <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                      Book Now
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={'/booking'}>
+                      <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                        Book Now
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: -50 }}
@@ -417,11 +423,12 @@ export default function ServicesPage() {
                       </ul>
                     </div> */}
 
-                    {/* Button */}
-                    <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                      Book Now
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={'/booking'}>                    {/* Button */}
+                      <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                        Book Now
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
                   </motion.div>
                 </div>
               </div>
@@ -481,11 +488,12 @@ export default function ServicesPage() {
                       </ul>
                     </div> */}
 
-                    {/* Button */}
-                    <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                      Book Now
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={'/booking'}>                    {/* Button */}
+                      <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                        Book Now
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
                   </motion.div>
                   {/* Left Side Image */}
                   <motion.div
@@ -573,10 +581,13 @@ export default function ServicesPage() {
                     </div> */}
 
                     {/* Button */}
-                    <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                      Book Now
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+                    <Link href={'/booking'}>                    <Link href={'/booking'}>
+                      <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                        Book Now
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
+                    </Link>
                   </motion.div>
                 </div>
               </div>
@@ -694,16 +705,20 @@ export default function ServicesPage() {
                 Choose from our wide range of services and experience premium transportation
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold">
-                  Book Now
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-black bg-transparent"
-                >
-                  Call: 5267-214-392
-                </Button>
+                <Link href={'/booking'}>
+                  <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold">
+                    Book Now
+                  </Button>
+                </Link>
+                <a href="tel:+916296443245">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-white text-white hover:bg-white hover:text-black bg-transparent"
+                  >
+                    Call: +916296443245
+                  </Button>
+                </a>
               </div>
             </motion.div>
           </div>
