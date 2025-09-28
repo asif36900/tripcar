@@ -8,9 +8,9 @@ import "./globals.css"
 import ClientWrapper from "./clientWarpper";
 
 export const metadata: Metadata = {
-  title: "Easy Travel - Your Trusted Taxi Service",
+  title: "Easy Go Cab - Your Trusted Taxi Service",
   description:
-    "Book reliable taxi services for local rides, outstation trips, airport transfers and more. Easy Travel provides safe and comfortable transportation.",
+    "Book reliable taxi services for local rides, outstation trips, airport transfers and more. Easy Go Cab provides safe and comfortable transportation.",
   generator: "v0.app",
 }
 

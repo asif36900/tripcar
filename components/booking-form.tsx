@@ -284,20 +284,19 @@ export default function BookingForm() {
             </div>
 
             {/* Destination */}
-            {(watchBookingType === "oneway" || watchBookingType === "roundtrip") && (
-              <div>
-                <Label htmlFor="destination" className="text-sm font-medium text-gray-700 mb-2 block">
-                  <MapPin className="w-4 h-4 inline mr-1" />
-                  Destination *
-                </Label>
-                <Input
-                  id="destination"
-                  placeholder="Enter destination"
-                  {...register("destination", { required: "Destination is required" })}
-                />
-                {errors.destination && <p className="text-red-500 text-sm mt-1">{errors.destination.message}</p>}
-              </div>
-            )}
+            <div>
+              <Label htmlFor="destination" className="text-sm font-medium text-gray-700 mb-2 block">
+                <MapPin className="w-4 h-4 inline mr-1" />
+                {watchBookingType === "airport" ? "Airport Destination *" : "Destination *"}
+              </Label>
+              <Input
+                id="destination"
+                placeholder={watchBookingType === "airport" ? "Enter airport name" : "Enter destination"}
+                {...register("destination", { required: "Destination is required" })}
+              />
+              {errors.destination && <p className="text-red-500 text-sm mt-1">{errors.destination.message}</p>}
+            </div>
+
 
             {/* Airport Trip Type */}
             {watchBookingType === "airport" && (

@@ -56,7 +56,7 @@ export default function Page() {
               transition={{ delay: 0.5 }}
               className="text-4xl font-bold text-white mb-2"
             >
-              Easy Travel
+              Easy Go Cab
             </motion.h1>
             <motion.p
               initial={{ y: 20, opacity: 0 }}

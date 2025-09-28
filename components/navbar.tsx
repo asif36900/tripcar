@@ -26,7 +26,7 @@ export default function Navbar() {
             <div className="bg-yellow-400 p-2 rounded-lg">
               <Car className="w-6 h-6 text-black" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">Easy Travel</span>
+            <span className="text-2xl font-bold text-gray-900">Easy Go Cab</span>
           </Link>
 
           {/* Desktop Navigation */}

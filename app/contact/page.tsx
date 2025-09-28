@@ -251,7 +251,7 @@ export default function ContactPage() {
                   <Mail className="w-8 h-8 text-black" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Email Address</h3>
-                <p className="text-yellow-400">info@easytravel.com</p>
+                <p className="text-yellow-400">info@easygocab.com</p>
               </motion.div>
 
               <motion.div

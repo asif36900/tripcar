@@ -35,7 +35,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <img src="/trusted.jpg" alt="Easy Travel Team" className="rounded-lg shadow-lg w-full h-[350px] md:h-[550px] object-cover" />
+                <img src="/trusted.jpg" alt="Easy Go Cab Team" className="rounded-lg shadow-lg w-full h-[350px] md:h-[550px] object-cover" />
               </motion.div>
 
               <motion.div
@@ -45,10 +45,10 @@ export default function AboutPage() {
                 className="space-y-6"
               >
                 <div>
-                  <Badge className="bg-yellow-400 text-black mb-4">About Easy Travel</Badge>
+                  <Badge className="bg-yellow-400 text-black mb-4">About Easy Go Cab</Badge>
                   <h2 className="text-4xl font-bold text-gray-900 mb-6">We Provide Trusted Cab Services</h2>
                   <p className="text-lg text-gray-600 mb-6">
-                    With over a decade of experience in the transportation industry, Easy Travel has established itself
+                    With over a decade of experience in the transportation industry, Easy Go Cab has established itself
                     as a leading taxi service provider in India. We are committed to delivering exceptional service
                     through our fleet of well-maintained vehicles and professional drivers.
                   </p>
@@ -146,7 +146,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Easy Travel?</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Easy Go Cab?</h2>
               <p className="text-xl text-gray-600">Experience the difference with our premium services</p>
             </motion.div>
 
@@ -201,7 +201,7 @@ export default function AboutPage() {
               className="text-center mb-16"
             >
               <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Leadership</h2>
-              <p className="text-xl text-gray-600">The people behind Easy Travel's success</p>
+              <p className="text-xl text-gray-600">The people behind Easy Go Cab's success</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -211,7 +211,7 @@ export default function AboutPage() {
                   role: "Founder & CEO",
                   image: "/indian-business-executive-man-professional.jpg",
                   description:
-                    "With 15+ years in transportation, Rajesh founded Easy Travel with a vision to revolutionize taxi services in India.",
+                    "With 15+ years in transportation, Rajesh founded Easy Go Cab with a vision to revolutionize taxi services in India.",
                 },
                 {
                   name: "Priya Sharma",

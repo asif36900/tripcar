@@ -396,8 +396,8 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
               key={type.id}
               variant={bookingData.bookingType === type.id ? "default" : "outline"}
               className={`h-auto p-4 text-left ${bookingData.bookingType === type.id
-                  ? "bg-yellow-400 text-black hover:bg-yellow-500"
-                  : "hover:border-yellow-400"
+                ? "bg-yellow-400 text-black hover:bg-yellow-500"
+                : "hover:border-yellow-400"
                 }`}
               onClick={() => updateBookingData({ bookingType: type.id as any })}
             >
@@ -427,7 +427,7 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
           {errors.pickupLocation && <p className="text-red-500 text-sm mt-1">{errors.pickupLocation}</p>}
         </div>
 
-        {(bookingData.bookingType === "oneway" || bookingData.bookingType === "roundtrip") && (
+        {/* {(bookingData.bookingType === "oneway" || bookingData.bookingType === "roundtrip") && (
           <div>
             <Label htmlFor="destination" className="text-sm font-medium text-gray-700 mb-2 block">
               <MapPin className="w-4 h-4 inline mr-1" />
@@ -442,7 +442,22 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
             />
             {errors.destination && <p className="text-red-500 text-sm mt-1">{errors.destination}</p>}
           </div>
-        )}
+        )} */}
+
+        <div>
+          <Label htmlFor="destination" className="text-sm font-medium text-gray-700 mb-2 block">
+            <MapPin className="w-4 h-4 inline mr-1" />
+            Destination *
+          </Label>
+          <Input
+            id="destination"
+            value={bookingData.destination || ""}
+            onChange={(e) => updateBookingData({ destination: e.target.value })}
+            placeholder="Enter destination city"
+            className={errors.destination ? "border-red-500" : ""}
+          />
+          {errors.destination && <p className="text-red-500 text-sm mt-1">{errors.destination}</p>}
+        </div>
 
         {bookingData.bookingType === "airport" && (
           <div>

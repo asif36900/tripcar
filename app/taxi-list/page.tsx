@@ -38,7 +38,7 @@ export default function TaxiListPage() {
           setCars(data.cars)
         }
       } catch (error) {
-        console.error("Failed to fetch cars:", error)
+        console.log("Failed to fetch cars:", error)
       } finally {
         setLoading(false)
       }

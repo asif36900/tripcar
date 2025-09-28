@@ -659,7 +659,7 @@ export default function ServicesPage() {
               className="text-center mb-16"
             >
               <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Our Services Stand Out</h2>
-              <p className="text-xl text-gray-600">Experience the Easy Travel difference</p>
+              <p className="text-xl text-gray-600">Experience the Easy Go Cab difference</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

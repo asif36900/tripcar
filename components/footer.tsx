@@ -25,7 +25,7 @@ export default function Footer() {
               <div className="bg-yellow-400 p-2 rounded-lg">
                 <Car className="w-6 h-6 text-black" />
               </div>
-              <span className="text-2xl font-bold">Easy Travel</span>
+              <span className="text-2xl font-bold">Easy Go Cab</span>
             </div>
             <p className="text-gray-300 mb-4">
               We successfully cope with tasks of varying complexity, provide long-term guarantees and regularly master
@@ -88,7 +88,7 @@ export default function Footer() {
                 <Mail className="w-4 h-4 mr-2 text-yellow-400" />
                 <div>
                   <p className="font-medium">Join Us:</p>
-                  <p className="text-sm">info@easytravel.com</p>
+                  <p className="text-sm">info@easygocab.com</p>
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -174,7 +174,7 @@ export default function Footer() {
       <div className="border-t border-gray-800 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">© Copyright 2025 Easy Travel. All Rights Reserved.</p>
+            <p className="text-gray-400 text-sm">© Copyright 2025 Easy Go Cab. All Rights Reserved.</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
               <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Facebook className="w-5 h-5" />

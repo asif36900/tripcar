@@ -27,7 +27,7 @@
 
 
 
-
+// /api/payment
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 
@@ -40,18 +40,31 @@ export async function POST(req: Request) {
       key_id: process.env.RAZORPAY_KEY_ID!,
       key_secret: process.env.RAZORPAY_KEY_SECRET!,
     });
-
+    console.log('====================');
+    console.log(process.env.RAZORPAY_KEY_ID);
+    console.log(process.env.RAZORPAY_KEY_SECRET);
+    
     const options = {
-      amount: amount * 100,
+      amount: Number(amount) * 100, // paise me
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
+    console.log(options);
+    console.log(razorpay.orders);
+    console.log(razorpay.orders.create);
 
     const order = await razorpay.orders.create(options);
+    console.log("========== Order Created Success =========");
+    console.log(order);
+    
 
-    return NextResponse.json(order);
+    return NextResponse.json({
+      success: true,
+      order, // 👈 wrap karke bhej rahe
+    });
   } catch (error: any) {
-    console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.log("================");
+    console.log(error);
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }

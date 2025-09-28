@@ -186,7 +186,7 @@
 //       </div>
 
 //       <div className="text-center pt-6">
-//         <p className="text-sm text-gray-600">Thank you for choosing Easy Travel! Have a safe journey.</p>
+//         <p className="text-sm text-gray-600">Thank you for choosing Easy Go Cab! Have a safe journey.</p>
 //       </div>
 //     </div>
 //   )
@@ -508,7 +508,7 @@ export default function BookingStep5() {
         <div className="text-center pt-8 animate-slide-up" style={{ animationDelay: "0.6s" }}>
           <div className="p-6 bg-gradient-to-r from-accent/20 to-secondary/20 rounded-2xl border border-accent/30">
             <p className="text-muted-foreground mb-2">
-              Thank you for choosing <span className="font-semibold text-primary">Easy Travel</span>!
+              Thank you for choosing <span className="font-semibold text-primary">Easy Go Cab</span>!
             </p>
             <p className="text-sm text-muted-foreground">
               Have a safe and comfortable journey. We're here if you need any assistance.
