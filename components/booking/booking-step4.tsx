@@ -43,23 +43,28 @@ const OPENROUTESERVICE_API_KEY = process.env.NEXT_PUBLIC_OPENROUTESERVICE_KEY ||
 const GEOAPIFY_API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || ""
 
 // Helper function to calculate the full fare structure
+// Helper function to calculate the full fare structure
 const calculateFareStructure = (
   step2: BookingDataStep2,
   step3: BookingDataStep3,
   effectiveDistance: number,
-  paymentPercentage: number
+  paymentPercentage: number,
+  // 🆕 Add paymentMethod here
+  paymentMethod: string 
 ) => {
   const baseFare = step3.baseRate ? Number(step3.baseRate) * effectiveDistance : 0
   const tollTax = step2.bookingType !== "local" ? 200 : 0
 
   const totalBaseAndToll = baseFare + tollTax
 
-  // Determine discount rate based on selected advance payment
+  // 🛑 KEY CHANGE: Determine discount rate based on selected advance payment AND payment method
   let discountRate = 0
-  if (paymentPercentage === 100) {
-    discountRate = 0.05 // 5%
-  } else if (paymentPercentage === 50) {
-    discountRate = 0.02 // 2%
+  if (paymentMethod === 'razorpay') { // Only apply discount if Razorpay is selected
+    if (paymentPercentage === 100) {
+      discountRate = 0.05 // 5%
+    } else if (paymentPercentage === 50) {
+      discountRate = 0.02 // 2%
+    }
   }
 
   const calculatedDiscount = Math.round(totalBaseAndToll * discountRate)
@@ -78,7 +83,6 @@ const calculateFareStructure = (
     totalFare
   }
 }
-
 
 export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) {
   const dispatch = useDispatch()
@@ -172,20 +176,20 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   // --- END Distance Calculation Logic ---
 
   // --- Payment Percentage Effect ---
-  useEffect(() => {
-    // If Cash is selected, we logically treat it as 25% for minimal advance if user switches,
-    // or keep the discount logic simple by only applying it when Razorpay is selected.
-    if (paymentMethod === 'cash') {
-      // For cash, no advance is required, but we should clear the percentage selection
-      // to reflect '0' payment amount in the UI, even though the discount logic 
-      // depends on paymentPercentage. Let's ensure the UI reflects 0.
-      // We keep paymentPercentage at 25 internally for Razorpay fallback, 
-      // but the paymentAmount logic handles the '0' for cash.
-    } else if (paymentPercentage === 100 && paymentMethod !== 'razorpay') {
-      // If user switches from Cash back to Razorpay, revert to default 25% if it was 100% due to cash logic
-      setPaymentPercentage(25);
-    }
-  }, [paymentMethod, paymentPercentage]);
+  // useEffect(() => {
+  //   // If Cash is selected, we logically treat it as 25% for minimal advance if user switches,
+  //   // or keep the discount logic simple by only applying it when Razorpay is selected.
+  //   if (paymentMethod === 'cash') {
+  //     // For cash, no advance is required, but we should clear the percentage selection
+  //     // to reflect '0' payment amount in the UI, even though the discount logic 
+  //     // depends on paymentPercentage. Let's ensure the UI reflects 0.
+  //     // We keep paymentPercentage at 25 internally for Razorpay fallback, 
+  //     // but the paymentAmount logic handles the '0' for cash.
+  //   } else if (paymentPercentage === 100 && paymentMethod !== 'razorpay') {
+  //     // If user switches from Cash back to Razorpay, revert to default 25% if it was 100% due to cash logic
+  //     setPaymentPercentage(25);
+  //   }
+  // }, [paymentMethod, paymentPercentage]);
 
 
   if (!step1 || !step2 || !step3) {
@@ -193,7 +197,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   }
 
   // --- Fare Calculations (FIX 2: Use useMemo for dynamic calculation) ---
-  const {
+ const {
     baseFare,
     tollTax,
     discountRate,
@@ -202,10 +206,9 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
     gst,
     totalFare
   } = useMemo(() => {
-    // Calculate the fare structure based on the latest distance and selected percentage
-    // This runs whenever effectiveDistance or paymentPercentage changes.
-    return calculateFareStructure(step2, step3, effectiveDistance, paymentPercentage);
-  }, [step2, step3, effectiveDistance, paymentPercentage]);
+    // Calculate the fare structure based on the latest distance, selected percentage, and payment method
+    return calculateFareStructure(step2, step3, effectiveDistance, paymentPercentage, paymentMethod);
+  }, [step2, step3, effectiveDistance, paymentPercentage, paymentMethod]);
 
   // The amount the user is paying NOW
   const paymentAmount = useMemo(() => {
