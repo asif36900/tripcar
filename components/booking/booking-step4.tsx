@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { CreditCard, Wallet, Smartphone, ArrowRight, ArrowLeft, Shield, Info, Loader2, Users, Snowflake, Fuel, Route, Percent, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,9 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import type { RootState } from "@/store/store"
-import type { BookingDataStep1, BookingDataStep2, BookingDataStep3 } from "@/store/Slices/bookingSlice"
+import { setFinalBooking, type BookingDataStep1, type BookingDataStep2, type BookingDataStep3 } from "@/store/Slices/bookingSlice"
 import { toast } from "sonner"
-// Assuming you have an action to set the final payment method/status in Redux
 // import { setPaymentDetails } from "@/store/Slices/bookingSlice" 
 
 interface BookingStep4Props {
@@ -40,17 +39,56 @@ declare global {
 }
 
 // **NOTE: This is a placeholder for your actual API keys**
-// You should manage these securely, potentially via server-side or environment variables
 const OPENROUTESERVICE_API_KEY = process.env.NEXT_PUBLIC_OPENROUTESERVICE_KEY || ""
 const GEOAPIFY_API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || ""
+
+// Helper function to calculate the full fare structure
+const calculateFareStructure = (
+  step2: BookingDataStep2,
+  step3: BookingDataStep3,
+  effectiveDistance: number,
+  paymentPercentage: number
+) => {
+  const baseFare = step3.baseRate ? Number(step3.baseRate) * effectiveDistance : 0
+  const tollTax = step2.bookingType !== "local" ? 200 : 0
+
+  const totalBaseAndToll = baseFare + tollTax
+
+  // Determine discount rate based on selected advance payment
+  let discountRate = 0
+  if (paymentPercentage === 100) {
+    discountRate = 0.05 // 5%
+  } else if (paymentPercentage === 50) {
+    discountRate = 0.02 // 2%
+  }
+
+  const calculatedDiscount = Math.round(totalBaseAndToll * discountRate)
+  const discountedFare = totalBaseAndToll - calculatedDiscount
+
+  const gst = Math.round(discountedFare * 0.00) // GST on discounted amount
+  const totalFare = discountedFare + gst
+
+  return {
+    baseFare,
+    tollTax,
+    discountRate,
+    calculatedDiscount,
+    discountedFare,
+    gst,
+    totalFare
+  }
+}
+
 
 export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) {
   const dispatch = useDispatch()
   const step1: BookingDataStep1 | null = useSelector((state: RootState) => state.booking.bookingDataStep1)
   const step2: BookingDataStep2 | null = useSelector((state: RootState) => state.booking.bookingDataStep2)
   const step3: BookingDataStep3 | null = useSelector((state: RootState) => state.booking.bookingDataStep3)
+  // Ensure Razorpay is the default if Redux state is empty/null
   const paymentMethodRedux = useSelector((state: RootState) => state.booking.paymentMethod)
 
+  // FIX 1: Set razorpay as the default payment method
   const [paymentMethod, setPaymentMethod] = useState(paymentMethodRedux || "razorpay")
   const [paymentPercentage, setPaymentPercentage] = useState<number>(25)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -59,13 +97,15 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   const [isDistanceLoading, setIsDistanceLoading] = useState(false)
   const [distanceError, setDistanceError] = useState<string | null>(null)
 
+  // Use effectiveDistance immediately for fare calculations
+  const effectiveDistance = calculatedDistance || (step2?.bookingType === "local" ? 20 : 250)
+
   // --- Distance Calculation Logic (API Integration) ---
   const calculateDistance = useCallback(
     async (pickup: string, destination: string) => {
       setIsDistanceLoading(true);
       setDistanceError(null);
 
-      // Check if we have API keys for actual calculation
       if (!GEOAPIFY_API_KEY || (!OPENROUTESERVICE_API_KEY && GEOAPIFY_API_KEY.length < 50)) {
         console.warn("API keys missing or incomplete. Using default distance estimate.");
         setCalculatedDistance(step2?.bookingType === "local" ? 20 : 250);
@@ -127,58 +167,55 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
     if (step2 && step2.pickupLocation && step2.destination) {
       calculateDistance(step2.pickupLocation, step2.destination)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Only run when location changes. `calculateDistance` is stable due to useCallback.
   }, [step2?.pickupLocation, step2?.destination, calculateDistance])
   // --- END Distance Calculation Logic ---
 
   // --- Payment Percentage Effect ---
   useEffect(() => {
-    // If Cash is selected, we logically treat it as 100% of the fare due later. 
-    // This ensures the discount calculation is correct if they switch back to Razorpay.
+    // If Cash is selected, we logically treat it as 25% for minimal advance if user switches,
+    // or keep the discount logic simple by only applying it when Razorpay is selected.
     if (paymentMethod === 'cash') {
-      setPaymentPercentage(100);
+      // For cash, no advance is required, but we should clear the percentage selection
+      // to reflect '0' payment amount in the UI, even though the discount logic 
+      // depends on paymentPercentage. Let's ensure the UI reflects 0.
+      // We keep paymentPercentage at 25 internally for Razorpay fallback, 
+      // but the paymentAmount logic handles the '0' for cash.
     } else if (paymentPercentage === 100 && paymentMethod !== 'razorpay') {
-      // If user switches from Cash back to Razorpay, revert to default 25%
+      // If user switches from Cash back to Razorpay, revert to default 25% if it was 100% due to cash logic
       setPaymentPercentage(25);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paymentMethod]);
+  }, [paymentMethod, paymentPercentage]);
 
 
   if (!step1 || !step2 || !step3) {
     return <p className="text-red-500">Booking information is missing. Please go back and fill all steps.</p>
   }
 
-  // --- Fare Calculations ---
-  const effectiveDistance = calculatedDistance || (step2.bookingType === "local" ? 20 : 250)
+  // --- Fare Calculations (FIX 2: Use useMemo for dynamic calculation) ---
+  const {
+    baseFare,
+    tollTax,
+    discountRate,
+    calculatedDiscount,
+    discountedFare,
+    gst,
+    totalFare
+  } = useMemo(() => {
+    // Calculate the fare structure based on the latest distance and selected percentage
+    // This runs whenever effectiveDistance or paymentPercentage changes.
+    return calculateFareStructure(step2, step3, effectiveDistance, paymentPercentage);
+  }, [step2, step3, effectiveDistance, paymentPercentage]);
 
-  let discountRate = 0
-  // Discount is applied regardless of payment method, based on the percentage chosen/implied.
-  if (paymentPercentage === 100) {
-    discountRate = 0.05 // 5%
-  } else if (paymentPercentage === 50) {
-    discountRate = 0.02 // 2%
-  }
-
-  const baseFare = step3.baseRate ? Number(step3.baseRate) * effectiveDistance : 0
-  const tollTax = step2.bookingType !== "local" ? 200 : 0
-
-  const totalBaseAndToll = baseFare + tollTax
-
-  const calculatedDiscount = Math.round(totalBaseAndToll * discountRate)
-  const discountedFare = totalBaseAndToll - calculatedDiscount
-
-  const gst = Math.round(discountedFare * 0.05) // GST on discounted amount
-  const totalFare = discountedFare + gst
-
-  // The amount the user is paying NOW (Razorpay flow)
-  let paymentAmount = 0;
-  if (paymentMethod === 'razorpay') {
-    paymentAmount = Math.round((totalFare * paymentPercentage) / 100);
-  } else {
+  // The amount the user is paying NOW
+  const paymentAmount = useMemo(() => {
+    if (paymentMethod === 'razorpay') {
+      // Ensure the payment amount uses the correct percentage based on the UI selection
+      return Math.round((totalFare * paymentPercentage) / 100);
+    }
     // If cash, the advance payment is 0.
-    paymentAmount = 0;
-  }
+    return 0;
+  }, [paymentMethod, totalFare, paymentPercentage]);
 
   // The amount remaining to be paid at pickup/drop-off
   const remainingAmount = totalFare - paymentAmount
@@ -237,8 +274,8 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       distance: effectiveDistance,
       paymentMethod: paymentMethod,
       paymentPercentage: paymentPercentage,
-      amountPaid: paymentMethod === 'razorpay' ? paymentAmount : 0,
-      remainingAmount: remainingAmount,
+      amountPaid: paymentAmount, // Use the dynamically calculated amount
+      remainingAmount: remainingAmount, // Use the dynamically calculated amount
     }
 
     if (paymentMethod === "cash") {
@@ -254,6 +291,10 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
         const bookingResult = await bookingRes.json()
 
         if (bookingResult.success) {
+          console.log('=======================');
+          console.log(bookingResult.data);
+          
+          dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
           toast.success(`Booking confirmed! Total fare ₹${totalFare} due at pickup (Cash).`)
           nextStep()
         } else {
@@ -354,6 +395,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
           const bookingResult = await bookingRes.json()
 
           if (bookingResult.success) {
+            dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
             setIsProcessing(false)
             toast.success(`Booking confirmed! ${paymentStatus}.`)
             nextStep()
@@ -407,7 +449,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       </div>
 
       {/* Discount/Info Banner */}
-      <div className={`p-3 rounded-lg flex items-center space-x-2 ${paymentPercentage === 100 ? 'bg-green-100 text-green-800 border border-green-300' : paymentPercentage === 50 ? 'bg-blue-100 text-blue-800 border border-blue-300' : 'bg-gray-100 text-gray-600 border border-gray-300'}`}>
+      <div className={`p-3 rounded-lg flex items-center space-x-2 ${discountRate > 0 ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-gray-100 text-gray-600 border border-gray-300'}`}>
         <Percent className="w-5 h-5 flex-shrink-0" />
         <div className="text-sm">
           <p className="font-semibold">{getDiscountMessage()}</p>
@@ -415,7 +457,6 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       </div>
 
       {/* User Details */}
-      {/* ... (Keep User Details card as is) ... */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center pt-4">
@@ -494,7 +535,6 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       </Card>
 
       {/* Selected Car Details */}
-      {/* ... (Keep Selected Car Details card as is) ... */}
       <Card className="bg-yellow-50 border-yellow-200">
         <CardHeader>
           <CardTitle className="pt-4">Selected Car</CardTitle>
@@ -515,7 +555,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
         </CardContent>
       </Card>
 
-      {/* Fare Breakdown (Updated) */}
+      {/* Fare Breakdown */}
       <Card>
         <CardHeader>
           <CardTitle className="pt-4">Fare Breakdown</CardTitle>
@@ -567,19 +607,26 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
               className="grid grid-cols-1 md:grid-cols-3 gap-4"
               disabled={paymentMethod === 'cash'}
             >
-              {[25, 50, 100].map((perc) => (
-                <div key={perc} className="flex items-center space-x-2">
-                  <RadioGroupItem value={perc.toString()} id={`pay${perc}`} />
-                  <Label htmlFor={`pay${perc}`} className="cursor-pointer flex flex-col p-3 border rounded-md hover:bg-gray-50 transition-colors">
-                    <div className="text-sm font-semibold">{perc}% Advance {perc > 25 && <span className="text-green-600">({perc === 100 ? '5%' : '2%'} Discount)</span>}</div>
-                    <div className="text-gray-600">₹{Math.round(totalFare * perc / 100)}</div>
-                  </Label>
-                </div>
-              ))}
+              {[25, 50, 100].map((perc) => {
+                // FIX 3: Calculate the amount here dynamically using the latest totalFare
+                const advanceAmount = Math.round(totalFare * perc / 100);
+                return (
+                  <div key={perc} className="flex items-center space-x-2">
+                    <RadioGroupItem value={perc.toString()} id={`pay${perc}`} />
+                    <Label htmlFor={`pay${perc}`} className="cursor-pointer flex flex-col p-3 border rounded-md hover:bg-gray-50 transition-colors">
+                      <div className="text-sm font-semibold">
+                        {perc}% Advance {perc > 25 && <span className="text-green-600">({perc === 100 ? '5%' : '2%'} Discount)</span>}
+                        {paymentMethod === 'cash' && <span className="text-red-500 ml-2">(N/A - Cash)</span>}
+                      </div>
+                      <div className="text-gray-600">₹{advanceAmount}</div>
+                    </Label>
+                  </div>
+                )
+              })}
             </RadioGroup>
           </div>
 
-          {/* Payment Methods (Updated to include Cash) */}
+          {/* Payment Methods */}
           <div>
             <Label className="text-sm font-medium text-gray-700 mb-3 block">Payment Method</Label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -591,8 +638,6 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                     key={method}
                     className={`cursor-pointer transition-all ${paymentMethod === method ? "ring-2 ring-yellow-400" : ""}`}
                     onClick={() => setPaymentMethod(method)}
-                  // Disable other online methods for simplicity, focusing on Razorpay/Cash
-                  // disabled={method !== 'razorpay' && method !== 'cash'} 
                   >
                     <CardContent className="p-4 text-center">
                       <Icon className="w-8 h-8 mx-auto mb-2 text-blue-600" />
@@ -604,11 +649,25 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
             </div>
           </div>
 
+          <div className="flex justify-between font-semibold text-base pt-2 border-t">
+            <span>Amount to pay now ({paymentMethod === 'cash' ? 'Cash' : `${paymentPercentage}% Advance`})</span>
+            <span className={`text-xl ${paymentAmount > 0 ? 'text-green-600' : 'text-gray-600'}`}>
+              ₹{paymentAmount}
+            </span>
+          </div>
+
+          <div className="flex justify-between font-semibold text-base pt-2">
+            <span>Remaining Amount Due at Pickup/Drop-off</span>
+            <span className="text-xl text-red-600">
+              ₹{remainingAmount}
+            </span>
+          </div>
+
           <div className="bg-blue-50 p-3 rounded-lg flex items-start space-x-2">
             <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-blue-800">
               <p className="font-semibold">Secure Payment</p>
-              <p>Your payment is processed securely with 256-bit SSL encryption. For Cash/Wallet/Netbanking, full payment is due at the time of pickup/drop-off based on policy.</p>
+              <p>Your payment is processed securely with 256-bit SSL encryption. For Cash, the full amount is due at the time of pickup/drop-off.</p>
             </div>
           </div>
         </CardContent>

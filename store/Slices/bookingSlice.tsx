@@ -36,6 +36,7 @@ interface BookingState {
   bookingDataStep2: BookingDataStep2 | null;
   bookingDataStep3: BookingDataStep3 | null;
   paymentMethod: string;
+  finalBooking: any | null;
 }
 
 const initialState: BookingState = {
@@ -43,6 +44,7 @@ const initialState: BookingState = {
   bookingDataStep2: null,
   bookingDataStep3: null,
   paymentMethod: 'stripe',
+  finalBooking: null,
 };
 
 const bookingSlice = createSlice({
@@ -70,6 +72,9 @@ const bookingSlice = createSlice({
     clearPaymentMethod: (state) => {
       state.paymentMethod = 'stripe';
     },
+    setFinalBooking: (state, action: PayloadAction<any>) => {  // 🆕
+      state.finalBooking = action.payload;
+    },
   },
 });
 
@@ -79,6 +84,7 @@ export const {
   setBookingDataStep3,
   clearBookingData,
   setPaymentMethod,
+  setFinalBooking, 
   clearPaymentMethod,
 } = bookingSlice.actions;
 
