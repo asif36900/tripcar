@@ -284,7 +284,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
     if (paymentMethod === "cash") {
       // --- Cash Payment Flow ---
       try {
-        const bookingRes = await fetch("http://localhost:8080/booking/create", {
+        const bookingRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/booking/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           // For cash, amountPaid is 0, remainingAmount is totalFare.
@@ -383,7 +383,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
           // ✅ Payment successful, call booking API
           const paymentStatus = remainingAmount > 0 ? 'Partial Payment Complete' : 'Full Payment Complete';
 
-          const bookingRes = await fetch("http://localhost:8080/booking/create", {
+          const bookingRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/booking/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
