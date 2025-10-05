@@ -84,6 +84,13 @@ const calculateFareStructure = (
   }
 }
 
+  const icons = {
+    razorpay: CreditCard,
+    cash: Wallet,
+    wallet: Wallet,
+    netbanking: Smartphone,
+  };
+
 export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) {
   const dispatch = useDispatch()
   const step1: BookingDataStep1 | null = useSelector((state: RootState) => state.booking.bookingDataStep1)
@@ -105,67 +112,112 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   const effectiveDistance = calculatedDistance || (step2?.bookingType === "local" ? 20 : 250)
 
   // --- Distance Calculation Logic (API Integration) ---
-  const calculateDistance = useCallback(
-    async (pickup: string, destination: string) => {
-      setIsDistanceLoading(true);
-      setDistanceError(null);
+  // const calculateDistance = useCallback(
+  //   async (pickup: string, destination: string) => {
+  //     setIsDistanceLoading(true);
+  //     setDistanceError(null);
 
-      if (!GEOAPIFY_API_KEY || (!OPENROUTESERVICE_API_KEY && GEOAPIFY_API_KEY.length < 50)) {
-        console.warn("API keys missing or incomplete. Using default distance estimate.");
-        setCalculatedDistance(step2?.bookingType === "local" ? 20 : 250);
-        setIsDistanceLoading(false);
-        return;
+  //     if (!GEOAPIFY_API_KEY || (!OPENROUTESERVICE_API_KEY && GEOAPIFY_API_KEY.length < 50)) {
+  //       console.warn("API keys missing or incomplete. Using default distance estimate.");
+  //       setCalculatedDistance(step2?.bookingType === "local" ? 20 : 250);
+  //       setIsDistanceLoading(false);
+  //       return;
+  //     }
+
+  //     try {
+  //       const geocode = async (place: string) => {
+  //         const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
+  //           place
+  //         )}&apiKey=${GEOAPIFY_API_KEY}`;
+  //         const res = await fetch(url);
+  //         if (!res.ok) throw new Error("Geoapify Geocoding failed");
+  //         const data = await res.json();
+  //         if (!data.features?.length) throw new Error("No coordinates found");
+  //         const { lat, lon } = data.features[0].properties;
+  //         return [lon, lat]; // [lng, lat] format
+  //       };
+
+  //       const pickupCoords = await geocode(pickup);
+  //       const destinationCoords = await geocode(destination);
+
+  //       let distanceKm = 0;
+
+  //       // 1. Try OpenRouteService
+  //       try {
+  //         const orsUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${OPENROUTESERVICE_API_KEY}&start=${pickupCoords[0]},${pickupCoords[1]}&end=${destinationCoords[0]},${destinationCoords[1]}`;
+  //         const orsRes = await fetch(orsUrl);
+  //         if (!orsRes.ok) throw new Error("ORS request failed or rate limit hit");
+  //         const orsData = await orsRes.json();
+  //         distanceKm = orsData.routes[0].summary.distance / 1000; // meters → km
+  //         console.log("✅ Distance from ORS:", distanceKm, "km");
+  //       } catch (err) {
+  //         console.warn("ORS failed, trying Geoapify Routing...", err);
+
+  //         // 2. Fallback: Geoapify Routing
+  //         const geoUrl = `https://api.geoapify.com/v1/routing?waypoints=${pickupCoords[1]},${pickupCoords[0]}|${destinationCoords[1]},${destinationCoords[0]}&mode=drive&apiKey=${GEOAPIFY_API_KEY}`;
+  //         const geoRes = await fetch(geoUrl);
+  //         if (!geoRes.ok) throw new Error("Geoapify Routing failed");
+  //         const geoData = await geoRes.json();
+  //         distanceKm = geoData.features[0].properties.distance / 1000;
+  //         console.log("✅ Distance from Geoapify:", distanceKm, "km");
+  //       }
+
+  //       setCalculatedDistance(Math.round(distanceKm));
+  //     } catch (error) {
+  //       console.error("Distance calculation failed entirely:", error);
+  //       setDistanceError("Could not calculate distance. Using default estimate.");
+  //       setCalculatedDistance(step2?.bookingType === "local" ? 20 : 250);
+  //     } finally {
+  //       setIsDistanceLoading(false);
+  //     }
+  //   },
+  //   [step2?.bookingType]
+  // );
+
+  // --- Distance Calculation Logic (API Integration) ---
+const calculateDistance = useCallback(
+  async (pickup: string, destination: string) => {
+    setIsDistanceLoading(true);
+    setDistanceError(null);
+
+    try {
+      // Secure backend API route call
+      const response = await fetch(
+        `/api/distance?pickup=${encodeURIComponent(pickup)}&destination=${encodeURIComponent(destination)}`
+      );
+
+      // Try to parse JSON safely
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        const errorMsg = data?.error || `Server failed with status: ${response.status}`;
+        throw new Error(errorMsg);
       }
 
-      try {
-        const geocode = async (place: string) => {
-          const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
-            place
-          )}&apiKey=${GEOAPIFY_API_KEY}`;
-          const res = await fetch(url);
-          if (!res.ok) throw new Error("Geoapify Geocoding failed");
-          const data = await res.json();
-          if (!data.features?.length) throw new Error("No coordinates found");
-          const { lat, lon } = data.features[0].properties;
-          return [lon, lat]; // [lng, lat] format
-        };
-
-        const pickupCoords = await geocode(pickup);
-        const destinationCoords = await geocode(destination);
-
-        let distanceKm = 0;
-
-        // 1. Try OpenRouteService
-        try {
-          const orsUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${OPENROUTESERVICE_API_KEY}&start=${pickupCoords[0]},${pickupCoords[1]}&end=${destinationCoords[0]},${destinationCoords[1]}`;
-          const orsRes = await fetch(orsUrl);
-          if (!orsRes.ok) throw new Error("ORS request failed or rate limit hit");
-          const orsData = await orsRes.json();
-          distanceKm = orsData.routes[0].summary.distance / 1000; // meters → km
-          console.log("✅ Distance from ORS:", distanceKm, "km");
-        } catch (err) {
-          console.warn("ORS failed, trying Geoapify Routing...", err);
-
-          // 2. Fallback: Geoapify Routing
-          const geoUrl = `https://api.geoapify.com/v1/routing?waypoints=${pickupCoords[1]},${pickupCoords[0]}|${destinationCoords[1]},${destinationCoords[0]}&mode=drive&apiKey=${GEOAPIFY_API_KEY}`;
-          const geoRes = await fetch(geoUrl);
-          if (!geoRes.ok) throw new Error("Geoapify Routing failed");
-          const geoData = await geoRes.json();
-          distanceKm = geoData.features[0].properties.distance / 1000;
-          console.log("✅ Distance from Geoapify:", distanceKm, "km");
-        }
-
-        setCalculatedDistance(Math.round(distanceKm));
-      } catch (error) {
-        console.error("Distance calculation failed entirely:", error);
-        setDistanceError("Could not calculate distance. Using default estimate.");
-        setCalculatedDistance(step2?.bookingType === "local" ? 20 : 250);
-      } finally {
-        setIsDistanceLoading(false);
+      // ✅ Parse and validate distance
+      const distanceKm = parseFloat(data.distanceKm);
+      if (!isNaN(distanceKm) && distanceKm > 0) {
+        const roundedDistance = Math.round(distanceKm);
+        setCalculatedDistance(roundedDistance);
+        console.log("✅ Distance from Google Maps:", roundedDistance, "km");
+      } else {
+        throw new Error("Google Maps returned invalid distance.");
       }
-    },
-    [step2?.bookingType]
-  );
+    } catch (error: any) {
+      console.error("❌ Distance calculation failed:", error.message || error);
+      setDistanceError("Could not calculate distance. Using default estimate.");
+
+      // ✅ Safe fallback
+      const fallbackDistance = step2?.bookingType === "local" ? 20 : 250;
+      setCalculatedDistance(fallbackDistance);
+    } finally {
+      setIsDistanceLoading(false);
+    }
+  },
+  [step2?.bookingType]
+);
+
+// --- END Distance Calculation Logic ---
 
   useEffect(() => {
     if (step2 && step2.pickupLocation && step2.destination) {
@@ -629,28 +681,43 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
             </RadioGroup>
           </div>
 
-          {/* Payment Methods */}
-          <div>
-            <Label className="text-sm font-medium text-gray-700 mb-3 block">Payment Method</Label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {["razorpay", "cash"].map((method) => {
-                const icons = { razorpay: CreditCard, cash: Wallet, wallet: Wallet, netbanking: Smartphone }
-                const Icon = icons[method as keyof typeof icons]
-                return (
-                  <Card
-                    key={method}
-                    className={`cursor-pointer transition-all ${paymentMethod === method ? "ring-2 ring-yellow-400" : ""}`}
-                    onClick={() => setPaymentMethod(method)}
-                  >
-                    <CardContent className="p-4 text-center">
-                      <Icon className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                      <div className="text-sm font-semibold">{method.charAt(0).toUpperCase() + method.slice(1)}</div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-          </div>
+<div>
+      <Label className="text-sm font-medium text-gray-700 mb-3 block">
+        Payment Method
+      </Label>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {["razorpay", "cash"].map((method) => {
+          const Icon = icons[method as keyof typeof icons];
+
+          return (
+            <Card
+              key={method}
+              className={`cursor-pointer transition-all ${
+                paymentMethod === method ? "ring-2 ring-yellow-400" : "ring-1 ring-gray-200"
+              }`}
+              onClick={() => setPaymentMethod(method as "razorpay" | "cash")}
+            >
+              <CardContent className="p-4 text-center">
+                <Icon
+                  className={`w-8 h-8 mx-auto mb-2 ${
+                    paymentMethod === method ? "text-yellow-500" : "text-blue-600"
+                  }`}
+                />
+                <div className="text-sm font-semibold capitalize">
+                  {method}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Optional — Show selected below */}
+      <p className="mt-4 text-sm text-gray-600">
+        Selected: <span className="font-semibold">{paymentMethod}</span>
+      </p>
+    </div>
 
           <div className="flex justify-between font-semibold text-base pt-2 border-t">
             <span>Amount to pay now ({paymentMethod === 'cash' ? 'Cash' : `${paymentPercentage}% Advance`})</span>

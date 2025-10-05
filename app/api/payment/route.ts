@@ -8,7 +8,7 @@
 //     // Simulate payment processing delay
 //     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-//     // Mock payment success (in production, integrate with Stripe, PayPal, etc.)
+//     // Mock payment success (in production, integrate with razorpay, PayPal, etc.)
 //     const paymentResult = {
 //       success: true,
 //       transactionId: `TXN${Date.now()}`,

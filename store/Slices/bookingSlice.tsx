@@ -43,7 +43,7 @@ const initialState: BookingState = {
   bookingDataStep1: null,
   bookingDataStep2: null,
   bookingDataStep3: null,
-  paymentMethod: 'stripe',
+  paymentMethod: 'razorpay',
   finalBooking: null,
 };
 
@@ -64,16 +64,23 @@ const bookingSlice = createSlice({
       state.bookingDataStep1 = null;
       state.bookingDataStep2 = null;
       state.bookingDataStep3 = null;
-      state.paymentMethod = 'stripe';
+      state.paymentMethod = 'razorpay';
     },
     setPaymentMethod: (state, action: PayloadAction<string>) => {
       state.paymentMethod = action.payload;
     },
     clearPaymentMethod: (state) => {
-      state.paymentMethod = 'stripe';
+      state.paymentMethod = 'razorpay';
     },
     setFinalBooking: (state, action: PayloadAction<any>) => {  // 🆕
       state.finalBooking = action.payload;
+    },
+        clearBookingDetails: (state) => {
+      // state.bookingDataStep1 = null;
+      state.bookingDataStep2 = null;
+      state.bookingDataStep3 = null;
+      state.paymentMethod = 'razorpay';
+      state.finalBooking = null;
     },
   },
 });
@@ -85,6 +92,7 @@ export const {
   clearBookingData,
   setPaymentMethod,
   setFinalBooking, 
+  clearBookingDetails,
   clearPaymentMethod,
 } = bookingSlice.actions;
 

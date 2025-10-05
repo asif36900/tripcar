@@ -12,8 +12,18 @@ import "swiper/css"
 import "swiper/css/pagination"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
 import Link from "next/link"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { clearBookingDetails } from "@/store/Slices/bookingSlice"
+
 
 export default function HomePage() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    document.title = "Citycar - Professional Taxi Service";
+    dispatch(clearBookingDetails());
+  }, []); 
   return (
     <div className="min-h-screen">
       <Navbar />

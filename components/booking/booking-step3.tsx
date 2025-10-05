@@ -537,7 +537,7 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
                       <div>
                         <p className="text-sm text-gray-600">Starting from</p>
                         <p className="text-xl font-bold text-yellow-600">
-                          ₹{car.basePrice * 10}
+                          ₹{car.basePrice}/km
                         </p>
                       </div>
                       <Button
