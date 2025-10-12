@@ -15,6 +15,10 @@ import Link from "next/link"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { clearBookingDetails } from "@/store/Slices/bookingSlice"
+import ReviewSection from "./reviewSection"
+import HowToBookSection from "./how-to-book"
+import PopularRoutes from "./popular-routes"
+import { popularRoutes } from "@/lib/popularRoutes"
 
 
 export default function HomePage() {
@@ -23,7 +27,7 @@ export default function HomePage() {
   useEffect(() => {
     document.title = "Citycar - Professional Taxi Service";
     dispatch(clearBookingDetails());
-  }, []); 
+  }, []);
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -300,16 +304,20 @@ export default function HomePage() {
         {/* Popular Routes */}
         <section className="py-20 bg-gray-50 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Section Header */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Taxi to Ride!</h2>
-              <p className="text-xl text-gray-600">Most traveled destinations by our customers</p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Popular Cab Routes</h2>
+              <p className="text-xl text-gray-600">
+                Distance, Price & Duration — all verified from real market data
+              </p>
             </motion.div>
 
+            {/* Swiper */}
             <Swiper
               modules={[Autoplay, Pagination]}
               spaceBetween={30}
@@ -333,50 +341,7 @@ export default function HomePage() {
               }}
               className="pb-12"
             >
-              {[
-                {
-                  from: "Kolkata",
-                  to: "Jamshedpur",
-                  price: "₹2,500",
-                  duration: "4h 30m",
-                  image: "/kolkata-city-skyline-with-howrah-bridge.jpg",
-                },
-                {
-                  from: "Delhi",
-                  to: "Agra",
-                  price: "₹3,200",
-                  duration: "3h 45m",
-                  image: "/delhi-red-fort-and-india-gate-landmarks.jpg",
-                },
-                {
-                  from: "Mumbai",
-                  to: "Pune",
-                  price: "₹2,800",
-                  duration: "3h 15m",
-                  image: "/mumbai-gateway-of-india-and-marine-drive.jpg",
-                },
-                {
-                  from: "Bangalore",
-                  to: "Mysore",
-                  price: "₹2,200",
-                  duration: "3h 00m",
-                  image: "/bangalore-it-city-with-modern-buildings.jpg",
-                },
-                {
-                  from: "Chennai",
-                  to: "Pondicherry",
-                  price: "₹1,800",
-                  duration: "2h 45m",
-                  image: "/chennai-marina-beach-and-lighthouse.jpg",
-                },
-                {
-                  from: "Hyderabad",
-                  to: "Vijayawada",
-                  price: "₹3,500",
-                  duration: "4h 15m",
-                  image: "/hyderabad-charminar-and-modern-hitech-city.jpg",
-                },
-              ].map((route, index) => (
+              {popularRoutes.slice(0, 8).map((route, index) => (
                 <SwiperSlide key={`${route.from}-${route.to}`}>
                   <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -398,31 +363,25 @@ export default function HomePage() {
                         </div>
                       </div>
                       <CardContent className="p-6">
-                        <div className="flex justify-between items-center mb-4">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span className="font-semibold">{route.from}</span>
-                          </div>
-                          <ArrowRight className="w-5 h-5 text-gray-400" />
-                          <div className="flex items-center space-x-2">
-                            <span className="font-semibold">{route.to}</span>
-                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                          </div>
+                        <div className="flex justify-between items-center mb-3">
+                          <p className="font-semibold text-gray-800">
+                            Distance: <span className="text-primary">{route.distance} km</span>
+                          </p>
+                          <p className="text-sm text-gray-500">Est. Price</p>
                         </div>
+
                         <div className="flex justify-between items-center">
-                          <div>
-                            <p className="text-2xl font-bold text-yellow-600">{route.price}</p>
-                            <p className="text-sm text-gray-500">Starting from</p>
-                          </div>
+                          <p className="text-2xl font-bold text-yellow-600">{route.marketPrice}</p>
                           <div className="text-right">
-                            <p className="font-semibold">{route.duration}</p>
-                            <p className="text-sm text-gray-500">Duration</p>
+                            <p className="font-semibold text-gray-700">4–6 hrs</p>
+                            <p className="text-sm text-gray-500">Approx Duration</p>
                           </div>
                         </div>
-                        <Link href={'/booking'}>
-                        <Button className="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                          Book Now
-                        </Button>
+
+                        <Link href="/booking">
+                          <Button className="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
+                            Book Now
+                          </Button>
                         </Link>
                       </CardContent>
                     </Card>
@@ -431,10 +390,19 @@ export default function HomePage() {
               ))}
             </Swiper>
           </div>
+          <Link href={'/popular-routes'} className="flex justify-center items-center mt-10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="bg-yellow-400 text-black hover:bg-yellow-500 "
+            >
+              View More
+            </Button></Link>
         </section>
 
+
         {/* Client's Reviews */}
-        <section className="py-20 bg-white overflow-hidden">
+        {/* <section className="py-20 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <motion.div
@@ -482,12 +450,15 @@ export default function HomePage() {
               </motion.div>
             </div>
           </div>
-        </section>
+        </section> */}
+        <ReviewSection />
+        <HowToBookSection />
 
         {/* FAQ Section */}
         <section className="py-20 bg-gray-50 overflow-hidden">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-12 items-start">
+
               {/* FAQ Accordion */}
               <div className="space-y-8">
                 <div>
@@ -495,47 +466,59 @@ export default function HomePage() {
                   <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Frequently Asked Questions?</h2>
                 </div>
 
+                {/* Note: Accordion, AccordionItem, AccordionTrigger, AccordionContent are assumed to be imported from your component library (e.g., Shadcn/Radix) */}
                 <Accordion type="single" collapsible className="space-y-4 mb-3">
-                  {/* Accordion Items */}
+
+                  {/* New Accordion Item 1: How to book (Website/Call Focus) */}
                   <AccordionItem value="item-1" className="border border-gray-200 rounded-lg bg-white px-6">
                     <AccordionTrigger className="text-left font-semibold text-gray-900 hover:no-underline">
-                      1. How to booking a taxi cab in City Taxi?
+                      1. How do I book a cab with EasyGoCab?
                     </AccordionTrigger>
                     <AccordionContent className="text-gray-600 leading-relaxed">
-                      You can book a taxi through our mobile app, website, or by calling our 24/7 hotline. Simply enter
-                      your pickup location, destination, and preferred time, then confirm your booking.
+                      You can easily book directly through our **website** by entering your pickup/destination and date on the booking form. Alternatively, you can call our **24/7 hotline** for assistance with your booking.
                     </AccordionContent>
                   </AccordionItem>
 
+                  {/* New Accordion Item 2: Types of Trips (Outstation/Local Focus) */}
                   <AccordionItem value="item-2" className="border border-gray-200 rounded-lg bg-white px-6">
                     <AccordionTrigger className="text-left font-semibold text-gray-900 hover:no-underline">
-                      2. How to Download taxi App?
+                      2. What types of services and trips does EasyGoCab offer?
                     </AccordionTrigger>
                     <AccordionContent className="text-gray-600 leading-relaxed">
-                      Our Citycar app is available on both iOS App Store and Google Play Store. Search for "Citycar" and
-                      download the official app with our yellow logo.
+                      We specialize in reliable **Outstation Trips** (one-way and round-trip) and **Local Hourly Rentals** for city travel, airport transfers, and general sightseeing.
                     </AccordionContent>
                   </AccordionItem>
 
+                  {/* New Accordion Item 3: Fare Calculation/Transparency */}
                   <AccordionItem value="item-3" className="border border-gray-200 rounded-lg bg-white px-6">
                     <AccordionTrigger className="text-left font-semibold text-gray-900 hover:no-underline">
-                      3. How to hire a Driver?
+                      3. How are the fares calculated and is there a cancellation fee?
                     </AccordionTrigger>
                     <AccordionContent className="text-gray-600 leading-relaxed">
-                      For long-term driver services, contact our corporate booking team. We offer dedicated drivers for
-                      business clients, events, and extended trips with flexible hourly or daily rates.
+                      Our fares are **transparently calculated** based on distance and duration, with no hidden costs. You can get an instant fare estimate on our website. Cancellation policies are detailed during the booking process but are generally very customer-friendly.
                     </AccordionContent>
                   </AccordionItem>
 
+                  {/* New Accordion Item 4: Cancellation/Modification */}
                   <AccordionItem value="item-4" className="border border-gray-200 rounded-lg bg-white px-6">
                     <AccordionTrigger className="text-left font-semibold text-gray-900 hover:no-underline">
-                      4. How to booking a cab in City Taxi?
+                      4. Can I cancel or modify my existing booking?
                     </AccordionTrigger>
                     <AccordionContent className="text-gray-600 leading-relaxed">
-                      Booking is simple: open our app, set your pickup point, choose your destination, select vehicle
-                      type, and confirm. You'll receive driver details and can track your ride in real-time.
+                      Yes, you can manage your booking by visiting the 'My Bookings' section on our website or by contacting our customer support team as soon as possible. Changes are subject to vehicle availability.
                     </AccordionContent>
                   </AccordionItem>
+
+                  {/* New Accordion Item 5: Pre-booking for Outstation */}
+                  <AccordionItem value="item-5" className="border border-gray-200 rounded-lg bg-white px-6">
+                    <AccordionTrigger className="text-left font-semibold text-gray-900 hover:no-underline">
+                      5. Is pre-booking required for outstation travel?
+                    </AccordionTrigger>
+                    <AccordionContent className="text-gray-600 leading-relaxed">
+                      We strongly recommend **pre-booking** outstation cabs at least 4-6 hours in advance, especially for early morning or peak season travel, to ensure the best vehicle and driver availability.
+                    </AccordionContent>
+                  </AccordionItem>
+
                 </Accordion>
               </div>
 

@@ -13,7 +13,8 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
-    { name: "Taxi List", href: "/taxi-list" },
+    { name: "Popular Rides", href: "/popular-routes" },
+    // { name: "Taxi List", href: "/taxi-list" },
     { name: "Contact", href: "/contact" },
   ]
 

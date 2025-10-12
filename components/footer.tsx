@@ -46,8 +46,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-yellow-400 transition-colors">
-                  Our Services
+                <Link href="/taxi-list" className="hover:text-yellow-400 transition-colors">
+                  Taxi List
                 </Link>
               </li>
               <li>
@@ -65,11 +65,11 @@ export default function Footer() {
                   Terms of Use
                 </Link>
               </li>
-              {/* <li>
-                <Link href="/faq" className="hover:text-yellow-400 transition-colors">
-                  FAQ
+              <li>
+                <Link href="/cancellation-policy" className="hover:text-yellow-400 transition-colors">
+                  Cancellation Policy
                 </Link>
-              </li> */}
+              </li>
             </ul>
           </div>
 
