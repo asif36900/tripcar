@@ -371,14 +371,14 @@ export default function HomePage() {
                         </div>
 
                         <div className="flex justify-between items-center">
-                          <p className="text-2xl font-bold text-yellow-600">{route.marketPrice}</p>
+                          <p className="text-2xl font-bold text-yellow-600">{route.carPrices[0].marketPrice}</p>
                           <div className="text-right">
                             <p className="font-semibold text-gray-700">4–6 hrs</p>
                             <p className="text-sm text-gray-500">Approx Duration</p>
                           </div>
                         </div>
 
-                        <Link href="/booking">
+                        <Link href="/route-booking">
                           <Button className="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
                             Book Now
                           </Button>

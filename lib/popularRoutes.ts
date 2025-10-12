@@ -5,7 +5,7 @@ export const popularRoutes = [
     to: "Digha",
     distance: 183,
     marketPrice: "₹3,000",
-    carPrices: [
+    carPrices: [ 
       { id: 1, type: "Mini Car", marketPrice: "₹2,550" },
       { id: 5, type: "Swift Dzire", marketPrice: "₹3,000" },
       { id: 6, type: "WagonR Tour", marketPrice: "₹3,300" },
