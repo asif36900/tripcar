@@ -19,6 +19,8 @@ import { Badge } from "@/components/ui/badge"
 // Import Redux hooks and types
 import { useSelector } from "react-redux"
 import type { RootState } from "@/store/store"
+import Navbar from "../navbar"
+import Footer from "../footer"
 
 // Define a type for your final booking data (adjust this to match your actual structure)
 interface FinalBookingData {
@@ -148,6 +150,8 @@ export default function BookingStep5() {
   }
 
   return (
+<>
+<Navbar/>
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-secondary/30 p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-6 animate-slide-up">
@@ -386,5 +390,7 @@ export default function BookingStep5() {
         </div>
       </div>
     </div>
+<Footer/>
+</>
   )
 }

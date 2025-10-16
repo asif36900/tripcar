@@ -142,7 +142,7 @@ const RouteCard = ({ route, approxDuration }:any) => (
             {route.carPrices[0].marketPrice}
           </p>
         </div>
-        <Link href={`/route-booking?from=${route.from}&to=${route.to}`}>
+        <Link href={`/booking/${route.id}`}>
           <Button className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all">
             Book Now
           </Button>

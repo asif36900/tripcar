@@ -224,10 +224,12 @@ export default function HomePage() {
                   ))}
                 </div>
 
-                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                  Learn More
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
+                <Link href={'/services'}>
+                  <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
+                    Learn More
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
               </motion.div>
             </div>
           </div>
@@ -322,10 +324,10 @@ export default function HomePage() {
               modules={[Autoplay, Pagination]}
               spaceBetween={30}
               slidesPerView={1}
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-              }}
+              // autoplay={{
+              //   delay: 3000,
+              //   disableOnInteraction: false,
+              // }}
               pagination={{
                 clickable: true,
                 bulletClass: "swiper-pagination-bullet !bg-yellow-400",
@@ -378,7 +380,7 @@ export default function HomePage() {
                           </div>
                         </div>
 
-                        <Link href="/route-booking">
+                        <Link href={`/booking/${route.id}`}>
                           <Button className="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
                             Book Now
                           </Button>

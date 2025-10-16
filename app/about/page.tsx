@@ -207,11 +207,11 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 {
-                  name: "Rajesh Kumar",
+                  name: "Asif Iqbal",
                   role: "Founder & CEO",
-                  image: "/indian-business-executive-man-professional.jpg",
+                  image: "/indian-business-executive-man-professional.png",
                   description:
-                    "With 15+ years in transportation, Rajesh founded Easy Go Cab with a vision to revolutionize taxi services in India.",
+                    "With 15+ years in transportation, Asif founded Easy Go Cab with a vision to revolutionize taxi services in India.",
                 },
                 {
                   name: "Priya Sharma",
@@ -221,11 +221,11 @@ export default function AboutPage() {
                     "Priya oversees daily operations and ensures our high service standards are maintained across all locations.",
                 },
                 {
-                  name: "Amit Singh",
+                  name: "Subhan Muneer",
                   role: "Technology Head",
-                  image: "/indian-tech-professional-man-software-engineer.jpg",
+                  image: "/indian-tech-professional-man-software-engineer.png",
                   description:
-                    "Amit leads our technology initiatives, developing innovative solutions to enhance customer experience.",
+                    "Subhan leads our technology initiatives, developing innovative solutions to enhance customer experience.",
                 },
               ].map((member, index) => (
                 <motion.div

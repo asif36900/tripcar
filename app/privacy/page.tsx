@@ -128,15 +128,15 @@ export default function PrivacyPolicyPage() {
               transition={{ delay: 0.7 }}
               className="mt-8 flex items-center justify-center space-x-2 text-sm text-muted-foreground"
             >
-              <Shield className="w-4 h-4 text-primary" />
-              <span>Last updated: January 2024</span>
+              <Shield className="w-6 h-6 font-semibold text-yellow-500" />
+              <span className="text-xl font-semibold text-yellow-500">Last updated: 9/10/2025</span>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Privacy Policy Content */}
-      <section className="py-16">
+      <section className="pt-4 pb-8">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto space-y-12">
             {sections.map((section, index) => (

@@ -45,7 +45,7 @@ const cars = [
   {
     id: 1,
     name: "Mini Car",
-    type: "Hatchback",
+    type: "Hatchback", 
     image: "/cars/alto-k10.png",
     basePrice: 13,
     features: ["4 Seats", "Petrol", "AC", "Compact Size"],

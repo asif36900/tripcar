@@ -97,7 +97,7 @@ export default function BookingPage() {
     { number: 2, title: "Trip Details", component: BookingStep2 },
     { number: 3, title: "Car Selection", component: BookingStep3 },
     { number: 4, title: "Payment", component: BookingStep4 },
-    { number: 5, title: "Confirmation", component: BookingStep5 },
+    // { number: 5, title: "Confirmation", component: BookingStep5 },
   ]
 
   const updateBookingData = (data: Partial<BookingData>) => {
@@ -105,7 +105,7 @@ export default function BookingPage() {
   }
 
   const nextStep = () => {
-    if (currentStep < 5) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1)
     }
   }

@@ -8,36 +8,15 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
-import { toast } from 'sonner'
-import { popularRoutes } from '@/lib/popularRoutes'
-import { useDispatch } from 'react-redux'
-import { setFinalBooking } from '@/store/Slices/bookingSlice'
-import { useRouter } from 'next/navigation'
 import Footer from './footer'
 import Navbar from './navbar'
+import { popularRoutes } from '@/lib/popularRoutes'
 
 // --- Static Values (Fixed Charges & GST) ---
-// const STATIC_GST_RATE = 0.05; // 5% GST
-const STATIC_GST_RATE = 0.00; // 5% GST
-const FIXED_CHARGES_INCLUDED = 0; // Assuming marketPrice is the final fare for simplicity
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_xxxxxxxxxxxxxx';
-
-// Helper to load Razorpay script (must be available in the file scope)
-// The global 'window.Razorpay' type is assumed to be available when the script loads
-async function loadRazorpayScript(): Promise<boolean> {
-    if (typeof window === "undefined") return false
-    if ((window as any).Razorpay) return true
-
-    return new Promise((resolve) => {
-        const script = document.createElement("script")
-        script.src = "https://checkout.razorpay.com/v1/checkout.js"
-        script.async = true
-        script.onload = () => resolve(true)
-        script.onerror = () => resolve(false)
-        document.body.appendChild(script)
-    })
-}
+const STATIC_GST_RATE = 0.05; // 5% GST
+// const STATIC_FUEL_CHARGE = 500;
+// const STATIC_DRIVER_CHARGE = 600;
+// const STATIC_TOLL_TAX = 250;
 
 // --- Main Component ---
 export default function RouteBookingForm({ id }: any) {
@@ -59,24 +38,16 @@ export default function RouteBookingForm({ id }: any) {
         const currentCarPrice = Number(car.marketPrice.replace('₹', '').replace(',', ''));
         const baseMultiplier = parseFloat((currentCarPrice / baseCarPrice).toFixed(2));
 
-        // Find AC/Seats from features (helper to structure data better)
-        const isAC = car.features.includes("AC");
-        const seatsMatch = car.features.find((f: string) => f.includes('Seat'));
-        const seats = seatsMatch ? parseInt(seatsMatch.split(' ')[0]) : 4;
-
-
         return {
-            id: car.id, // Added ID for payload
             name: car.type,
             baseMultiplier,
             marketPrice: currentCarPrice,
             image: car.image,
             description: car.description,
             features: car.features,
+            // Capture the basePrice (extraFarePerKm equivalent) for the selected car
             baseFarePerKm: car.basePrice,
-            ac: isAC ? true : false, // Structured AC data
-            seats: seats, // Structured Seats data
-            fixedCharges: car.fixedCharges,
+            fixedCharges: car?.fixedCharges,
         }
     });
 
@@ -91,24 +62,20 @@ export default function RouteBookingForm({ id }: any) {
     const [selectedCar, setSelectedCar] = useState(DYNAMIC_CAR_OPTIONS_FULL[0].name)
     const [paymentMethod, setPaymentMethod] = useState('Razor Pay')
     const [isConfirmed, setIsConfirmed] = useState(false)
-    const [isProcessing, setIsProcessing] = useState(false); // 🆕 Added Processing State
-    const dispatch = useDispatch()
-    const router = useRouter()
-
 
     // NEW CALCULATION: Determine the currently selected car's detailed info
     const currentCarDetails = useMemo(() => {
         return DYNAMIC_CAR_OPTIONS_FULL.find(c => c.name === selectedCar) || DYNAMIC_CAR_OPTIONS_FULL[0];
     }, [selectedCar]);
 
+
     // Define Dynamic Trip Details (Now depends on currentCarDetails)
-    const DYNAMIC_TRIP_DETAILS: any = {
+    const DYNAMIC_TRIP_DETAILS = {
         pickup: selectedRoute.from,
         destination: selectedRoute.to,
         distance: selectedRoute.distance,
         carBaseFarePerKm: currentCarDetails.baseFarePerKm,
         baseAmount: currentCarDetails.marketPrice,
-        fixedCharges: currentCarDetails?.fixedCharges,
     }
 
     // 2. Handle Input Changes
@@ -119,16 +86,20 @@ export default function RouteBookingForm({ id }: any) {
 
     // 3. Pricing Calculation (Memoized for efficiency)
     const billingDetails: any = useMemo(() => {
-        const { baseAmount, fixedCharges } = DYNAMIC_TRIP_DETAILS
+        // Use the new dynamic baseAmount
+        const { baseAmount } = DYNAMIC_TRIP_DETAILS
+        const car = currentCarDetails
+        const baseMultiplier = car ? car.baseMultiplier : 1.0
 
-        // Use FIXED_CHARGES_INCLUDED (set to 0 for simplicity, assuming marketPrice is the fare)
-        const subTotal = baseAmount
+        // Core Costs
+        const subTotal = baseAmount // This is the car's market price (Base amount is now dynamic)
 
-        // Sum the car price and all fixed charges
-        const totalFareBeforeTax = subTotal + fixedCharges;
+        // Sum the car price and all fixed/hidden static charges
+        const carFixedCharges: any = currentCarDetails?.fixedCharges
+        const totalFare = subTotal + carFixedCharges;
 
-        const gstAmount = totalFareBeforeTax * STATIC_GST_RATE
-        const grossTotal = totalFareBeforeTax + gstAmount
+        const gstAmount = totalFare * STATIC_GST_RATE // Use Static GST Rate
+        const grossTotal = totalFare + gstAmount
 
         // Discount
         const razorpayDiscountRate = paymentMethod === 'Razor Pay' ? 0.05 : 0
@@ -137,216 +108,49 @@ export default function RouteBookingForm({ id }: any) {
 
         return {
             subTotal: parseFloat(subTotal.toFixed(2)),
-            totalFare: parseFloat(totalFareBeforeTax.toFixed(2)),
+            totalFare: parseFloat(totalFare.toFixed(2)),
             gstAmount: parseFloat(gstAmount.toFixed(2)),
             grossTotal: parseFloat(grossTotal.toFixed(2)),
             discountAmount: parseFloat(discountAmount.toFixed(2)),
             finalAmount: parseFloat(finalAmount.toFixed(2)),
             razorpayDiscountRate,
         }
-    }, [DYNAMIC_TRIP_DETAILS.baseAmount, paymentMethod, currentCarDetails])
+    }, [DYNAMIC_TRIP_DETAILS.baseAmount, paymentMethod, currentCarDetails]) // Dependencies updated
 
-    // --- CORE FUNCTION: Handle Booking Submission (Updated) ---
-    async function handleConfirmBooking(e: React.FormEvent) {
+    // 4. Form Submission (No change needed here)
+    const handleConfirmBooking = (e: any) => {
         e.preventDefault()
 
         if (!userInfo.name || !userInfo.phone || !selectedCar) {
-            toast.error("Please fill in all required user details (Name, Phone) and select a car.")
+            alert("Please fill in all required user details and select a car.")
             return
         }
 
-        // Ensure state is set before any async operations
-        setIsProcessing(true)
-
-        // --- 1. Prepare the full booking payload from current component state ---
-        const finalAmountInPaise = Math.round(billingDetails.finalAmount * 100);
-
-        // Determine payment details based on method (assuming 100% advance for Razorpay)
-        const isRazorpay = paymentMethod === 'Razor Pay';
-        const amountPaid = isRazorpay ? billingDetails.finalAmount : 0;
-        const remainingAmount = isRazorpay ? 0 : billingDetails.finalAmount;
-
-        const bookingPayload = {
-            // User Details
-            name: userInfo.name,
-            email: userInfo.email,
-            contact: userInfo.phone,
-
-            // Trip Details
-            bookingType: 'oneway',
-            pickupLocation: DYNAMIC_TRIP_DETAILS.pickup,
-            destination: DYNAMIC_TRIP_DETAILS.destination,
-            pickupDate: userInfo.pickupDate,
-            pickupTime: userInfo.pickupTime,
-            tripType: 'outstation',
-            returnDate: null,
-            returnTime: null,
-            rentalPackage: null,
-            passengers: currentCarDetails.seats,
-            distance: DYNAMIC_TRIP_DETAILS.distance,
-
-            // Car Details
-            id: currentCarDetails.id,
-            vehicleName: currentCarDetails.name,
-            type: currentCarDetails.name,
-            ac: currentCarDetails.ac,
-            seats: currentCarDetails.seats,
-            image: currentCarDetails.image,
-            baseRate: DYNAMIC_TRIP_DETAILS.baseAmount,
-            extraKmRate: DYNAMIC_TRIP_DETAILS.carBaseFarePerKm,
-            features: currentCarDetails.features,
-
-            // Fare & Payment Details
+        const bookingData = {
+            userDetails: userInfo,
+            tripDetails: {
+                ...DYNAMIC_TRIP_DETAILS,
+                gstRate: STATIC_GST_RATE,
+            },
+            carSelected: selectedCar,
             paymentMethod: paymentMethod,
-            finalTotalFare: billingDetails.finalAmount,
-            discountApplied: billingDetails.discountAmount,
-            paymentPercentage: isRazorpay ? 100 : 0,
-            amountPaid: amountPaid,
-            remainingAmount: remainingAmount,
+            billing: billingDetails,
+            bookingTime: new Date().toISOString(),
         }
 
-        if (paymentMethod === "Cash On Ride") {
-            // --- Cash Payment Flow (Awaiting Cash) ---
-            try {
-                const bookingRes = await fetch(`${BACKEND_URL}/booking/create`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ ...bookingPayload, paymentStatus: 'Awaiting Cash Payment' }),
-                })
+        console.log("--- BOOKING CONFIRMED DATA ---")
+        console.log(bookingData)
+        console.log("------------------------------")
 
-                const bookingResult = await bookingRes.json()
-
-                if (bookingResult.success) {
-                    // Success action: Update UI and state
-                    dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
-                    router.push("/booking/confirmed")
-                    setIsConfirmed(true);
-                    toast.success(`Booking confirmed! Total fare ₹${billingDetails.finalAmount.toLocaleString('en-IN')} due at pickup (Cash).`);
-                } else {
-                    toast.error("Booking creation failed. Please contact support.")
-                }
-            } catch (err) {
-                console.error("[Cash Booking error]:", err)
-                toast.error("There was a problem confirming your cash booking. Please try again.")
-            } finally {
-                // Must reset processing state
-                setIsProcessing(false)
-            }
-            return
-        }
-
-        // --- Razorpay Flow (Full Payment) ---
-        if (!RAZORPAY_KEY_ID || billingDetails.finalAmount <= 0) {
-            toast.error("Cannot proceed: Razorpay Key ID is missing or payment amount is zero.")
-            setIsProcessing(false);
-            return
-        }
-
-        try {
-            const scriptLoaded = await loadRazorpayScript()
-            if (!scriptLoaded || !(window as any).Razorpay) {
-                throw new Error("Failed to load Razorpay SDK")
-            }
-
-            // 1) Create order on the server (Your /api/order route)
-            const orderRes = await fetch("/api/order", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    amount: finalAmountInPaise,
-                    currency: "INR",
-                    notes: { customer_name: userInfo.name || "Guest" },
-                }),
-            })
-
-            if (!orderRes.ok) {
-                const errorBody = await orderRes.text();
-                console.error("[Order creation failed]:", errorBody);
-                throw new Error("Failed to create Razorpay order.");
-            }
-
-            const { order } = await orderRes.json();
-
-            // 2) Open Razorpay Checkout
-            const rzp = new (window as any).Razorpay({
-                key: RAZORPAY_KEY_ID,
-                amount: order.amount,
-                currency: order.currency,
-                name: "Your Cab Service",
-                description: "Full Booking Payment",
-                order_id: order.id,
-                prefill: { name: userInfo.name, email: userInfo.email, contact: userInfo.phone },
-                notes: { receipt: order.receipt },
-                theme: { color: "#f59e0b" }, // Tailwind yellow-500
-                handler: async (response: any) => {
-                    // 3) Verify signature on the server (Your /api/verify route)
-                    const verifyRes = await fetch("/api/verify", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(response),
-                    })
-
-                    if (!verifyRes.ok) {
-                        setIsProcessing(false)
-                        toast.error("Payment verification failed. Please contact support.")
-                        return
-                    }
-
-                    // 4) Payment successful: Final Booking API Call
-                    const paymentStatus = 'Full Payment Complete';
-
-                    const bookingRes = await fetch(`${BACKEND_URL}/booking/create`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            ...bookingPayload,
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                            paymentStatus: paymentStatus,
-                        }),
-                    })
-
-                    const bookingResult = await bookingRes.json()
-
-                    if (bookingResult.success) {
-                        // Success action: Update UI and state
-                        setIsConfirmed(true)
-                        dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
-                        router.push("/booking/confirmed")
-                        toast.success(`Booking confirmed! ${paymentStatus}.`)
-                    } else {
-                        toast.error("Payment successful, but booking creation failed. Please contact support.")
-                    }
-                    setIsProcessing(false) // Reset processing state after final booking API call
-                },
-                modal: {
-                    ondismiss: () => {
-                        console.log("Razorpay modal dismissed by user")
-                        setIsProcessing(false) // Must reset processing state if modal dismissed
-                    },
-                },
-            })
-
-            rzp.open()
-
-        } catch (err: any) {
-            setIsProcessing(false)
-            console.error("[Payment error]:", err?.message || err)
-            toast.error("There was a problem processing your payment. Please try again.")
-        } finally {
-            // Note: This 'finally' block handles errors before Razorpay opens. 
-            // The processing state is handled within the Razorpay handler/ondismiss otherwise.
-            // If the code reached rzp.open() successfully, the state is reset inside the handler.
-            // If an error occurred before that, it was reset in the catch block.
-        }
+        setIsConfirmed(true)
+        setTimeout(() => setIsConfirmed(false), 5000)
     }
 
+    // --- Render Logic ---
     return (
         <>
             <Navbar />
             <div className="min-h-screen bg-white p-4 md:p-8">
-                {/* <Toaster position="top-center" /> */}
                 <form onSubmit={handleConfirmBooking} className="max-w-4xl mx-auto space-y-8">
 
                     {/* Header */}
@@ -448,11 +252,12 @@ export default function RouteBookingForm({ id }: any) {
                                     {/* Now showing the SELECTED car's market price */}
                                     <CostRow label={`Car Market Price (${currentCarDetails.name})`} value={DYNAMIC_TRIP_DETAILS.baseAmount} />
 
+                                    {/* The surcharge calculation is now effectively simplified or removed 
+                                        since baseAmount = subTotal in the new logic where baseAmount is dynamic
+                                    */}
+
                                     <div className={`flex justify-between items-center`}>
                                         <span className='text-sm'>Included Trip Fixed Charges (Fuel, Driver, Toll)</span>
-                                        {/* <span className='text-green-600 font-semibold'>
-                                            ₹{FIXED_CHARGES_INCLUDED.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                        </span> */}
                                         <span className='text-green-600 font-semibold'>
                                             Included
                                         </span>
@@ -462,7 +267,7 @@ export default function RouteBookingForm({ id }: any) {
 
                                     <CostRow label="Subtotal (Car Price + Fixed Charges)" value={billingDetails.totalFare} isTotal={true} />
 
-                                    {/* <CostRow label={`GST Charges (${STATIC_GST_RATE * 100}%)`} value={billingDetails.gstAmount} /> */}
+                                    <CostRow label={`GST Charges (${STATIC_GST_RATE * 100}%)`} value={billingDetails.gstAmount} />
 
                                     {billingDetails.discountAmount > 0 && (
                                         <CostRow label="Razorpay Discount (5% OFF)" value={-billingDetails.discountAmount} isDiscount={true} />
@@ -515,18 +320,13 @@ export default function RouteBookingForm({ id }: any) {
                     {/* --- Final Button --- */}
                     <Button
                         type="submit"
-                        disabled={isProcessing}
                         className={`w-full py-7 text-xl font-semibold shadow-2xl transition-all disabled:opacity-50
                         ${isConfirmed
                                 ? "bg-green-500 hover:bg-green-600 text-white"
                                 : "bg-yellow-500 hover:bg-yellow-600 text-gray-900"
                             }`}
                     >
-                        {isProcessing ? (
-                            <span className="flex items-center justify-center">
-                                Processing...
-                            </span>
-                        ) : isConfirmed ? (
+                        {isConfirmed ? (
                             <span className="flex items-center justify-center">
                                 <CheckCircle className="w-6 h-6 mr-2" /> Booking Confirmed!
                             </span>
@@ -543,7 +343,8 @@ export default function RouteBookingForm({ id }: any) {
     )
 }
 
-// --- Helper Components (Kept outside the main function for better structure) ---
+// --- Helper Components (Kept the display logic from the last response) ---
+
 const DetailBox = ({ label, value, icon }: any) => (
     <div className="p-3 bg-white border rounded-lg shadow-sm">
         <div className="flex items-center justify-center text-yellow-500 mb-1">{icon}</div>
@@ -574,11 +375,8 @@ const CarSelectOption = ({ car, currentCar }: any) => {
     const surchargePercent = ((car.baseMultiplier - 1) * 100).toFixed(0);
     const marketPriceDisplay = car.marketPrice.toLocaleString('en-IN');
 
-    // Safely extract seat count and AC status
     const seatFeature = car.features.find((f: string) => f.includes('Seat'));
-    const seatCount = car.seats;
-    const isAC = car.ac === 'Yes';
-
+    const seatCount = seatFeature ? seatFeature.split(' ')[0] : 'N/A';
 
     return (
         <div className="relative">
@@ -614,7 +412,7 @@ const CarSelectOption = ({ car, currentCar }: any) => {
                         <Users className="w-3 h-3 mr-1" /> {seatCount} Seats
                     </span>
                     <span className="flex items-center text-gray-700 bg-gray-100 px-2 py-0.5 rounded-full font-medium">
-                        <AirVent className="w-3 h-3 mr-1" /> {isAC ? "AC" : "Non-AC"}
+                        <AirVent className="w-3 h-3 mr-1" /> {car.features.includes("AC") ? "AC" : "Non-AC"}
                     </span>
                     <span className="flex items-center text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-medium">
                         <Fuel className="w-3 h-3 mr-1" /> {car.features.find((f: string) => f.includes('Petrol') || f.includes('Diesel') || f.includes('CNG'))?.split('/')[0]}

@@ -76,7 +76,7 @@ export default function CancellationPolicyPage() {
       content: [
         "Approved refunds will be initiated within 5–7 business days after confirmation.",
         "Refunds are processed through the original payment method (UPI, bank transfer, or card payment).",
-        "In case of any delay, please contact us at support@easygocab.com.",
+        "In case of any delay, please contact us at info@easygocab.com.",
       ],
     },
     {
@@ -88,18 +88,18 @@ export default function CancellationPolicyPage() {
         "• Any applicable taxes or convenience fees charged by the payment processor.",
       ],
     },
+    // {
+    //   title: "7. Contact Information",
+    //   icon: Mail,
+    //   content: [
+    //     "For cancellations, booking modifications, or refund queries, please contact us:",
+    //     "📞 Customer Support: +916296443245",
+    //     "📧 Email: info@easygocab.com",
+    //     "🌐 Website: https://easygocab.com",
+    //   ],
+    // },
     {
-      title: "7. Contact Information",
-      icon: Mail,
-      content: [
-        "For cancellations, booking modifications, or refund queries, please contact us:",
-        "📞 Customer Support: +91 [Your Number]",
-        "📧 Email: support@easygocab.com",
-        "🌐 Website: https://easygocab.com",
-      ],
-    },
-    {
-      title: "8. Important Note",
+      title: "7. Important Note",
       icon: Shield,
       content: [
         "EasyGoCab reserves the right to modify this policy at any time.",
@@ -161,15 +161,15 @@ export default function CancellationPolicyPage() {
               transition={{ delay: 0.7 }}
               className="mt-8 flex items-center justify-center space-x-2 text-sm text-muted-foreground"
             >
-              <Shield className="w-4 h-4 text-primary" />
-              <span>Last updated: 9/10/2025</span>
+              <Shield className="w-6 h-6 text-yellow-500" />
+              <span className="text-xl font-semibold text-yellow-500">Last updated: 9/10/2025</span>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Cancellation Policy Content */}
-      <section className="py-16">
+      <section className="pt-4 pb-8">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto space-y-12">
             {sections.map((section, index) => (

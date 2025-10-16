@@ -40,7 +40,7 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
   // Get booking data from Redux
   const bookingDataFromRedux = useAppSelector((state) => state.booking.bookingDataStep2)
 
-  const [bookingData, setLocalBookingData] = useState<BookingDataStep2>({
+  const [bookingData, setLocalBookingData] = useState<any>({
     bookingType: bookingDataFromRedux?.bookingType || "local",
     pickupLocation: bookingDataFromRedux?.pickupLocation || "",
     destination: bookingDataFromRedux?.destination || "",
