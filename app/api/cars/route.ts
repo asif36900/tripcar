@@ -42,15 +42,15 @@ import { type NextRequest, NextResponse } from "next/server"
 
 
 const cars = [
-  {
-    id: 1,
-    name: "Mini Car",
-    type: "Hatchback", 
-    image: "/cars/alto-k10.png",
-    basePrice: 13,
-    features: ["4 Seats", "Petrol", "AC", "Compact Size"],
-    description: "A compact hatchback perfect for city driving and budget-friendly rides.",
-  },
+  // {
+  //   id: 1,
+  //   name: "Mini Car",
+  //   type: "Hatchback", 
+  //   image: "/cars/alto-k10.png",
+  //   basePrice: 13,
+  //   features: ["4 Seats", "Petrol", "AC", "Compact Size"],
+  //   description: "A compact hatchback perfect for city driving and budget-friendly rides.",
+  // },
   {
     id: 2,
     name: "Innova Crysta",

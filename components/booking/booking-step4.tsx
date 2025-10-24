@@ -45,34 +45,81 @@ const GEOAPIFY_API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || ""
 
 // Helper function to calculate the full fare structure
 // Helper function to calculate the full fare structure
+// const calculateFareStructure = (
+//   step2: BookingDataStep2,
+//   step3: BookingDataStep3,
+//   effectiveDistance: number,
+//   paymentPercentage: number,
+//   // 🆕 Add paymentMethod here
+//   paymentMethod: string
+// ) => {
+//   const baseFare = step3.baseRate ? Number(step3.baseRate) * effectiveDistance : 0
+//   const tollTax = step2.bookingType !== "local" ? 200 : 0
+
+//   const totalBaseAndToll = baseFare + tollTax
+
+//   // 🛑 KEY CHANGE: Determine discount rate based on selected advance payment AND payment method
+//   let discountRate = 0
+//   if (paymentMethod === 'razorpay') { // Only apply discount if Razorpay is selected
+//     if (paymentPercentage === 100) {
+//       discountRate = 0.05 // 5%
+//     } else if (paymentPercentage === 50) {
+//       discountRate = 0.02 // 2%
+//     }
+//   }
+
+//   const calculatedDiscount = Math.round(totalBaseAndToll * discountRate)
+//   const discountedFare = totalBaseAndToll - calculatedDiscount
+
+//   const gst = Math.round(discountedFare * 0.00) // GST on discounted amount
+//   const totalFare = discountedFare + gst
+
+//   return {
+//     baseFare,
+//     tollTax,
+//     discountRate,
+//     calculatedDiscount,
+//     discountedFare,
+//     gst,
+//     totalFare
+//   }
+// }
+
 const calculateFareStructure = (
   step2: BookingDataStep2,
   step3: BookingDataStep3,
   effectiveDistance: number,
   paymentPercentage: number,
-  // 🆕 Add paymentMethod here
   paymentMethod: string
 ) => {
-  const baseFare = step3.baseRate ? Number(step3.baseRate) * effectiveDistance : 0
-  const tollTax = step2.bookingType !== "local" ? 200 : 0
+  // 🧮 Adjust baseRate depending on distance range
+  let adjustedBaseRate = Number(step3.baseRate) || 0;
 
-  const totalBaseAndToll = baseFare + tollTax
+  if (effectiveDistance > 100 && effectiveDistance <= 200) {
+    adjustedBaseRate += 5; // +₹5 per km
+  } else if (effectiveDistance > 200 && effectiveDistance <= 300) {
+    adjustedBaseRate += 8; // +₹8 per km
+  }
 
-  // 🛑 KEY CHANGE: Determine discount rate based on selected advance payment AND payment method
-  let discountRate = 0
-  if (paymentMethod === 'razorpay') { // Only apply discount if Razorpay is selected
+  // 💰 Calculate the base fare using adjusted rate
+  const baseFare = adjustedBaseRate * effectiveDistance;
+  const tollTax = step2.bookingType !== "local" ? 200 : 0;
+  const totalBaseAndToll = baseFare + tollTax;
+
+  // 🔖 Discount logic (same as before)
+  let discountRate = 0;
+  if (paymentMethod === 'razorpay') {
     if (paymentPercentage === 100) {
-      discountRate = 0.05 // 5%
+      discountRate = 0.05; // 5%
     } else if (paymentPercentage === 50) {
-      discountRate = 0.02 // 2%
+      discountRate = 0.02; // 2%
     }
   }
 
-  const calculatedDiscount = Math.round(totalBaseAndToll * discountRate)
-  const discountedFare = totalBaseAndToll - calculatedDiscount
-
-  const gst = Math.round(discountedFare * 0.00) // GST on discounted amount
-  const totalFare = discountedFare + gst
+  const calculatedDiscount = Math.round(totalBaseAndToll * discountRate);
+  const discountedFare = totalBaseAndToll - calculatedDiscount;
+  const gst = Math.round(discountedFare * 0.00); // No GST currently
+  const totalFare = discountedFare + gst;
 
   return {
     baseFare,
@@ -81,9 +128,10 @@ const calculateFareStructure = (
     calculatedDiscount,
     discountedFare,
     gst,
-    totalFare
-  }
-}
+    totalFare,
+    adjustedBaseRate // 🆕 Optional — useful for showing in UI
+  };
+};
 
 const icons = {
   razorpay: CreditCard,
@@ -177,12 +225,15 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
     calculatedDiscount,
     discountedFare,
     gst,
-    totalFare
+    totalFare,
+    adjustedBaseRate // 🆕 add this
   } = useMemo(() => {
     // Calculate the fare structure based on the latest distance, selected percentage, and payment method
     return calculateFareStructure(step2, step3, effectiveDistance, paymentPercentage, paymentMethod);
   }, [step2, step3, effectiveDistance, paymentPercentage, paymentMethod]);
   const router = useRouter()
+  console.log("====== Adjust BAse RAte ======");
+  console.log(adjustedBaseRate);
 
   // The amount the user is paying NOW
   const paymentAmount = useMemo(() => {
@@ -526,7 +577,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
               <div className="flex items-center space-x-3 text-sm text-gray-600">
                 <div className="flex items-center"><Users className="w-4 h-4 mr-1" />{step3.seats} Seats</div>
                 <div className="flex items-center"><Snowflake className="w-4 h-4 mr-1" />AC</div>
-                <div className="flex items-center"><Fuel className="w-4 h-4 mr-1" />₹{step3.baseRate}/km</div>
+                <div className="flex items-center"><Fuel className="w-4 h-4 mr-1" />₹{adjustedBaseRate ? adjustedBaseRate : step3.baseRate}/km</div>
               </div>
             </div>
           </div>
@@ -540,7 +591,8 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span>Base Fare ({effectiveDistance}km × ₹{step3.baseRate}/km)</span>
+            {/* <span>Base Fare ({effectiveDistance}km × ₹{step3.baseRate}/km)</span> */}
+            <span>Base Fare</span>
             <span>₹{baseFare}</span>
           </div>
           <div className="flex justify-between text-sm">

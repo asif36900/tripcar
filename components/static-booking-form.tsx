@@ -69,7 +69,7 @@ export default function RouteBookingForm({ id }: any) {
             id: car.id, // Added ID for payload
             name: car.type,
             baseMultiplier,
-            marketPrice: currentCarPrice,
+            marketPrice: currentCarPrice + car.fixedCharges,
             image: car.image,
             description: car.description,
             features: car.features,
@@ -125,7 +125,7 @@ export default function RouteBookingForm({ id }: any) {
         const subTotal = baseAmount
 
         // Sum the car price and all fixed charges
-        const totalFareBeforeTax = subTotal + fixedCharges;
+        const totalFareBeforeTax = subTotal ;//+ fixedCharges;
 
         const gstAmount = totalFareBeforeTax * STATIC_GST_RATE
         const grossTotal = totalFareBeforeTax + gstAmount
@@ -425,7 +425,7 @@ export default function RouteBookingForm({ id }: any) {
                                 <DetailBox label="Pickup" value={DYNAMIC_TRIP_DETAILS.pickup.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
                                 <DetailBox label="Destination" value={DYNAMIC_TRIP_DETAILS.destination.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
                                 <DetailBox label="Distance" value={`${DYNAMIC_TRIP_DETAILS.distance} km`} icon={<DollarSign className="w-5 h-5 text-yellow-500" />} />
-                                <DetailBox label="Base Fare/km" value={`₹${DYNAMIC_TRIP_DETAILS.carBaseFarePerKm}/km`} icon={<DollarSign className="w-5 h-5 text-yellow-500" />} />
+                                <DetailBox label="Extra Fare/km" value={`₹${DYNAMIC_TRIP_DETAILS.carBaseFarePerKm}/km`} icon={<DollarSign className="w-5 h-5 text-yellow-500" />} />
                             </div>
 
                             <div className="bg-yellow-50 p-3 rounded-lg flex items-start text-sm text-yellow-800">

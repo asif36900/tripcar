@@ -12,22 +12,31 @@ import "swiper/css"
 import "swiper/css/pagination"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
 import Link from "next/link"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { clearBookingDetails } from "@/store/Slices/bookingSlice"
 import ReviewSection from "./reviewSection"
 import HowToBookSection from "./how-to-book"
 import PopularRoutes from "./popular-routes"
 import { popularRoutes } from "@/lib/popularRoutes"
+import { useRouter } from "next/navigation"
 
 
 export default function HomePage() {
   const dispatch = useDispatch()
-
+  const [loadingRoute, setLoadingRoute] = useState<number | null>(null);
+  const router = useRouter();
   useEffect(() => {
     document.title = "Citycar - Professional Taxi Service";
     dispatch(clearBookingDetails());
   }, []);
+
+
+  const handleBookNow = (routeId: number) => {
+    setLoadingRoute(routeId); // show loader for that route
+    router.push(`/booking/${routeId}`);
+  };
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -380,11 +389,44 @@ export default function HomePage() {
                           </div>
                         </div>
 
-                        <Link href={`/booking/${route.id}`}>
+                        {/* <Link href={`/booking/${route.id}`}>
                           <Button className="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
                             Book Now
                           </Button>
-                        </Link>
+                        </Link> */}
+                        <Button
+                          onClick={() => handleBookNow(route.id)}
+                          className="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold flex items-center justify-center gap-2"
+                          disabled={loadingRoute === route.id}
+                        >
+                          {loadingRoute === route.id ? (
+                            <>
+                              <svg
+                                className="animate-spin h-5 w-5 text-black"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                ></path>
+                              </svg>
+                              Redirecting...
+                            </>
+                          ) : (
+                            "Book Now"
+                          )}
+                        </Button>
                       </CardContent>
                     </Card>
                   </motion.div>
