@@ -31,17 +31,17 @@ import Footer from "@/components/footer"
 
 export default function TermsConditionsPage() {
   const sections = [
-    {
-      title: "Rental Agreement",
-      icon: FileText,
-      content: [
-        "Minimum age requirement: 25 years with a valid driver's license",
-        "Valid credit card required for security deposit and payment",
-        "International driving permit required for non-US license holders",
-        "Rental period minimum 24 hours, charged in full-day increments",
-        "Vehicle must be returned to the same location unless otherwise arranged",
-      ],
-    },
+    // {
+    //   title: "Rental Agreement",
+    //   icon: FileText,
+    //   content: [
+    //     "Minimum age requirement: 25 years with a valid driver's license",
+    //     "Valid credit card required for security deposit and payment",
+    //     "International driving permit required for non-US license holders",
+    //     "Rental period minimum 24 hours, charged in full-day increments",
+    //     "Vehicle must be returned to the same location unless otherwise arranged",
+    //   ],
+    // },
     {
       title: "Vehicle Usage",
       icon: Car,
@@ -196,8 +196,8 @@ export default function TermsConditionsPage() {
                 customer service team is here to help.
               </p>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p>Email: support@tripcar.com</p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: info@easygocab.com</p>
+                <p>Phone: +916296443245</p>
                 <p>Available 24/7 for your convenience</p>
               </div>
             </motion.div>

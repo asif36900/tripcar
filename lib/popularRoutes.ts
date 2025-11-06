@@ -925,3 +925,22 @@ export const popularRoutes = [
     taxPercent: 5
   }
 ];
+
+
+export const FARE_RATES = {
+  local: [
+    { maxKm: 10, mini: 31, sedan: 36, suv: 53 },
+    { maxKm: 20, mini: 27, sedan: 31, suv: 47 },
+    { maxKm: 50, mini: 22, sedan: 26, suv: 44 },
+    { maxKm: 70, mini: 25, sedan: 26, suv: 32, suvP: 40 },
+    { maxKm: 110, mini: 21.5, sedan: 22.5, suv: 28.95, suvP: 36.98 },
+    { maxKm: 150, mini: 20, sedan: 21.98, suv: 32, suvP: 35.85 },
+    { maxKm: 200, mini: 19, sedan: 19.75, suv: 29, suvP: 34.78 },
+    { maxKm: 300, mini: 17, sedan: 17.77, suv: 24, suvP: 30 },
+    { maxKm: 500, mini: 15, sedan: 16, suv: 22, suvP: 28 },
+  ],
+  hill: [
+    { maxKm: 100, mini: 33.33, sedan: 34.2, suv: 66.69, suvP: 94.99 },
+    { maxKm: 150, mini: 34, sedan: 35, suv: 51, suvP: 67 },
+  ],
+};

@@ -20,6 +20,7 @@ import HowToBookSection from "./how-to-book"
 import PopularRoutes from "./popular-routes"
 import { popularRoutes } from "@/lib/popularRoutes"
 import { useRouter } from "next/navigation"
+import { carBasePrice } from "@/lib/helper"
 
 
 export default function HomePage() {
@@ -382,7 +383,7 @@ export default function HomePage() {
                         </div>
 
                         <div className="flex justify-between items-center">
-                          <p className="text-2xl font-bold text-yellow-600">{route.carPrices[0].marketPrice}</p>
+                          <p className="text-2xl font-bold text-yellow-600">₹{carBasePrice(route.carPrices[0].marketPrice, route.carPrices[0].fixedCharges)}</p>
                           <div className="text-right">
                             <p className="font-semibold text-gray-700">4–6 hrs</p>
                             <p className="text-sm text-gray-500">Approx Duration</p>

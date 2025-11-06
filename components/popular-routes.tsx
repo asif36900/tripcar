@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { popularRoutes } from "@/lib/popularRoutes";
 import Navbar from "./navbar";
 import Footer from "./footer";
+import { carBasePrice } from "@/lib/helper";
 
 export default function PopularRoutes() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -149,7 +150,8 @@ const RouteCard = ({ route, approxDuration }: any) => {
           <div>
             <p className="text-sm text-gray-500 font-medium">Market Price</p>
             <p className="text-3xl font-extrabold text-yellow-600 flex items-center">
-              {route.carPrices[0].marketPrice}
+              {/* {route.carPrices[0].marketPrice} */}
+              ₹{carBasePrice(route.carPrices[0].marketPrice, route.carPrices[0].fixedCharges)}
             </p>
           </div>
 

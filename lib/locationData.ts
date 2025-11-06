@@ -159,3 +159,50 @@
 // INOVA —-  6540                      
 // TAX 5% —- TOTAL FARE 
 // TOLLTAXS —- 260
+
+
+
+
+// ===================== Resolve Points
+
+
+// [3:43 PM, 11/2/2025] Asif IN: 
+
+// Wagnor - 2650 
+// Swift- 2677
+// Eartiga- 4812
+// Scorpio- 5130
+// Inova - 6930
+
+
+
+// [9:38 PM, 11/2/2025] Asif IN: 
+
+
+// Local Under 10 km - 31/km Mini, sedan - 36, Suv - 53
+
+// Under 20km - 27/km Mini, sedan - 31/km Suv - 47/km 
+
+// Under 50km - Mini- 22/km, sedan - 26/km , suv -- 44/km 
+
+// Under 70km -- Mini - 25 , Sedan - 26, Suv - 32/km , Suv P - 40km 
+
+// Under 110km -- Mini - 21.50 , Sedan - 22.50 , Suv - 28.95 km , Suv P - 36.98km 
+
+// Under 150 km -- Mini - 20 , Sedan - 21.98, Suv - 32km , Suv P - 35.85km 
+
+// Under 200km --- Mini -  19, Sedan - 19.75, Suv - 29km , Suv P - 34.78km 
+
+// Under 300km - Mini - 17 , Sedan - 17.77 , Suv - 24km , Suv P - 30km 
+
+// Under 500km -- Mini - 15 , Sedan - 16 , Suv - 22 km , Suv P - 28km 
+
+// Hill station ⛰️ 
+
+// Under 100km - Mini - 33.33 , Sedan - 34.20, Suv - 66.69km , Suv P - 94.99km 
+
+// Under 150 km -- Mini - 34 , Sedan - 35 , Suv - 51km , Suv P - 67km
+
+
+
+// Mini car Matlab- wagnor, sedan Matlab- swift dzire, Suv - Eartiga, Suv P - inova , scorpio ka price Eartiga se 1 rupee jada rakhna

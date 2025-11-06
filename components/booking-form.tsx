@@ -13,14 +13,13 @@ import { useRouter } from "next/navigation"
 import { useDispatch, useSelector } from "react-redux"
 import { setBookingDataStep2 } from "@/store/Slices/bookingSlice"
 import type { BookingDataStep2 } from "@/store/Slices/bookingSlice"
-import type { RootState } from "@/store/store"
 import AutocompleteInput from "./AutocompleteInput/autocompleteInput"
 
 export default function BookingForm() {
   const router = useRouter()
   const dispatch = useDispatch()
   const bookingDataFromRedux = useSelector(
-    (state: RootState) => state.booking.bookingDataStep2
+    (state: any) => state.booking.bookingDataStep2
   )
 
   // State for the loading button

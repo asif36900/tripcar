@@ -183,9 +183,9 @@ export default function PrivacyPolicyPage() {
                 don't hesitate to contact us.
               </p>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p>Email: privacy@tripcar.com</p>
-                <p>Phone: +1 (555) 123-4567</p>
-                <p>Address: 123 Luxury Drive, Premium City, PC 12345</p>
+                <p>Email: info@easygocab.com</p>
+                <p>Phone: +916296443245</p>
+                <p>Address: Kolkata, India</p>
               </div>
             </motion.div>
           </div>

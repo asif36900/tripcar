@@ -204,22 +204,23 @@ export default function AboutPage() {
               <p className="text-xl text-gray-600">The people behind Easy Go Cab's success</p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12">
+            {/* <div className="flex flex-wrap justify-center items-center gap-8"> */}
               {[
                 {
-                  name: "Asif Iqbal",
+                  name: "Asif Ikbal",
                   role: "Founder & CEO",
                   image: "/indian-business-executive-man-professional.png",
                   description:
                     "With 15+ years in transportation, Asif founded Easy Go Cab with a vision to revolutionize taxi services in India.",
                 },
-                {
-                  name: "Priya Sharma",
-                  role: "Operations Director",
-                  image: "/indian-professional-woman-business-executive.jpg",
-                  description:
-                    "Priya oversees daily operations and ensures our high service standards are maintained across all locations.",
-                },
+                // {
+                //   name: "Priya Sharma",
+                //   role: "Operations Director",
+                //   image: "/indian-professional-woman-business-executive.jpg",
+                //   description:
+                //     "Priya oversees daily operations and ensures our high service standards are maintained across all locations.",
+                // },
                 {
                   name: "Subhan Muneer",
                   role: "Technology Head",

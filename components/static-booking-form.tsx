@@ -53,7 +53,7 @@ export default function RouteBookingForm({ id }: any) {
         );
     }
 
-    // Preparation of DYNAMIC_CAR_OPTIONS (includes all details)
+    // Preparation of DYNAMIC_CAR_OPTIONS (includes all details) 
     const DYNAMIC_CAR_OPTIONS_FULL = selectedRoute.carPrices.map(car => {
         const baseCarPrice = Number(selectedRoute.carPrices[0].marketPrice.replace('₹', '').replace(',', ''));
         const currentCarPrice = Number(car.marketPrice.replace('₹', '').replace(',', ''));
