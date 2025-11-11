@@ -1003,7 +1003,7 @@ export const popularRoutes = [
                 fixedCharges: 2730
             }
         ],
-        image: "https://www.india-tours.com/images/festivals/gangasagarmela/gangasagar-mela-1.jpg",
+        image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Kapil_Muni_Temple.jpg",
         tollTax: 0,
         taxPercent: 5,
         permit: 0
@@ -1375,7 +1375,7 @@ export const popularRoutes = [
                 fixedCharges: 545
             }
         ],
-        image: "https://media.istockphoto.com/id/1129899392/photo/big-statueof-buddha-bodh-gaya-india-famous-buddhist-place-ofinterest.jpg?s=612x612&w=0&k=20&c=CMr9OhGrBlvmAXZFgKlQsJ3XihxOdSDorkic7_zA0Nk=",
+        image: "https://pravase.co.in/admin_pravase/uploads/yatradham/Bodh-Gaya-Holy-Site-Buddhism-UNESCO-World-Heritage-Site-Bihar-India_1655229593.JPG",
         tollTax: 0,
         taxPercent: 5
     },
@@ -1743,7 +1743,7 @@ export const popularRoutes = [
                 fixedCharges: 1886
             }
         ],
-        image: "https://peagant.dpmentertainment.com/wpcontent/uploads/2024/06/ranchi.jpg",
+        image: "https://i.ytimg.com/vi/wNjqbyR2yBM/maxresdefault.jpg",
         tollTax: 650,
         permit: 500,
         taxPercent: 5
