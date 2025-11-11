@@ -1871,5 +1871,68 @@ export const popularRoutes = [
         tollTax: 260,
         permit: 0,
         taxPercent: 5
-    }
+    },
+    {
+  id: 15,
+  from: "Kolkata",
+  to: "MANDARMANI",
+  distance: 185,
+  carPrices: [
+    {
+      id: 4,
+      type: "Maruti Ertiga",
+      image: "/cars/maruti-ertiga.png",
+      basePrice: 24.5,
+      features: ["7 Seats", "Petrol/CNG", "AC", "Foldable Seats"],
+      description: "A practical 7-seater MPV that’s fuel efficient and family-friendly.",
+      marketPrice: "₹4,532",
+      fixedCharges: 363,
+    },
+    {
+      id: 5,
+      type: "Swift Dzire",
+      image: "/cars/swift-dzire.png",
+      basePrice: 17,
+      features: ["5 Seats", "Petrol/CNG", "AC", "Bluetooth"],
+      description: "A compact sedan offering comfort, efficiency, and reliability for daily commutes.",
+      marketPrice: "₹3,145",
+      fixedCharges: 305,
+    },
+    {
+      id: 6,
+      type: "WagonR Tour",
+      image: "/cars/wagonr-tour.png",
+      basePrice: 16.5,
+      features: ["5 Seats", "Petrol/CNG", "AC", "Spacious Cabin"],
+      description: "A tall-boy hatchback with ample headroom and practicality for city travel.",
+      marketPrice: "₹3,052",
+      fixedCharges: 318,
+    },
+    {
+      id: 3,
+      type: "Mahindra Scorpio",
+      image: "/cars/mahindra-scorpio.webp",
+      basePrice: 26,
+      features: ["7 Seats", "Diesel", "Strong Build", "AC", "Spacious Cabin"],
+      description: "Rugged SUV with power and space, suitable for both city and off-road travel.",
+      marketPrice: "₹4,810",
+      fixedCharges: 479,
+    },
+    {
+      id: 2,
+      type: "Innova Crysta",
+      image: "/cars/innova-crysta.png",
+      basePrice: 35,
+      features: ["7 Seats", "Diesel", "AC", "Spacious Interior"],
+      description: "A premium MPV known for its comfort and long-distance reliability.",
+      marketPrice: "₹6,475",
+      fixedCharges: 515,
+    },
+  ],
+  image:
+    "https://i.ytimg.com/vi/Ci5Mc4ZChbw/sddefault.jpg",
+  tollTax: 260,
+  taxPercent: 5,
+}
+
 ];
