@@ -21,6 +21,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+
+ {/* Google Search Console */}
+        <meta
+          name="google-site-verification"
+          content="3KRYEF2HxC0j9uAWd2faQBVPxuf9ryeqrvEBn3AgWVM"
+        />
+
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-B8GSKBD3TB"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-B8GSKBD3TB');
+          `}
+        </Script>
+      
       {/* <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
