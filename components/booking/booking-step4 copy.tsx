@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import type { RootState } from "@/store/store"
 import { setFinalBooking, type BookingDataStep1, type BookingDataStep2, type BookingDataStep3 } from "@/store/Slices/bookingSlice"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { getFareRate } from "@/lib/helper"
 // import { setPaymentDetails } from "@/store/Slices/bookingSlice" 
 
 interface BookingStep4Props {
@@ -38,40 +40,34 @@ declare global {
   }
 }
 
-// **NOTE: This is a placeholder for your actual API keys**
-const OPENROUTESERVICE_API_KEY = process.env.NEXT_PUBLIC_OPENROUTESERVICE_KEY || ""
-const GEOAPIFY_API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || ""
-
-// Helper function to calculate the full fare structure
-// Helper function to calculate the full fare structure
 const calculateFareStructure = (
   step2: BookingDataStep2,
   step3: BookingDataStep3,
   effectiveDistance: number,
   paymentPercentage: number,
-  // 🆕 Add paymentMethod here
-  paymentMethod: string 
+  paymentMethod: string
 ) => {
-  const baseFare = step3.baseRate ? Number(step3.baseRate) * effectiveDistance : 0
-  const tollTax = step2.bookingType !== "local" ? 200 : 0
+  const region = step2?.tripType?.toLowerCase().includes("hill") ? "hill" : "local";
 
-  const totalBaseAndToll = baseFare + tollTax
+  // ✅ Dynamically fetch rate
+  const dynamicBaseRate = getFareRate(effectiveDistance, step3.name, region);
 
-  // 🛑 KEY CHANGE: Determine discount rate based on selected advance payment AND payment method
-  let discountRate = 0
-  if (paymentMethod === 'razorpay') { // Only apply discount if Razorpay is selected
-    if (paymentPercentage === 100) {
-      discountRate = 0.05 // 5%
-    } else if (paymentPercentage === 50) {
-      discountRate = 0.02 // 2%
-    }
+  // 💰 Fare calculations
+  const baseFare = dynamicBaseRate * effectiveDistance;
+  const tollTax = step2.bookingType !== "local" ? 200 : 0;
+  const totalBaseAndToll = baseFare + tollTax;
+
+  // 🔖 Discount logic
+  let discountRate = 0;
+  if (paymentMethod === "razorpay") {
+    if (paymentPercentage === 100) discountRate = 0.05;
+    else if (paymentPercentage === 50) discountRate = 0.02;
   }
 
-  const calculatedDiscount = Math.round(totalBaseAndToll * discountRate)
-  const discountedFare = totalBaseAndToll - calculatedDiscount
-
-  const gst = Math.round(discountedFare * 0.00) // GST on discounted amount
-  const totalFare = discountedFare + gst
+  const calculatedDiscount = Math.round(totalBaseAndToll * discountRate);
+  const discountedFare = totalBaseAndToll - calculatedDiscount;
+  const gst = 0; // adjust later
+  const totalFare = discountedFare + gst;
 
   return {
     baseFare,
@@ -80,16 +76,18 @@ const calculateFareStructure = (
     calculatedDiscount,
     discountedFare,
     gst,
-    totalFare
-  }
-}
-
-  const icons = {
-    razorpay: CreditCard,
-    cash: Wallet,
-    wallet: Wallet,
-    netbanking: Smartphone,
+    totalFare,
+    dynamicBaseRate,
   };
+};
+
+
+const icons = {
+  razorpay: CreditCard,
+  cash: Wallet,
+  wallet: Wallet,
+  netbanking: Smartphone,
+};
 
 export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) {
   const dispatch = useDispatch()
@@ -112,112 +110,49 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   const effectiveDistance = calculatedDistance || (step2?.bookingType === "local" ? 20 : 250)
 
   // --- Distance Calculation Logic (API Integration) ---
-  // const calculateDistance = useCallback(
-  //   async (pickup: string, destination: string) => {
-  //     setIsDistanceLoading(true);
-  //     setDistanceError(null);
+  const calculateDistance = useCallback(
+    async (pickup: string, destination: string) => {
+      setIsDistanceLoading(true);
+      setDistanceError(null);
 
-  //     if (!GEOAPIFY_API_KEY || (!OPENROUTESERVICE_API_KEY && GEOAPIFY_API_KEY.length < 50)) {
-  //       console.warn("API keys missing or incomplete. Using default distance estimate.");
-  //       setCalculatedDistance(step2?.bookingType === "local" ? 20 : 250);
-  //       setIsDistanceLoading(false);
-  //       return;
-  //     }
+      try {
+        // Secure backend API route call
+        const response = await fetch(
+          `/api/distance?pickup=${encodeURIComponent(pickup)}&destination=${encodeURIComponent(destination)}`
+        );
 
-  //     try {
-  //       const geocode = async (place: string) => {
-  //         const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
-  //           place
-  //         )}&apiKey=${GEOAPIFY_API_KEY}`;
-  //         const res = await fetch(url);
-  //         if (!res.ok) throw new Error("Geoapify Geocoding failed");
-  //         const data = await res.json();
-  //         if (!data.features?.length) throw new Error("No coordinates found");
-  //         const { lat, lon } = data.features[0].properties;
-  //         return [lon, lat]; // [lng, lat] format
-  //       };
+        // Try to parse JSON safely
+        const data = await response.json().catch(() => ({}));
 
-  //       const pickupCoords = await geocode(pickup);
-  //       const destinationCoords = await geocode(destination);
+        if (!response.ok) {
+          const errorMsg = data?.error || `Server failed with status: ${response.status}`;
+          throw new Error(errorMsg);
+        }
 
-  //       let distanceKm = 0;
+        // ✅ Parse and validate distance
+        const distanceKm = parseFloat(data.distanceKm);
+        if (!isNaN(distanceKm) && distanceKm > 0) {
+          const roundedDistance = Math.round(distanceKm);
+          setCalculatedDistance(roundedDistance);
+          console.log("✅ Distance from Google Maps:", roundedDistance, "km");
+        } else {
+          throw new Error("Google Maps returned invalid distance.");
+        }
+      } catch (error: any) {
+        console.error("❌ Distance calculation failed:", error.message || error);
+        setDistanceError("Could not calculate distance. Using default estimate.");
 
-  //       // 1. Try OpenRouteService
-  //       try {
-  //         const orsUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${OPENROUTESERVICE_API_KEY}&start=${pickupCoords[0]},${pickupCoords[1]}&end=${destinationCoords[0]},${destinationCoords[1]}`;
-  //         const orsRes = await fetch(orsUrl);
-  //         if (!orsRes.ok) throw new Error("ORS request failed or rate limit hit");
-  //         const orsData = await orsRes.json();
-  //         distanceKm = orsData.routes[0].summary.distance / 1000; // meters → km
-  //         console.log("✅ Distance from ORS:", distanceKm, "km");
-  //       } catch (err) {
-  //         console.warn("ORS failed, trying Geoapify Routing...", err);
-
-  //         // 2. Fallback: Geoapify Routing
-  //         const geoUrl = `https://api.geoapify.com/v1/routing?waypoints=${pickupCoords[1]},${pickupCoords[0]}|${destinationCoords[1]},${destinationCoords[0]}&mode=drive&apiKey=${GEOAPIFY_API_KEY}`;
-  //         const geoRes = await fetch(geoUrl);
-  //         if (!geoRes.ok) throw new Error("Geoapify Routing failed");
-  //         const geoData = await geoRes.json();
-  //         distanceKm = geoData.features[0].properties.distance / 1000;
-  //         console.log("✅ Distance from Geoapify:", distanceKm, "km");
-  //       }
-
-  //       setCalculatedDistance(Math.round(distanceKm));
-  //     } catch (error) {
-  //       console.error("Distance calculation failed entirely:", error);
-  //       setDistanceError("Could not calculate distance. Using default estimate.");
-  //       setCalculatedDistance(step2?.bookingType === "local" ? 20 : 250);
-  //     } finally {
-  //       setIsDistanceLoading(false);
-  //     }
-  //   },
-  //   [step2?.bookingType]
-  // );
-
-  // --- Distance Calculation Logic (API Integration) ---
-const calculateDistance = useCallback(
-  async (pickup: string, destination: string) => {
-    setIsDistanceLoading(true);
-    setDistanceError(null);
-
-    try {
-      // Secure backend API route call
-      const response = await fetch(
-        `/api/distance?pickup=${encodeURIComponent(pickup)}&destination=${encodeURIComponent(destination)}`
-      );
-
-      // Try to parse JSON safely
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        const errorMsg = data?.error || `Server failed with status: ${response.status}`;
-        throw new Error(errorMsg);
+        // ✅ Safe fallback
+        const fallbackDistance = step2?.bookingType === "local" ? 20 : 250;
+        setCalculatedDistance(fallbackDistance);
+      } finally {
+        setIsDistanceLoading(false);
       }
+    },
+    [step2?.bookingType]
+  );
 
-      // ✅ Parse and validate distance
-      const distanceKm = parseFloat(data.distanceKm);
-      if (!isNaN(distanceKm) && distanceKm > 0) {
-        const roundedDistance = Math.round(distanceKm);
-        setCalculatedDistance(roundedDistance);
-        console.log("✅ Distance from Google Maps:", roundedDistance, "km");
-      } else {
-        throw new Error("Google Maps returned invalid distance.");
-      }
-    } catch (error: any) {
-      console.error("❌ Distance calculation failed:", error.message || error);
-      setDistanceError("Could not calculate distance. Using default estimate.");
-
-      // ✅ Safe fallback
-      const fallbackDistance = step2?.bookingType === "local" ? 20 : 250;
-      setCalculatedDistance(fallbackDistance);
-    } finally {
-      setIsDistanceLoading(false);
-    }
-  },
-  [step2?.bookingType]
-);
-
-// --- END Distance Calculation Logic ---
+  // --- END Distance Calculation Logic ---
 
   useEffect(() => {
     if (step2 && step2.pickupLocation && step2.destination) {
@@ -227,40 +162,27 @@ const calculateDistance = useCallback(
   }, [step2?.pickupLocation, step2?.destination, calculateDistance])
   // --- END Distance Calculation Logic ---
 
-  // --- Payment Percentage Effect ---
-  // useEffect(() => {
-  //   // If Cash is selected, we logically treat it as 25% for minimal advance if user switches,
-  //   // or keep the discount logic simple by only applying it when Razorpay is selected.
-  //   if (paymentMethod === 'cash') {
-  //     // For cash, no advance is required, but we should clear the percentage selection
-  //     // to reflect '0' payment amount in the UI, even though the discount logic 
-  //     // depends on paymentPercentage. Let's ensure the UI reflects 0.
-  //     // We keep paymentPercentage at 25 internally for Razorpay fallback, 
-  //     // but the paymentAmount logic handles the '0' for cash.
-  //   } else if (paymentPercentage === 100 && paymentMethod !== 'razorpay') {
-  //     // If user switches from Cash back to Razorpay, revert to default 25% if it was 100% due to cash logic
-  //     setPaymentPercentage(25);
-  //   }
-  // }, [paymentMethod, paymentPercentage]);
-
-
   if (!step1 || !step2 || !step3) {
     return <p className="text-red-500">Booking information is missing. Please go back and fill all steps.</p>
   }
 
   // --- Fare Calculations (FIX 2: Use useMemo for dynamic calculation) ---
- const {
+  const {
     baseFare,
     tollTax,
     discountRate,
     calculatedDiscount,
     discountedFare,
     gst,
-    totalFare
+    totalFare,
+    dynamicBaseRate // 🆕 add this
   } = useMemo(() => {
     // Calculate the fare structure based on the latest distance, selected percentage, and payment method
     return calculateFareStructure(step2, step3, effectiveDistance, paymentPercentage, paymentMethod);
   }, [step2, step3, effectiveDistance, paymentPercentage, paymentMethod]);
+  const router = useRouter()
+  console.log("====== Adjust BAse RAte ======");
+  console.log(dynamicBaseRate);
 
   // The amount the user is paying NOW
   const paymentAmount = useMemo(() => {
@@ -348,7 +270,7 @@ const calculateDistance = useCallback(
         if (bookingResult.success) {
           console.log('=======================');
           console.log(bookingResult.data);
-          
+
           dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
           toast.success(`Booking confirmed! Total fare ₹${totalFare} due at pickup (Cash).`)
           nextStep()
@@ -453,7 +375,8 @@ const calculateDistance = useCallback(
             dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
             setIsProcessing(false)
             toast.success(`Booking confirmed! ${paymentStatus}.`)
-            nextStep()
+            router.push("/booking/confirmed")
+            // nextStep()
           } else {
             setIsProcessing(false)
             toast.error("Payment successful, but booking creation failed. Please contact support.")
@@ -603,7 +526,7 @@ const calculateDistance = useCallback(
               <div className="flex items-center space-x-3 text-sm text-gray-600">
                 <div className="flex items-center"><Users className="w-4 h-4 mr-1" />{step3.seats} Seats</div>
                 <div className="flex items-center"><Snowflake className="w-4 h-4 mr-1" />AC</div>
-                <div className="flex items-center"><Fuel className="w-4 h-4 mr-1" />₹{step3.baseRate}/km</div>
+                <div className="flex items-center"><Fuel className="w-4 h-4 mr-1" />₹{dynamicBaseRate ? dynamicBaseRate : step3.baseRate}/km</div>
               </div>
             </div>
           </div>
@@ -617,7 +540,8 @@ const calculateDistance = useCallback(
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span>Base Fare ({effectiveDistance}km × ₹{step3.baseRate}/km)</span>
+            {/* <span>Base Fare ({effectiveDistance}km × ₹{step3.baseRate}/km)</span> */}
+            <span>Base Fare</span>
             <span>₹{baseFare}</span>
           </div>
           <div className="flex justify-between text-sm">
@@ -681,43 +605,41 @@ const calculateDistance = useCallback(
             </RadioGroup>
           </div>
 
-<div>
-      <Label className="text-sm font-medium text-gray-700 mb-3 block">
-        Payment Method
-      </Label>
+          <div>
+            <Label className="text-sm font-medium text-gray-700 mb-3 block">
+              Payment Method
+            </Label>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {["razorpay", "cash"].map((method) => {
-          const Icon = icons[method as keyof typeof icons];
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {["razorpay", "cash"].map((method) => {
+                const Icon = icons[method as keyof typeof icons];
 
-          return (
-            <Card
-              key={method}
-              className={`cursor-pointer transition-all ${
-                paymentMethod === method ? "ring-2 ring-yellow-400" : "ring-1 ring-gray-200"
-              }`}
-              onClick={() => setPaymentMethod(method as "razorpay" | "cash")}
-            >
-              <CardContent className="p-4 text-center">
-                <Icon
-                  className={`w-8 h-8 mx-auto mb-2 ${
-                    paymentMethod === method ? "text-yellow-500" : "text-blue-600"
-                  }`}
-                />
-                <div className="text-sm font-semibold capitalize">
-                  {method}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                return (
+                  <Card
+                    key={method}
+                    className={`cursor-pointer transition-all ${paymentMethod === method ? "ring-2 ring-yellow-400" : "ring-1 ring-gray-200"
+                      }`}
+                    onClick={() => setPaymentMethod(method as "razorpay" | "cash")}
+                  >
+                    <CardContent className="p-4 text-center">
+                      <Icon
+                        className={`w-8 h-8 mx-auto mb-2 ${paymentMethod === method ? "text-yellow-500" : "text-blue-600"
+                          }`}
+                      />
+                      <div className="text-sm font-semibold capitalize">
+                        {method}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
 
-      {/* Optional — Show selected below */}
-      <p className="mt-4 text-sm text-gray-600">
-        Selected: <span className="font-semibold">{paymentMethod}</span>
-      </p>
-    </div>
+            {/* Optional — Show selected below */}
+            <p className="mt-4 text-sm text-gray-600">
+              Selected: <span className="font-semibold">{paymentMethod}</span>
+            </p>
+          </div>
 
           <div className="flex justify-between font-semibold text-base pt-2 border-t">
             <span>Amount to pay now ({paymentMethod === 'cash' ? 'Cash' : `${paymentPercentage}% Advance`})</span>

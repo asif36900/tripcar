@@ -73,28 +73,38 @@ export default function BookingForm() {
       // Navigate after saving
       router.push("/booking")
 
-      // NOTE: In a real application, you would set setIsLoading(false)
-      // *before* the router.push if the navigation was to happen client-side
-      // immediately after the async dispatch/API call. Since Next.js's
-      // router.push causes a navigation/page change, the component will unmount,
-      // and this line is often unnecessary unless you are handling the
-      // state *before* navigation.
-      // setIsLoading(false)
     }, 1000) // 1 second delay
   }
 
 
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}>
-      <Card className="bg-white shadow-2xl">
+      {/* CARD UPDATE:
+        - bg-white (Light Mode BG)
+        - dark:bg-black (Dark Mode BG)
+        - dark:shadow-white/20 (Dark Mode Shadow for contrast)
+      */}
+      <Card className="bg-white dark:bg-zinc-900 shadow-2xl dark:shadow-white/20 border dark:border-gray-800">
         <CardHeader className="mt-5 text-center">
-          <CardTitle className="text-2xl font-bold text-gray-900">Book Your Ride</CardTitle>
-          <p className="text-gray-600">Quick and easy booking in just a few steps</p>
+          {/* CARD TITLE UPDATE:
+            - text-gray-900 (Light Mode Text)
+            - dark:text-white (Dark Mode Text)
+          */}
+          <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">Book Your Ride</CardTitle>
+          {/* CARD SUBTEXT UPDATE:
+            - text-gray-600 (Light Mode Text)
+            - dark:text-gray-400 (Dark Mode Text)
+          */}
+          <p className="text-gray-600 dark:text-gray-400">Quick and easy booking in just a few steps</p>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Booking Type Selection */}
           <div>
-            <Label className="text-sm font-medium text-gray-700 mb-3 block">Select Service Type</Label>
+            {/* LABEL UPDATE:
+              - text-gray-700 (Light Mode Text)
+              - dark:text-gray-300 (Dark Mode Text)
+            */}
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">Select Service Type</Label>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: "local", label: "Local" },
@@ -108,7 +118,15 @@ export default function BookingForm() {
                   variant={watchBookingType === type.id ? "default" : "outline"}
                   size="sm"
                   onClick={() => setValue("bookingType", type.id)}
-                  className={watchBookingType === type.id ? "bg-yellow-400 text-black hover:bg-yellow-500" : ""}
+                  /* BUTTON STYLING UPDATE:
+                    - Active button uses your accent color (#ffc200) for BG, with Black Text.
+                    - Outline button uses the light/dark theme colors for text/border/bg.
+                  */
+                  className={
+                    watchBookingType === type.id
+                      ? "bg-yellow-400 text-black hover:bg-yellow-500" // Active (Accent)
+                      : "text-black dark:text-white border-gray-300 dark:border-gray-700 bg-white dark:bg-black hover:bg-gray-100 dark:hover:bg-gray-900" // Outline (Themed)
+                  }
                 >
                   {type.label}
                 </Button>
@@ -119,7 +137,7 @@ export default function BookingForm() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Pickup Location */}
             <div>
-              <Label className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                 Pickup Location *
               </Label>
               <Controller
@@ -137,7 +155,7 @@ export default function BookingForm() {
 
             {/* Destination */}
             <div>
-              <Label className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                 {watchBookingType === "airport" ? "Airport Destination *" : "Destination *"}
               </Label>
               <Controller
@@ -156,24 +174,23 @@ export default function BookingForm() {
               )}
             </div>
 
-
-
             {/* Airport Trip Type */}
             {watchBookingType === "airport" && (
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">Trip Type *</Label>
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Trip Type *</Label>
                 <Controller
                   control={control}
                   name="tripType"
                   rules={{ required: "Trip type is required" }}
                   render={({ field }) => (
+                    // SELECT TRIGGER UPDATE: dark:bg-black and dark:text-white for theme support
                     <Select value={field.value} onValueChange={(val) => field.onChange(val)}>
-                      <SelectTrigger>
+                      <SelectTrigger className="dark:bg-black dark:text-white dark:border-gray-700">
                         <SelectValue placeholder="Select trip type" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pickup">Pickup from Airport</SelectItem>
-                        <SelectItem value="drop">Drop to Airport</SelectItem>
+                      <SelectContent className="dark:bg-black dark:text-white dark:border-gray-700">
+                        <SelectItem value="pickup" className="dark:hover:bg-gray-900">Pickup from Airport</SelectItem>
+                        <SelectItem value="drop" className="dark:hover:bg-gray-900">Drop to Airport</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -185,21 +202,22 @@ export default function BookingForm() {
             {/* Rental Package */}
             {watchBookingType === "rental" && (
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">Rental Package *</Label>
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Rental Package *</Label>
                 <Controller
                   control={control}
                   name="rentalPackage"
                   rules={{ required: "Please select rental package" }}
                   render={({ field }) => (
+                    // SELECT TRIGGER UPDATE: dark:bg-black and dark:text-white for theme support
                     <Select value={field.value} onValueChange={(val) => field.onChange(val)}>
-                      <SelectTrigger>
+                      <SelectTrigger className="dark:bg-black dark:text-white dark:border-gray-700">
                         <SelectValue placeholder="Select package" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1hr/10km - ₹299">1hr/10km - ₹299</SelectItem>
-                        <SelectItem value="2hr/20km - ₹599">2hr/20km - ₹599</SelectItem>
-                        <SelectItem value="4hr/40km - ₹999">4hr/40km - ₹999</SelectItem>
-                        <SelectItem value="8hr/80km - ₹1799">8hr/80km - ₹1799</SelectItem>
+                      <SelectContent className="dark:bg-black dark:text-white dark:border-gray-700">
+                        <SelectItem value="1hr/10km - ₹299" className="dark:hover:bg-gray-900">1hr/10km - ₹299</SelectItem>
+                        <SelectItem value="2hr/20km - ₹599" className="dark:hover:bg-gray-900">2hr/20km - ₹599</SelectItem>
+                        <SelectItem value="4hr/40km - ₹999" className="dark:hover:bg-gray-900">4hr/40km - ₹999</SelectItem>
+                        <SelectItem value="8hr/80km - ₹1799" className="dark:hover:bg-gray-900">8hr/80km - ₹1799</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -211,23 +229,28 @@ export default function BookingForm() {
             {/* Pickup Date & Time */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="pickupDate" className="text-sm font-medium text-gray-700 mb-2 block">
-                  <Calendar className="w-4 h-4 inline mr-1" />
+                <Label htmlFor="pickupDate" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                  {/* Icon Fix: Added text-black dark:text-white */}
+                  <Calendar className="w-4 h-4 inline mr-1 **text-black dark:text-white**" />
                   Pickup Date *
                 </Label>
                 <Input
                   type="date"
+                  className="dark:bg-black dark:text-white dark:border-gray-700"
                   {...register("pickupDate", { required: "Pickup date is required" })}
                 />
                 {errors.pickupDate && <p className="text-red-500 text-sm mt-1">{errors.pickupDate.message}</p>}
               </div>
               <div>
-                <Label htmlFor="pickupTime" className="text-sm font-medium text-gray-700 mb-2 block">
-                  <Clock className="w-4 h-4 inline mr-1" />
+                <Label htmlFor="pickupTime" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                  {/* Icon Fix: Added text-black dark:text-white */}
+                  <Clock className="w-4 h-4 inline mr-1 **text-black dark:text-white**" />
                   Pickup Time *
                 </Label>
+                {/* INPUT UPDATE: dark:bg-black and dark:text-white for theme support */}
                 <Input
                   type="time"
+                  className="dark:bg-black dark:text-white dark:border-gray-700"
                   {...register("pickupTime", { required: "Pickup time is required" })}
                 />
                 {errors.pickupTime && <p className="text-red-500 text-sm mt-1">{errors.pickupTime.message}</p>}
@@ -238,23 +261,27 @@ export default function BookingForm() {
             {watchBookingType === "roundtrip" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="returnDate" className="text-sm font-medium text-gray-700 mb-2 block">
+                  <Label htmlFor="returnDate" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                     <Calendar className="w-4 h-4 inline mr-1" />
                     Return Date *
                   </Label>
+                  {/* INPUT UPDATE: dark:bg-black and dark:text-white for theme support */}
                   <Input
                     type="date"
+                    className="dark:bg-black dark:text-white dark:border-gray-700"
                     {...register("returnDate", { required: "Return date is required" })}
                   />
                   {errors.returnDate && <p className="text-red-500 text-sm mt-1">{errors.returnDate.message}</p>}
                 </div>
                 <div>
-                  <Label htmlFor="returnTime" className="text-sm font-medium text-gray-700 mb-2 block">
+                  <Label htmlFor="returnTime" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                     <Clock className="w-4 h-4 inline mr-1" />
                     Return Time *
                   </Label>
+                  {/* INPUT UPDATE: dark:bg-black and dark:text-white for theme support */}
                   <Input
                     type="time"
+                    className="dark:bg-black dark:text-white dark:border-gray-700"
                     {...register("returnTime", { required: "Return time is required" })}
                   />
                   {errors.returnTime && <p className="text-red-500 text-sm mt-1">{errors.returnTime.message}</p>}
@@ -264,7 +291,7 @@ export default function BookingForm() {
 
             {/* Passengers */}
             <div>
-              <Label className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                 <Users className="w-4 h-4 inline mr-1" />
                 Number of Passengers *
               </Label>
@@ -273,16 +300,17 @@ export default function BookingForm() {
                 name="passengers"
                 rules={{ required: "Please select number of passengers" }}
                 render={({ field }) => (
+                  // SELECT TRIGGER UPDATE: dark:bg-black and dark:text-white for theme support
                   <Select value={field.value} onValueChange={(val) => field.onChange(val)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="dark:bg-black dark:text-white dark:border-gray-700">
                       <SelectValue placeholder="Select passengers" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 Passenger</SelectItem>
-                      <SelectItem value="2">2 Passengers</SelectItem>
-                      <SelectItem value="3">3 Passengers</SelectItem>
-                      <SelectItem value="4">4 Passengers</SelectItem>
-                      <SelectItem value="5">5+ Passengers</SelectItem>
+                    <SelectContent className="dark:bg-black dark:text-white dark:border-gray-700">
+                      <SelectItem value="1" className="dark:hover:bg-gray-900">1 Passenger</SelectItem>
+                      <SelectItem value="2" className="dark:hover:bg-gray-900">2 Passengers</SelectItem>
+                      <SelectItem value="3" className="dark:hover:bg-gray-900">3 Passengers</SelectItem>
+                      <SelectItem value="4" className="dark:hover:bg-gray-900">4 Passengers</SelectItem>
+                      <SelectItem value="5" className="dark:hover:bg-gray-900">5+ Passengers</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -291,6 +319,10 @@ export default function BookingForm() {
             </div>
 
             {/* Submit Button with Loader */}
+            {/* BUTTON STYLING REMAINS ACCENT:
+              - bg-yellow-400 (Accent BG)
+              - text-black (Always Black Text on Accent BG for contrast)
+            */}
             <Button
               type="submit"
               className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-lg py-3"
@@ -308,7 +340,11 @@ export default function BookingForm() {
               )}
             </Button>
 
-            <p className="text-xs text-gray-500 text-center">
+            {/* POLICY TEXT UPDATE:
+              - text-gray-500 (Light Mode Text)
+              - dark:text-gray-500 (Kept dark:text-gray-500 to keep it subtle in both modes)
+            */}
+            <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
               By booking, you agree to our Terms & Conditions and Privacy Policy
             </p>
           </form>

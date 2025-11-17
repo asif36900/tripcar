@@ -40,100 +40,6 @@ declare global {
   }
 }
 
-// **NOTE: This is a placeholder for your actual API keys**
-const OPENROUTESERVICE_API_KEY = process.env.NEXT_PUBLIC_OPENROUTESERVICE_KEY || ""
-const GEOAPIFY_API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || ""
-
-// Helper function to calculate the full fare structure
-// Helper function to calculate the full fare structure
-// const calculateFareStructure = (
-//   step2: BookingDataStep2,
-//   step3: BookingDataStep3,
-//   effectiveDistance: number,
-//   paymentPercentage: number,
-//   // 🆕 Add paymentMethod here
-//   paymentMethod: string
-// ) => {
-//   const baseFare = step3.baseRate ? Number(step3.baseRate) * effectiveDistance : 0
-//   const tollTax = step2.bookingType !== "local" ? 200 : 0
-
-//   const totalBaseAndToll = baseFare + tollTax
-
-//   // 🛑 KEY CHANGE: Determine discount rate based on selected advance payment AND payment method
-//   let discountRate = 0
-//   if (paymentMethod === 'razorpay') { // Only apply discount if Razorpay is selected
-//     if (paymentPercentage === 100) {
-//       discountRate = 0.05 // 5%
-//     } else if (paymentPercentage === 50) {
-//       discountRate = 0.02 // 2%
-//     }
-//   }
-
-//   const calculatedDiscount = Math.round(totalBaseAndToll * discountRate)
-//   const discountedFare = totalBaseAndToll - calculatedDiscount
-
-//   const gst = Math.round(discountedFare * 0.00) // GST on discounted amount
-//   const totalFare = discountedFare + gst
-
-//   return {
-//     baseFare,
-//     tollTax,
-//     discountRate,
-//     calculatedDiscount,
-//     discountedFare,
-//     gst,
-//     totalFare
-//   }
-// }
-
-// const calculateFareStructure = (
-//   step2: BookingDataStep2,
-//   step3: BookingDataStep3,
-//   effectiveDistance: number,
-//   paymentPercentage: number,
-//   paymentMethod: string
-// ) => {
-//   // 🧮 Adjust baseRate depending on distance range
-//   let adjustedBaseRate = Number(step3.baseRate) || 0;
-
-//   if (effectiveDistance > 100 && effectiveDistance <= 200) {
-//     adjustedBaseRate += 5; // +₹5 per km
-//   } else if (effectiveDistance > 200 && effectiveDistance <= 300) {
-//     adjustedBaseRate += 8; // +₹8 per km
-//   }
-
-//   // 💰 Calculate the base fare using adjusted rate
-//   const baseFare = adjustedBaseRate * effectiveDistance;
-//   const tollTax = step2.bookingType !== "local" ? 200 : 0;
-//   const totalBaseAndToll = baseFare + tollTax;
-
-//   // 🔖 Discount logic (same as before)
-//   let discountRate = 0;
-//   if (paymentMethod === 'razorpay') {
-//     if (paymentPercentage === 100) {
-//       discountRate = 0.05; // 5%
-//     } else if (paymentPercentage === 50) {
-//       discountRate = 0.02; // 2%
-//     }
-//   }
-
-//   const calculatedDiscount = Math.round(totalBaseAndToll * discountRate);
-//   const discountedFare = totalBaseAndToll - calculatedDiscount;
-//   const gst = Math.round(discountedFare * 0.00); // No GST currently
-//   const totalFare = discountedFare + gst;
-
-//   return {
-//     baseFare,
-//     tollTax,
-//     discountRate,
-//     calculatedDiscount,
-//     discountedFare,
-//     gst,
-//     totalFare,
-//     adjustedBaseRate // 🆕 Optional — useful for showing in UI
-//   };
-// };
-
 const calculateFareStructure = (
   step2: BookingDataStep2,
   step3: BookingDataStep3,
@@ -257,7 +163,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   // --- END Distance Calculation Logic ---
 
   if (!step1 || !step2 || !step3) {
-    return <p className="text-red-500">Booking information is missing. Please go back and fill all steps.</p>
+    return <p className="text-red-500 dark:text-red-400">Booking information is missing. Please go back and fill all steps.</p>
   }
 
   // --- Fare Calculations (FIX 2: Use useMemo for dynamic calculation) ---
@@ -516,12 +422,17 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Details</h2>
-        <p className="text-gray-600">Review your booking and complete payment</p>
+        {/* Dark Mode: Text color adjustment */}
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Payment Details</h2>
+        <p className="text-gray-600 dark:text-gray-400">Review your booking and complete payment</p>
       </div>
 
       {/* Discount/Info Banner */}
-      <div className={`p-3 rounded-lg flex items-center space-x-2 ${discountRate > 0 ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-gray-100 text-gray-600 border border-gray-300'}`}>
+      {/* Dark Mode: Background and text color adjustments for the banner */}
+      <div className={`p-3 rounded-lg flex items-center space-x-2 
+        ${discountRate > 0
+          ? 'bg-green-100 text-green-800 border border-green-300 dark:bg-green-950 dark:text-green-300 dark:border-green-800'
+          : 'bg-gray-100 text-gray-600 border border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'}`}>
         <Percent className="w-5 h-5 flex-shrink-0" />
         <div className="text-sm">
           <p className="font-semibold">{getDiscountMessage()}</p>
@@ -529,26 +440,29 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       </div>
 
       {/* User Details */}
-      <Card>
+      {/* Dark Mode: Card background and border */}
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items-center pt-4">
-            <Info className="w-5 h-5 mr-2 text-yellow-600" />
+          {/* Dark Mode: Text color adjustment */}
+          <CardTitle className="flex items-center pt-4 text-gray-900 dark:text-gray-100">
+            <Info className="w-5 h-5 mr-2 text-yellow-600 dark:text-yellow-400" />
             Basic Information
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-gray-600">Name</p>
-              <p className="font-semibold capitalize">{step1.fullName}</p>
+              {/* Dark Mode: Text color adjustment */}
+              <p className="text-gray-600 dark:text-gray-400">Name</p>
+              <p className="font-semibold capitalize dark:text-gray-100">{step1.fullName}</p>
             </div>
             <div>
-              <p className="text-gray-600">Email</p>
-              <p className="font-semibold">{step1.email}</p>
+              <p className="text-gray-600 dark:text-gray-400">Email</p>
+              <p className="font-semibold dark:text-gray-100">{step1.email}</p>
             </div>
             <div>
-              <p className="text-gray-600">Phone Number</p>
-              <p className="font-semibold">{step1.phone}</p>
+              <p className="text-gray-600 dark:text-gray-400">Phone Number</p>
+              <p className="font-semibold dark:text-gray-100">{step1.phone}</p>
             </div>
           </div>
         </CardContent>
@@ -556,68 +470,69 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
 
 
       {/* Booking Summary */}
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items- pt-4">
-            <Info className="w-5 h-5 mr-2 text-yellow-600" />
+          <CardTitle className="flex items- pt-4 text-gray-900 dark:text-gray-100">
+            <Info className="w-5 h-5 mr-2 text-yellow-600 dark:text-yellow-400" />
             Booking Summary
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-gray-600">Service Type</p>
-              <p className="font-semibold capitalize">{step2.bookingType}</p>
+              <p className="text-gray-600 dark:text-gray-400">Service Type</p>
+              <p className="font-semibold capitalize dark:text-gray-100">{step2.bookingType}</p>
             </div>
             <div>
-              <p className="text-gray-600">Pickup Location</p>
-              <p className="font-semibold">{step2.pickupLocation}</p>
+              <p className="text-gray-600 dark:text-gray-400">Pickup Location</p>
+              <p className="font-semibold dark:text-gray-100">{step2.pickupLocation}</p>
             </div>
             {step2.destination && (
               <div>
-                <p className="text-gray-600">Destination</p>
-                <p className="font-semibold">{step2.destination}</p>
+                <p className="text-gray-600 dark:text-gray-400">Destination</p>
+                <p className="font-semibold dark:text-gray-100">{step2.destination}</p>
               </div>
             )}
             <div>
-              <p className="text-gray-600">Distance</p>
+              <p className="text-gray-600 dark:text-gray-400">Distance</p>
               {isDistanceLoading ? (
-                <p className="font-semibold flex items-center text-blue-600"><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Calculating...</p>
+                <p className="font-semibold flex items-center text-blue-600 dark:text-blue-400"><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Calculating...</p>
               ) : distanceError ? (
-                <p className="font-semibold text-red-500">{effectiveDistance} km (Est.)</p>
+                <p className="font-semibold text-red-500 dark:text-red-400">{effectiveDistance} km (Est.)</p>
               ) : (
-                <p className="font-semibold flex items-center">
-                  <Route className="w-4 h-4 mr-1 text-green-600" />
+                <p className="font-semibold flex items-center dark:text-gray-100">
+                  <Route className="w-4 h-4 mr-1 text-green-600 dark:text-green-400" />
                   {effectiveDistance} km
                 </p>
               )}
             </div>
             <div>
-              <p className="text-gray-600">Pickup Date & Time</p>
-              <p className="font-semibold">
+              <p className="text-gray-600 dark:text-gray-400">Pickup Date & Time</p>
+              <p className="font-semibold dark:text-gray-100">
                 {step2.pickupDate} at {step2.pickupTime}
               </p>
             </div>
             <div>
-              <p className="text-gray-600">Passengers</p>
-              <p className="font-semibold">{step2.passengers}</p>
+              <p className="text-gray-600 dark:text-gray-400">Passengers</p>
+              <p className="font-semibold dark:text-gray-100">{step2.passengers}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Selected Car Details */}
-      <Card className="bg-yellow-50 border-yellow-200">
+      {/* Dark Mode: Card background and border for accent section */}
+      <Card className="bg-yellow-50 border-yellow-200 dark:bg-yellow-950 dark:border-yellow-800">
         <CardHeader>
-          <CardTitle className="pt-4">Selected Car</CardTitle>
+          <CardTitle className="pt-4 dark:text-yellow-100">Selected Car</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex flex-wrap md:flex-nowrap items-center space-x-4">
             <img src={step3.image} alt={step3.name} className="w-full h-32 md:w-24 md:h-16 object-cover rounded" />
             <div className="space-y-1 mt-2 md:mt-0">
-              <p className="font-semibold text-gray-900">{step3.name}</p>
-              <p className="text-sm text-gray-600">{step3.type}</p>
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
+              <p className="font-semibold text-gray-900 dark:text-gray-100">{step3.name}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{step3.type}</p>
+              <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-300">
                 <div className="flex items-center"><Users className="w-4 h-4 mr-1" />{step3.seats} Seats</div>
                 <div className="flex items-center"><Snowflake className="w-4 h-4 mr-1" />AC</div>
                 <div className="flex items-center"><Fuel className="w-4 h-4 mr-1" />₹{dynamicBaseRate ? dynamicBaseRate : step3.baseRate}/km</div>
@@ -628,36 +543,39 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       </Card>
 
       {/* Fare Breakdown */}
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="pt-4">Fare Breakdown</CardTitle>
+          <CardTitle className="pt-4 dark:text-gray-100">Fare Breakdown</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 dark:text-gray-300">
           <div className="flex justify-between text-sm">
-            {/* <span>Base Fare ({effectiveDistance}km × ₹{step3.baseRate}/km)</span> */}
             <span>Base Fare</span>
-            <span>₹{baseFare}</span>
+            <span className="dark:text-gray-100">₹{baseFare}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span>Toll/State Tax</span>
-            <span>₹{tollTax}</span>
+            <span className="dark:text-gray-100">₹{tollTax}</span>
           </div>
+          {/* Dark Mode: Text and border for discount */}
           {discountRate > 0 && (
-            <div className="flex justify-between text-sm text-green-600 font-semibold border-t border-dashed pt-2">
+            <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-semibold border-t border-dashed pt-2 dark:border-gray-600">
               <span>Discount ({discountRate * 100}%)</span>
               <span>- ₹{calculatedDiscount}</span>
             </div>
           )}
-          <div className="flex justify-between text-sm border-t pt-2">
+
+          {/* Dark Mode: Border for subtotal */}
+          <div className="flex justify-between text-sm border-t pt-2 dark:border-gray-700">
             <span>Subtotal (After Discount)</span>
-            <span>₹{discountedFare}</span>
+            <span className="dark:text-gray-100">₹{discountedFare}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span>GST (5% on Subtotal)</span>
-            <span>₹{gst}</span>
+            <span className="dark:text-gray-100">₹{gst}</span>
           </div>
-          <div className="border-t pt-3">
-            <div className="flex justify-between font-semibold text-lg text-gray-900">
+          {/* Dark Mode: Border and text color for total */}
+          <div className="border-t pt-3 dark:border-gray-600">
+            <div className="flex justify-between font-semibold text-lg text-gray-900 dark:text-gray-50">
               <span>Total Payable Fare</span>
               <span>₹{totalFare}</span>
             </div>
@@ -666,14 +584,15 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       </Card>
 
       {/* Payment Options */}
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="pt-4">Payment Options</CardTitle>
+          <CardTitle className="pt-4 dark:text-gray-100">Payment Options</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Payment Percentage */}
           <div>
-            <Label className="text-sm font-medium text-gray-700 mb-3 block">Choose Payment Amount</Label>
+            {/* Dark Mode: Label color */}
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">Choose Payment Amount</Label>
             <RadioGroup
               value={paymentPercentage.toString()}
               onValueChange={(val) => setPaymentPercentage(Number(val))}
@@ -685,13 +604,16 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                 const advanceAmount = Math.round(totalFare * perc / 100);
                 return (
                   <div key={perc} className="flex items-center space-x-2">
+                    {/* Assuming RadioGroupItem handles dark mode styles internally or via theme */}
                     <RadioGroupItem value={perc.toString()} id={`pay${perc}`} />
-                    <Label htmlFor={`pay${perc}`} className="cursor-pointer flex flex-col p-3 border rounded-md hover:bg-gray-50 transition-colors">
+                    {/* Dark Mode: Label styles */}
+                    <Label htmlFor={`pay${perc}`} className="cursor-pointer flex flex-col p-3 border rounded-md hover:bg-gray-50 transition-colors dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700">
                       <div className="text-sm font-semibold">
-                        {perc}% Advance {perc > 25 && <span className="text-green-600">({perc === 100 ? '5%' : '2%'} Discount)</span>}
-                        {paymentMethod === 'cash' && <span className="text-red-500 ml-2">(N/A - Cash)</span>}
+                        <span className="dark:text-gray-100">{perc}% Advance</span>
+                        {perc > 25 && <span className="text-green-600 dark:text-green-400">({perc === 100 ? '5%' : '2%'} Discount)</span>}
+                        {paymentMethod === 'cash' && <span className="text-red-500 dark:text-red-400 ml-2">(N/A - Cash)</span>}
                       </div>
-                      <div className="text-gray-600">₹{advanceAmount}</div>
+                      <div className="text-gray-600 dark:text-gray-300">₹{advanceAmount}</div>
                     </Label>
                   </div>
                 )
@@ -700,7 +622,8 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
           </div>
 
           <div>
-            <Label className="text-sm font-medium text-gray-700 mb-3 block">
+            {/* Dark Mode: Label color */}
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
               Payment Method
             </Label>
 
@@ -711,16 +634,19 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                 return (
                   <Card
                     key={method}
-                    className={`cursor-pointer transition-all ${paymentMethod === method ? "ring-2 ring-yellow-400" : "ring-1 ring-gray-200"
+                    // Dark Mode: Card styling, ring color
+                    className={`cursor-pointer transition-all dark:bg-gray-700 dark:border-gray-600 ${paymentMethod === method ? "ring-2 ring-yellow-400 dark:ring-yellow-500" : "ring-1 ring-gray-200 dark:ring-gray-700"
                       }`}
                     onClick={() => setPaymentMethod(method as "razorpay" | "cash")}
                   >
                     <CardContent className="p-4 text-center">
                       <Icon
-                        className={`w-8 h-8 mx-auto mb-2 ${paymentMethod === method ? "text-yellow-500" : "text-blue-600"
+                        // Dark Mode: Icon color adjustment
+                        className={`w-8 h-8 mx-auto mb-2 ${paymentMethod === method ? "text-yellow-500 dark:text-yellow-400" : "text-blue-600 dark:text-blue-400"
                           }`}
                       />
-                      <div className="text-sm font-semibold capitalize">
+                      {/* Dark Mode: Text color adjustment */}
+                      <div className="text-sm font-semibold capitalize dark:text-gray-100">
                         {method}
                       </div>
                     </CardContent>
@@ -730,28 +656,32 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
             </div>
 
             {/* Optional — Show selected below */}
-            <p className="mt-4 text-sm text-gray-600">
-              Selected: <span className="font-semibold">{paymentMethod}</span>
+            <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+              Selected: <span className="font-semibold dark:text-gray-100">{paymentMethod}</span>
             </p>
           </div>
 
-          <div className="flex justify-between font-semibold text-base pt-2 border-t">
-            <span>Amount to pay now ({paymentMethod === 'cash' ? 'Cash' : `${paymentPercentage}% Advance`})</span>
-            <span className={`text-xl ${paymentAmount > 0 ? 'text-green-600' : 'text-gray-600'}`}>
+          {/* Dark Mode: Border and text color */}
+          <div className="flex justify-between font-semibold text-base pt-2 border-t dark:border-gray-700">
+            <span className="dark:text-gray-100">Amount to pay now ({paymentMethod === 'cash' ? 'Cash' : `${paymentPercentage}% Advance`})</span>
+            {/* Dark Mode: Conditional text color */}
+            <span className={`text-xl ${paymentAmount > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
               ₹{paymentAmount}
             </span>
           </div>
 
           <div className="flex justify-between font-semibold text-base pt-2">
-            <span>Remaining Amount Due at Pickup/Drop-off</span>
-            <span className="text-xl text-red-600">
+            <span className="dark:text-gray-100">Remaining Amount Due at Pickup/Drop-off</span>
+            <span className="text-xl text-red-600 dark:text-red-400">
               ₹{remainingAmount}
             </span>
           </div>
 
-          <div className="bg-blue-50 p-3 rounded-lg flex items-start space-x-2">
-            <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
-            <div className="text-sm text-blue-800">
+          {/* Secure Payment Banner */}
+          {/* Dark Mode: Background and text color adjustments */}
+          <div className="bg-blue-50 p-3 rounded-lg flex items-start space-x-2 dark:bg-blue-950 dark:border dark:border-blue-800">
+            <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+            <div className="text-sm text-blue-800 dark:text-blue-300">
               <p className="font-semibold">Secure Payment</p>
               <p>Your payment is processed securely with 256-bit SSL encryption. For Cash, the full amount is due at the time of pickup/drop-off.</p>
             </div>
@@ -759,11 +689,23 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
         </CardContent>
       </Card>
 
-      <div className="flex justify-between pt-6">
-        <Button variant="outline" onClick={prevStep} disabled={isProcessing}>
+      {/* Navigation Buttons */}
+      {/* Dark Mode: Border for separator */}
+      <div className="flex justify-between pt-6 border-t dark:border-gray-700">
+        <Button
+          variant="outline"
+          onClick={prevStep}
+          disabled={isProcessing}
+          // Dark Mode: Button styling
+          className="dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-600"
+        >
           <ArrowLeft className="w-4 h-4 mr-2" /> Back
         </Button>
-        <Button onClick={handlePayment} className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold" disabled={isProcessing || isDistanceLoading || (paymentMethod === 'razorpay' && paymentAmount <= 0)}>
+        <Button
+          onClick={handlePayment}
+          // Dark Mode: Primary button styling
+          className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900"
+          disabled={isProcessing || isDistanceLoading || (paymentMethod === 'razorpay' && paymentAmount <= 0)}>
           {isProcessing ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...

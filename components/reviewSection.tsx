@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 // Assuming 'Star' is an imported icon component like from lucide-react or similar
-// Assuming 'ChevronLeft' and 'ChevronRight' are imported icon components for navigation
+// Assuming 'ChevronLeft' and 'ChevronRight' are imported icon component for navigation
 
 // Dummy components for demonstration. Replace with your actual icons.
-const Star = (props: any) => <svg {...props} viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.817 1.48-8.279L.001 9.306l8.332-1.151z" /></svg>;
-const ChevronLeft = (props: any) => <svg {...props} viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" /></svg>;
-const ChevronRight = (props: any) => <svg {...props} viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" /></svg>;
+const Star = (props: any) => <svg {...props} fill="currentColor" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.817 1.48-8.279L.001 9.306l8.332-1.151z" /></svg>;
+const ChevronLeft = (props: any) => <svg {...props} fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" /></svg>;
+const ChevronRight = (props: any) => <svg {...props} fill="currentColor" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" /></svg>;
 
 
 const reviewsData = [
@@ -70,7 +70,7 @@ const ReviewSection = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-white overflow-hidden">
+    <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
@@ -91,18 +91,19 @@ const ReviewSection = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.4 }}
-                    className="bg-white p-6 rounded-lg shadow-lg"
+                    // Adjusted dark background to be slightly lighter than the section background
+                    className="bg-white dark:bg-zinc-900 dark:shadow-2xl dark:shadow-yellow-900/10 p-6 rounded-lg shadow-lg"
                   >
                     <div className="flex mb-4">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-5 h-5 ${i < currentReview.rating ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-300 text-gray-300'}`}
+                          className={`w-5 h-5 ${i < currentReview.rating ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-300 dark:fill-gray-600 text-gray-300 dark:text-gray-600'}`}
                         />
                       ))}
                     </div>
 
-                    <p className="text-gray-700 italic mb-4">
+                    <p className="text-gray-700 dark:text-gray-300 italic mb-4">
                       "{currentReview.text}"
                     </p>
 
@@ -113,8 +114,8 @@ const ReviewSection = () => {
                         className="w-12 h-12 rounded-full mr-4 object-cover"
                       />
                       <div>
-                        <h4 className="font-semibold text-gray-900">{currentReview.name}</h4>
-                        <p className="text-sm text-gray-500">{currentReview.title}</p>
+                        <h4 className="font-semibold text-gray-900 dark:text-white">{currentReview.name}</h4>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{currentReview.title}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -125,16 +126,18 @@ const ReviewSection = () => {
                 <button
                   onClick={handlePrev}
                   aria-label="Previous review"
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition"
+                  // Adjusted button background and border for visibility on the yellow and dark backgrounds
+                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition dark:bg-[#0d1927] dark:hover:bg-zinc-800 dark:border dark:border-gray-700"
                 >
-                  <ChevronLeft className="w-5 h-5 text-gray-800" />
+                  <ChevronLeft className="w-5 h-5 text-gray-800 dark:text-white" />
                 </button>
                 <button
                   onClick={handleNext}
                   aria-label="Next review"
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition"
+                  // Adjusted button background and border for visibility on the yellow and dark backgrounds
+                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition dark:bg-[#0d1927] dark:hover:bg-zinc-800 dark:border dark:border-gray-700"
                 >
-                  <ChevronRight className="w-5 h-5 text-gray-800" />
+                  <ChevronRight className="w-5 h-5 text-gray-800 dark:text-white" />
                 </button>
               </div>
             </div>

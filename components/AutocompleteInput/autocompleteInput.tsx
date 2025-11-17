@@ -174,38 +174,59 @@ export default function AutocompleteInput({ field, placeholder }: AutocompleteIn
 
       {/* Suggestions Dropdown */}
       {showDropdown && (loading || suggestions.length > 0 || query.length >= 3) && (
-        <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto">
-          
-          {/* 🔍 Always show search header */}
-          {query.length >= 3 && (
-            <div className="p-2 text-sm text-gray-600 flex items-center border-b border-gray-100 bg-gray-50">
-              <Search className="w-4 h-4 mr-2 text-gray-500" />
-              Searching for: <span className="ml-1 font-medium text-gray-800">"{query}"</span>
+        <div className="relative" ref={wrapperRef}>
+          <Input
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value)
+              field.onChange(e.target.value)
+            }}
+            placeholder={placeholder || "Search address..."}
+            onFocus={() => {
+              if (suggestions.length > 0) setShowDropdown(true)
+            }}
+            className="bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
+          />
+
+          {/* Suggestions Dropdown */}
+          {showDropdown && (loading || suggestions.length > 0 || query.length >= 3) && (
+            <div className="absolute z-10 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto">
+
+              {/* 🔍 Always show search header */}
+              {query.length >= 3 && (
+                <div className="p-2 text-sm text-gray-600 dark:text-gray-300 flex items-center border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                  <Search className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-300" />
+                  Searching for: <span className="ml-1 font-medium text-gray-800 dark:text-gray-200">"{query}"</span>
+                </div>
+              )}
+
+              {loading && (
+                <div className="p-2 text-sm text-gray-500 dark:text-gray-300 flex items-center">
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Fetching suggestions...
+                </div>
+              )}
+
+              {!loading &&
+                suggestions.map((s, index) => (
+                  <div
+                    key={index}
+                    className="p-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white"
+                    onClick={() => handleSelect(s)}
+                  >
+                    {s.label}
+                  </div>
+                ))}
+
+              {!loading && suggestions.length === 0 && query.length >= 3 && (
+                <div className="p-2 text-sm text-gray-500 dark:text-gray-300">
+                  No suggestions found.
+                </div>
+              )}
             </div>
-          )}
-
-          {loading && (
-            <div className="p-2 text-sm text-gray-500 flex items-center">
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Fetching suggestions...
-            </div>
-          )}
-
-          {!loading &&
-            suggestions.map((s, index) => (
-              <div
-                key={index}
-                className="p-2 text-sm cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSelect(s)}
-              >
-                {s.label}
-              </div>
-            ))}
-
-          {!loading && suggestions.length === 0 && query.length >= 3 && (
-            <div className="p-2 text-sm text-gray-500">No suggestions found.</div>
           )}
         </div>
+
       )}
     </div>
   )

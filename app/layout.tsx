@@ -1,11 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
-// import { GeistSans } from "geist/font/sans"
-// import { GeistMono } from "geist/font/mono"
-// import { Analytics } from "@vercel/analytics/next"
-// import { Suspense } from "react"
 import "./globals.css"
 import ClientWrapper from "./clientWarpper";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Easy Go Cab - Your Trusted Taxi Service",
@@ -21,14 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      
-      {/* <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={null}>{children}</Suspense>
-        <Analytics />
-      </body> */}
       <ClientWrapper>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </ClientWrapper>
+
     </html>
   )
 }
+
+

@@ -946,127 +946,65 @@ export const FARE_RATES = {
 };
 
 export const popularRoutes = [
-    {
-        id: 5,
-        from: "Kolkata",
-        to: "Gangasagar",
-        distance: 120,
+        {
+        id: 12,
+        from: "Ranchi",
+        to: "Dhanbad",
+        distance: 150,
         carPrices: [
             {
                 id: 4,
                 type: "Maruti Ertiga",
                 image: "/cars/maruti-ertiga.png",
-                basePrice: 32,
+                basePrice: 26,
                 features: ["7 Seats", "Petrol/CNG", "AC", "Foldable Seats"],
                 description: "A practical 7-seater MPV that’s fuel efficient and family-friendly.",
-                marketPrice: "₹3,840",
-                fixedCharges: 972
+                marketPrice: "₹3,900",
+                fixedCharges: 345
             },
             {
                 id: 5,
                 type: "Swift Dzire",
                 image: "/cars/swift-dzire.png",
-                basePrice: 21,
+                basePrice: 19,
                 features: ["5 Seats", "Petrol/CNG", "AC", "Bluetooth"],
                 description: "A compact sedan offering comfort, efficiency, and reliability for daily commutes.",
-                marketPrice: "₹2,520",
-                fixedCharges: 157
+                marketPrice: "₹2,850",
+                fixedCharges: 289
             },
             {
                 id: 6,
                 type: "WagonR Tour",
                 image: "/cars/wagonr-tour.png",
-                basePrice: 20,
+                basePrice: 18.50,
                 features: ["5 Seats", "Petrol/CNG", "AC", "Spacious Cabin"],
                 description: "A tall-boy hatchback with ample headroom and practicality for city travel.",
-                marketPrice: "₹2,400",
-                fixedCharges: 250
+                marketPrice: "₹2,775",
+                fixedCharges: 308
             },
             {
                 id: 3,
                 type: "Mahindra Scorpio",
                 image: "/cars/mahindra-scorpio.webp",
+                basePrice: 28,
+                features: ["7 Seats", "Diesel", "Strong Build", "AC", "Spacious Cabin"],
+                description: "Rugged SUV with power and space, suitable for both city and off-road travel.",
+                marketPrice: "₹4,200",
+                fixedCharges: 495
+            },
+            {
+                id: 2,
+                type: "Innova Crysta",
+                image: "/cars/innova-crysta.png",
                 basePrice: 33,
-                features: ["7 Seats", "Diesel", "Strong Build", "AC", "Spacious Cabin"],
-                description: "Rugged SUV with power and space, suitable for both city and off-road travel.",
-                marketPrice: "₹3,960",
-                fixedCharges: 1270
-            },
-            {
-                id: 2,
-                type: "Innova Crysta",
-                image: "/cars/innova-crysta.png",
-                basePrice: 35,
                 features: ["7 Seats", "Diesel", "AC", "Spacious Interior"],
                 description: "A premium MPV known for its comfort and longdistance reliability.",
-                marketPrice: "₹4,200",
-                fixedCharges: 2730
+                marketPrice: "₹4,950",
+                fixedCharges: 802
             }
         ],
-        image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Kapil_Muni_Temple.jpg",
-        tollTax: 0,
-        taxPercent: 5,
-        permit: 0
-    },
-    {
-        id: 6,
-        from: "Darjeeling",
-        to: "Gangtok",
-        distance: 120,
-        carPrices: [
-            {
-                id: 4,
-                type: "Maruti Ertiga",
-                image: "/cars/maruti-ertiga.png",
-                basePrice: 51,
-                features: ["7 Seats", "Petrol/CNG", "AC", "Foldable Seats"],
-                description: "A practical 7-seater MPV that’s fuel efficient and family-friendly.",
-                marketPrice: "₹6,160",
-                fixedCharges: 600
-            },
-            {
-                id: 5,
-                type: "Swift Dzire",
-                image: "/cars/swift-dzire.png",
-                basePrice: 35,
-                features: ["5 Seats", "Petrol/CNG", "AC", "Bluetooth"],
-                description: "A compact sedan offering comfort, efficiency, and reliability for daily commutes.",
-                marketPrice: "₹4,200",
-                fixedCharges: 740
-            },
-            {
-                id: 6,
-                type: "WagonR Tour",
-                image: "/cars/wagonr-tour.png",
-                basePrice: 34,
-                features: ["5 Seats", "Petrol/CNG", "AC", "Spacious Cabin"],
-                description: "A tall-boy hatchback with ample headroom and practicality for city travel.",
-                marketPrice: "₹4,080",
-                fixedCharges: 700
-            },
-            {
-                id: 3,
-                type: "Mahindra Scorpio",
-                image: "/cars/mahindra-scorpio.webp",
-                basePrice: 52,
-                features: ["7 Seats", "Diesel", "Strong Build", "AC", "Spacious Cabin"],
-                description: "Rugged SUV with power and space, suitable for both city and off-road travel.",
-                marketPrice: "₹6,240",
-                fixedCharges: 850
-            },
-            {
-                id: 2,
-                type: "Innova Crysta",
-                image: "/cars/innova-crysta.png",
-                basePrice: 67,
-                features: ["7 Seats", "Diesel", "AC", "Spacious Interior"],
-                description: "A premium MPV known for its comfort and longdistance reliability.",
-                marketPrice: "₹8,040",
-                fixedCharges: 280
-            }
-        ],
-        image: "https://i.ytimg.com/vi/8ZMP3CQEfrA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAY_RS_uIGs67XBS3_ZJ75sqoAc4Q",
-        tollTax: 0,
+        image: "https://i.ytimg.com/vi/nL05E6PaFUc/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBe18NfeKVp6kVwDuY-KEaYJL4iEg",
+        tollTax: 90,
         taxPercent: 5
     },
     {
@@ -1131,6 +1069,68 @@ export const popularRoutes = [
         tollTax: 0,
         permit: 0,
         taxPercent: 5
+    },
+        {
+        id: 5,
+        from: "Kolkata",
+        to: "Gangasagar",
+        distance: 120,
+        carPrices: [
+            {
+                id: 4,
+                type: "Maruti Ertiga",
+                image: "/cars/maruti-ertiga.png",
+                basePrice: 32,
+                features: ["7 Seats", "Petrol/CNG", "AC", "Foldable Seats"],
+                description: "A practical 7-seater MPV that’s fuel efficient and family-friendly.",
+                marketPrice: "₹3,840",
+                fixedCharges: 972
+            },
+            {
+                id: 5,
+                type: "Swift Dzire",
+                image: "/cars/swift-dzire.png",
+                basePrice: 21,
+                features: ["5 Seats", "Petrol/CNG", "AC", "Bluetooth"],
+                description: "A compact sedan offering comfort, efficiency, and reliability for daily commutes.",
+                marketPrice: "₹2,520",
+                fixedCharges: 157
+            },
+            {
+                id: 6,
+                type: "WagonR Tour",
+                image: "/cars/wagonr-tour.png",
+                basePrice: 20,
+                features: ["5 Seats", "Petrol/CNG", "AC", "Spacious Cabin"],
+                description: "A tall-boy hatchback with ample headroom and practicality for city travel.",
+                marketPrice: "₹2,400",
+                fixedCharges: 250
+            },
+            {
+                id: 3,
+                type: "Mahindra Scorpio",
+                image: "/cars/mahindra-scorpio.webp",
+                basePrice: 33,
+                features: ["7 Seats", "Diesel", "Strong Build", "AC", "Spacious Cabin"],
+                description: "Rugged SUV with power and space, suitable for both city and off-road travel.",
+                marketPrice: "₹3,960",
+                fixedCharges: 1270
+            },
+            {
+                id: 2,
+                type: "Innova Crysta",
+                image: "/cars/innova-crysta.png",
+                basePrice: 35,
+                features: ["7 Seats", "Diesel", "AC", "Spacious Interior"],
+                description: "A premium MPV known for its comfort and longdistance reliability.",
+                marketPrice: "₹4,200",
+                fixedCharges: 2730
+            }
+        ],
+        image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Kapil_Muni_Temple.jpg",
+        tollTax: 0,
+        taxPercent: 5,
+        permit: 0
     },
     {
         id: 8,
@@ -1380,67 +1380,6 @@ export const popularRoutes = [
         taxPercent: 5
     },
     {
-        id: 12,
-        from: "Ranchi",
-        to: "Dhanbad",
-        distance: 150,
-        carPrices: [
-            {
-                id: 4,
-                type: "Maruti Ertiga",
-                image: "/cars/maruti-ertiga.png",
-                basePrice: 26,
-                features: ["7 Seats", "Petrol/CNG", "AC", "Foldable Seats"],
-                description: "A practical 7-seater MPV that’s fuel efficient and family-friendly.",
-                marketPrice: "₹3,900",
-                fixedCharges: 345
-            },
-            {
-                id: 5,
-                type: "Swift Dzire",
-                image: "/cars/swift-dzire.png",
-                basePrice: 19,
-                features: ["5 Seats", "Petrol/CNG", "AC", "Bluetooth"],
-                description: "A compact sedan offering comfort, efficiency, and reliability for daily commutes.",
-                marketPrice: "₹2,850",
-                fixedCharges: 289
-            },
-            {
-                id: 6,
-                type: "WagonR Tour",
-                image: "/cars/wagonr-tour.png",
-                basePrice: 18.50,
-                features: ["5 Seats", "Petrol/CNG", "AC", "Spacious Cabin"],
-                description: "A tall-boy hatchback with ample headroom and practicality for city travel.",
-                marketPrice: "₹2,775",
-                fixedCharges: 308
-            },
-            {
-                id: 3,
-                type: "Mahindra Scorpio",
-                image: "/cars/mahindra-scorpio.webp",
-                basePrice: 28,
-                features: ["7 Seats", "Diesel", "Strong Build", "AC", "Spacious Cabin"],
-                description: "Rugged SUV with power and space, suitable for both city and off-road travel.",
-                marketPrice: "₹4,200",
-                fixedCharges: 495
-            },
-            {
-                id: 2,
-                type: "Innova Crysta",
-                image: "/cars/innova-crysta.png",
-                basePrice: 33,
-                features: ["7 Seats", "Diesel", "AC", "Spacious Interior"],
-                description: "A premium MPV known for its comfort and longdistance reliability.",
-                marketPrice: "₹4,950",
-                fixedCharges: 802
-            }
-        ],
-        image: "https://i.ytimg.com/vi/nL05E6PaFUc/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBe18NfeKVp6kVwDuY-KEaYJL4iEg",
-        tollTax: 90,
-        taxPercent: 5
-    },
-    {
         id: 13,
         from: "Kolkata",
         to: "Kharagpur",
@@ -1622,6 +1561,67 @@ export const popularRoutes = [
         ],
         image: "https://i.ytimg.com/vi/WH9O906Db7w/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCtBmEiO7_bD0C6Tfu-1cDVMO9gmw",
         tollTax: 260,
+        taxPercent: 5
+    },
+        {
+        id: 6,
+        from: "Darjeeling",
+        to: "Gangtok",
+        distance: 120,
+        carPrices: [
+            {
+                id: 4,
+                type: "Maruti Ertiga",
+                image: "/cars/maruti-ertiga.png",
+                basePrice: 51,
+                features: ["7 Seats", "Petrol/CNG", "AC", "Foldable Seats"],
+                description: "A practical 7-seater MPV that’s fuel efficient and family-friendly.",
+                marketPrice: "₹6,160",
+                fixedCharges: 600
+            },
+            {
+                id: 5,
+                type: "Swift Dzire",
+                image: "/cars/swift-dzire.png",
+                basePrice: 35,
+                features: ["5 Seats", "Petrol/CNG", "AC", "Bluetooth"],
+                description: "A compact sedan offering comfort, efficiency, and reliability for daily commutes.",
+                marketPrice: "₹4,200",
+                fixedCharges: 740
+            },
+            {
+                id: 6,
+                type: "WagonR Tour",
+                image: "/cars/wagonr-tour.png",
+                basePrice: 34,
+                features: ["5 Seats", "Petrol/CNG", "AC", "Spacious Cabin"],
+                description: "A tall-boy hatchback with ample headroom and practicality for city travel.",
+                marketPrice: "₹4,080",
+                fixedCharges: 700
+            },
+            {
+                id: 3,
+                type: "Mahindra Scorpio",
+                image: "/cars/mahindra-scorpio.webp",
+                basePrice: 52,
+                features: ["7 Seats", "Diesel", "Strong Build", "AC", "Spacious Cabin"],
+                description: "Rugged SUV with power and space, suitable for both city and off-road travel.",
+                marketPrice: "₹6,240",
+                fixedCharges: 850
+            },
+            {
+                id: 2,
+                type: "Innova Crysta",
+                image: "/cars/innova-crysta.png",
+                basePrice: 67,
+                features: ["7 Seats", "Diesel", "AC", "Spacious Interior"],
+                description: "A premium MPV known for its comfort and longdistance reliability.",
+                marketPrice: "₹8,040",
+                fixedCharges: 280
+            }
+        ],
+        image: "https://i.ytimg.com/vi/8ZMP3CQEfrA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAY_RS_uIGs67XBS3_ZJ75sqoAc4Q",
+        tollTax: 0,
         taxPercent: 5
     },
     {

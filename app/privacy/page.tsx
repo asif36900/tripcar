@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next"
 import { motion } from "framer-motion"
-import { Shield, Eye, Lock, Users, FileText, Mail } from "lucide-react"
+import { Shield, Eye, Lock, Users, FileText, Mail, AlertTriangle, RefreshCw, CreditCard, CalendarClock } from "lucide-react"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 
@@ -29,51 +29,89 @@ import Footer from "@/components/footer"
 // }
 
 export default function PrivacyPolicyPage() {
-  const sections = [
-    {
-      title: "Information We Collect",
-      icon: FileText,
-      content: [
-        "Personal identification information (Name, email address, phone number)",
-        "Booking and rental history",
-        "Payment information (processed securely through our payment partners)",
-        "Vehicle usage data and GPS location (when using our vehicles)",
-        "Website usage data and cookies for improving user experience",
-      ],
-    },
-    {
-      title: "How We Use Your Information",
-      icon: Users,
-      content: [
-        "Process and manage your car rental bookings",
-        "Provide customer support and communicate about your reservations",
-        "Send important updates about your bookings and our services",
-        "Improve our services and develop new features",
-        "Comply with legal requirements and prevent fraud",
-      ],
-    },
-    {
-      title: "Information Sharing",
-      icon: Eye,
-      content: [
-        "We do not sell, trade, or rent your personal information to third parties",
-        "Information may be shared with trusted service providers who assist in our operations",
-        "We may disclose information when required by law or to protect our rights",
-        "Anonymous, aggregated data may be used for analytics and business insights",
-      ],
-    },
-    {
-      title: "Data Security",
-      icon: Lock,
-      content: [
-        "We implement industry-standard security measures to protect your data",
-        "All payment information is encrypted and processed through secure payment gateways",
-        "Regular security audits and updates to maintain data protection",
-        "Limited access to personal information on a need-to-know basis",
-        "Secure data transmission using SSL encryption",
-      ],
-    },
-  ]
+const sections = [
+  {
+    title: "1. Information We Collect",
+    icon: CalendarClock,
+    content: [
+      "We may collect the following personal details when you use our services:",
+      "Full name",
+      "Mobile number",
+      "Email address",
+      "Pickup and drop location",
+      "Booking date and time",
+      "Payment information (processed securely through Razorpay)",
+      "Device information and IP address (for security and analytics)",
+    ],
+  },
+  {
+    title: "2. How We Use Your Information",
+    icon: AlertTriangle,
+    content: [
+      "We use your information to:",
+      "Confirm and manage your cab bookings.",
+      "Communicate driver details, booking updates, or cancellations.",
+      "Process payments securely via Razorpay.",
+      "Improve service quality and enhance customer experience.",
+      "Handle complaints and provide customer support.",
+      "Comply with legal and regulatory requirements.",
+    ],
+  },
+
+  {
+    title: "3. Data Sharing",
+    icon: RefreshCw,
+    content: [
+      "We only share necessary information with trusted third parties:",
+      "Driver partners (for pickup & trip fulfillment).",
+      "Payment gateway providers (Razorpay) for secure transactions.",
+      "Legal or government authorities when required by law.",
+      "We never sell your personal data to any third party.",
+    ],
+  },
+
+  {
+    title: "4. Data Security",
+    icon: Shield,
+    content: [
+      "Your information is stored securely using encryption, firewalls, and modern security practices.",
+      "We continuously review and upgrade our systems to prevent unauthorized access, misuse, or data loss.",
+    ],
+  },
+
+  {
+    title: "5. Cookies",
+    icon: CreditCard,
+    content: [
+      "Our website may use cookies to improve functionality and personalize your experience.",
+      "You may disable cookies through your browser settings if you prefer.",
+    ],
+  },
+
+  {
+    title: "6. Your Rights",
+    icon: CreditCard,
+    content: [
+      "You have the right to perform the following actions:",
+      "Request a copy of your personal data.",
+      "Ask us to correct or delete your information.",
+      "Withdraw consent for marketing communication.",
+      "For any such requests, email us at info@easygocab.com.",
+    ],
+  },
+
+  {
+    title: "7. Contact Us",
+    icon: Shield,
+    content: [
+      "For any questions or concerns regarding this Privacy Policy, please contact:",
+      "📩 Email: info@easygocab.com",
+      "📞 Phone: +91 78900 88921",
+      "🌐 Website: www.easygocab.com",
+    ],
+  },
+];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -167,7 +205,7 @@ export default function PrivacyPolicyPage() {
             ))}
 
             {/* Contact Section */}
-            <motion.div
+            {/* <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6 }}
@@ -184,10 +222,10 @@ export default function PrivacyPolicyPage() {
               </p>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p>Email: info@easygocab.com</p>
-                <p>Phone: +916296443245</p>
+                <p>Phone: +917890088921</p>
                 <p>Address: Kolkata, India</p>
               </div>
-            </motion.div>
+            </motion.div> */}
           </div>
         </div>
       </section>

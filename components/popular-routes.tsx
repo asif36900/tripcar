@@ -43,14 +43,17 @@ export default function PopularRoutes() {
   return (
     <>
       <Navbar />
-      <section className="py-16 md:py-24 bg-gray-50">
+      {/* Main Section Background: Light Gray -> Dark Custom Color */}
+      <section className="py-16 md:py-24 bg-gray-50 dark:bg-[#0d1927]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-3">
+            {/* Text Color Adjustment */}
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-3">
               Explore Popular Cab Routes 🗺️
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            {/* Text Color Adjustment */}
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Verified distance and estimated market prices for popular
               destinations.
             </p>
@@ -59,11 +62,13 @@ export default function PopularRoutes() {
           {/* Search Bar */}
           <div className="mb-10 max-w-lg mx-auto">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              {/* Icon Color Adjustment */}
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-400" />
               <Input
                 type="text"
                 placeholder="Search by city (e.g., Puri, Darjeeling, Kolkata)"
-                className="w-full pl-10 pr-4 py-6 border-2 border-yellow-300 focus:border-yellow-500 rounded-full shadow-md transition-all"
+                // Input BG/Border/Text Color Adjustment
+                className="w-full pl-10 pr-4 py-6 border-2 border-yellow-300 focus:border-yellow-500 rounded-full shadow-md transition-all bg-white dark:bg-zinc-800 text-gray-900 dark:text-white dark:placeholder:text-gray-400"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -83,10 +88,12 @@ export default function PopularRoutes() {
             </div>
           ) : (
             <div className="text-center py-20">
-              <h3 className="text-2xl font-semibold text-gray-700">
+              {/* Text Color Adjustment */}
+              <h3 className="text-2xl font-semibold text-gray-700 dark:text-gray-300">
                 No routes found for "{searchTerm}" 😔
               </h3>
-              <p className="text-gray-500 mt-2">
+              {/* Text Color Adjustment */}
+              <p className="text-gray-500 mt-2 dark:text-gray-400">
                 Try searching for a different city name.
               </p>
             </div>
@@ -111,7 +118,8 @@ const RouteCard = ({ route, approxDuration }: any) => {
   };
 
   return (
-    <Card className="rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out border-t-4 border-yellow-500 overflow-hidden">
+    // Card BG/Shadow Adjustment: White BG in light, darker BG in dark mode
+    <Card className="rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out border-t-4 border-yellow-500 overflow-hidden bg-white dark:bg-zinc-900">
       <div className="relative">
         <img
           src={route.image || "/placeholder.svg"}
@@ -121,8 +129,8 @@ const RouteCard = ({ route, approxDuration }: any) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
         <div className="absolute bottom-4 left-4 text-white">
-          {/* <p className="text-sm font-medium opacity-80">{route.from}</p> */}
           <div className="flex items-center">
+            {/* Text is white on gradient, so no change */}
             <h3 className="text-2xl font-bold mr-2">{route.from}</h3>
             <ArrowRight className="w-5 h-5 font-bold" />
             <h3 className="text-2xl font-bold ml-2">{route.to}</h3>
@@ -132,7 +140,8 @@ const RouteCard = ({ route, approxDuration }: any) => {
 
       <CardContent className="p-6 space-y-4">
         {/* Route Details */}
-        <div className="grid grid-cols-2 gap-4 border-b pb-4">
+        {/* Border color adjustment */}
+        <div className="grid grid-cols-2 gap-4 border-b pb-4 border-gray-200 dark:border-zinc-700">
           <DetailItem
             icon={<MapPin className="w-5 h-5 text-blue-500" />}
             label="Distance"
@@ -148,9 +157,10 @@ const RouteCard = ({ route, approxDuration }: any) => {
         {/* Price and Action */}
         <div className="flex justify-between items-center pt-2">
           <div>
-            <p className="text-sm text-gray-500 font-medium">Market Price</p>
+            {/* Text Color Adjustment */}
+            <p className="text-sm text-gray-500 font-medium dark:text-gray-400">Market Price</p>
+            {/* Price color is yellow-600, which works in dark mode */}
             <p className="text-3xl font-extrabold text-yellow-600 flex items-center">
-              {/* {route.carPrices[0].marketPrice} */}
               ₹{carBasePrice(route.carPrices[0].marketPrice, route.carPrices[0].fixedCharges)}
             </p>
           </div>
@@ -158,6 +168,7 @@ const RouteCard = ({ route, approxDuration }: any) => {
           <Button
             onClick={handleBookNow}
             disabled={loading}
+            // Button is yellow/black, which works in dark mode
             className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
           >
             {loading ? (
@@ -198,10 +209,13 @@ const RouteCard = ({ route, approxDuration }: any) => {
 // Helper Component for Details
 const DetailItem = ({ icon, label, value }: any) => (
   <div className="flex items-center space-x-2">
+    {/* Icon colors (blue/green) work in dark mode */}
     {icon}
     <div>
-      <p className="text-sm text-gray-500 font-medium">{label}</p>
-      <p className="font-semibold text-gray-800">{value}</p>
+      {/* Text Color Adjustment */}
+      <p className="text-sm text-gray-500 font-medium dark:text-gray-400">{label}</p>
+      {/* Text Color Adjustment */}
+      <p className="font-semibold text-gray-800 dark:text-white">{value}</p>
     </div>
   </div>
 );

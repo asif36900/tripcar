@@ -77,17 +77,17 @@ export default function TaxiListPage() {
       </div>
     )
   }
-
+ 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0d1927]">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-16">
+      <section className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Taxi Fleet</h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-white max-w-2xl mx-auto">
               Choose from our diverse range of well-maintained vehicles for your perfect ride
             </p>
           </motion.div>
@@ -107,7 +107,7 @@ export default function TaxiListPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-white w-4 h-4" />
                   <Input
                     placeholder="Search cars..."
                     value={searchTerm}
@@ -143,14 +143,14 @@ export default function TaxiListPage() {
           </Card>
 
           {/* Results Count */}
-          <div className="mb-6">
+          <div className="mb-6 dark:text-white">
             <p className="text-gray-600">
               Showing {filteredCars.length} of {cars.length} vehicles
             </p>
           </div>
 
           {/* Car Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 dark:text-white">
             {filteredCars.map((car, index) => {
               const seats = car.name.includes("7") || car.type === "MUV" || car.type === "SUV" ? 7 : 4
               return (
@@ -169,23 +169,23 @@ export default function TaxiListPage() {
                           className="w-full h-48 md:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         <div className="absolute top-4 left-4">
-                          <Badge className="bg-yellow-400 text-black font-semibold">{car.type}</Badge>
+                          <Badge className="bg-yellow-400 text-black dark:text-white font-semibold">{car.type}</Badge>
                         </div>
-                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2">
+                        <div className="absolute top-4 right-4 bg-[#0d1927] backdrop-blur-sm rounded-full p-2">
                           <div className="flex items-center space-x-1">
-                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                            <span className="text-sm font-semibold">4.8</span>
+                            <Star className="w-4 h-4 text-yellow-500  fill-current" />
+                            <span className="text-sm font-semibold text-white">4.8</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="p-6">
                         <div>
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">{car.name}</h3>
-                          <p className="text-gray-600 text-sm">{car.description}</p>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{car.name}</h3>
+                          <p className="text-gray-600 dark:text-white text-sm">{car.description}</p>
                         </div>
 
-                        <div className="flex items-center justify-between text-sm text-gray-600">
+                        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-white">
                           <div className="flex items-center space-x-4">
                             <div className="flex items-center">
                               <Users className="w-4 h-4 mr-1" />
@@ -202,7 +202,7 @@ export default function TaxiListPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <h4 className="font-semibold text-gray-900 text-sm">Features:</h4>
+                          <h4 className="font-semibold text-gray-900 dark:text-white text-sm">Features:</h4>
                           <div className="flex flex-wrap gap-1">
                             {car.features.slice(0, 3).map((feature, idx) => (
                               <Badge key={idx} variant="secondary" className="text-xs">
@@ -219,7 +219,7 @@ export default function TaxiListPage() {
 
                         <div className="flex items-center justify-between pt-4 border-t">
                           <div>
-                            <p className="text-sm text-gray-600">Starting from</p>
+                            <p className="text-sm text-gray-600 dark:text-white">Starting from</p>
                             <p className="text-2xl font-bold text-yellow-600">₹{car.basePrice * 10}</p>
                           </div>
                           <Link href="/booking">
@@ -229,7 +229,7 @@ export default function TaxiListPage() {
                           </Link>
                         </div>
 
-                        <div className="flex items-center justify-between text-xs text-gray-500 pt-2">
+                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-white pt-2">
                           <div className="flex items-center">
                             <MapPin className="w-3 h-3 mr-1" />
                             Available citywide
@@ -249,16 +249,16 @@ export default function TaxiListPage() {
 
           {filteredCars.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-gray-400 mb-4">
+              <div className="text-gray-400 dark:text-white mb-4">
                 <Search className="w-16 h-16 mx-auto" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No vehicles found</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No vehicles found</h3>
               <p className="text-gray-600">Try adjusting your search or filter criteria</p>
             </div>
           )}
 
           {/* Call to Action */}
-          <Card className="mt-12 bg-gradient-to-r from-yellow-400 to-orange-500 text-black">
+          <Card className="mt-12 bg-gradient-to-r from-yellow-400 to-orange-500 text-black ">
             <CardContent className="p-8 text-center">
               <h2 className="text-2xl font-bold mb-4">Ready to Book Your Ride?</h2>
               <p className="text-lg mb-6">Choose from our premium fleet and enjoy a comfortable, safe journey</p>

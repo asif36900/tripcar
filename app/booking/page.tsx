@@ -97,15 +97,17 @@ export default function BookingPage() {
     { number: 2, title: "Trip Details", component: BookingStep2 },
     { number: 3, title: "Car Selection", component: BookingStep3 },
     { number: 4, title: "Payment", component: BookingStep4 },
-    // { number: 5, title: "Confirmation", component: BookingStep5 },
+    { number: 5, title: "Confirmation", component: BookingStep5 }, // STEP 5 ADDED
   ]
+
+  const maxStep = steps.length
 
   const updateBookingData = (data: Partial<BookingData>) => {
     setBookingData((prev) => ({ ...prev, ...data }))
   }
 
   const nextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < maxStep) { // Check against maxStep (5)
       setCurrentStep(currentStep + 1)
     }
   }
@@ -116,74 +118,83 @@ export default function BookingPage() {
     }
   }
 
-  const CurrentStepComponent = steps[currentStep - 1].component
+  // Logic to determine the component to render
+  const CurrentStepComponent = steps[currentStep - 1]?.component || BookingStep5
+  // Note: Since the Confirmation page (Step 5) doesn't typically need the props, 
+  // it's better handled as a separate view if possible, but for a simple flow, 
+  // this array look-up works fine now that it's included.
+
+  // Hide the progress bar and main card wrapper on the final confirmation step
+  const isConfirmationStep = currentStep === maxStep
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0d1927]">
       <Navbar />
 
       <main className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Progress Steps */}
-          <div className="mb-8">
-            <div className="flex items-center justify-center space-x-2 md:space-x-4 mb-6">
-              {steps.map((step, index) => (
-                <div key={step.number} className="flex items-center">
-                  <div
-                    className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full border-2 ${
-                      currentStep > step.number
-                        ? "bg-green-500 border-green-500 text-white"
-                        : currentStep === step.number
-                          ? "bg-yellow-400 border-yellow-400 text-black"
-                          : "bg-white border-gray-300 text-gray-400"
-                    }`}
-                  >
-                    {currentStep > step.number ? (
-                      <Check className="w-5 h-5" />
-                    ) : (
-                      <span className="text-sm font-semibold">{step.number}</span>
+          {/* Progress Steps (Hidden on Confirmation Step 5) */}
+          {!isConfirmationStep && (
+            <div className="mb-8">
+              <div className="flex items-center justify-center space-x-2 md:space-x-4 mb-6">
+                {steps.slice(0, maxStep - 1).map((step, index) => ( // Show steps 1-4 in the progress bar
+                  <div key={step.number} className="flex items-center">
+                    <div
+                      className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-colors duration-300
+                        ${currentStep > step.number
+                          ? "bg-green-500 border-green-500 text-white"
+                          : currentStep === step.number
+                            ? "bg-yellow-400 border-yellow-400 text-black dark:bg-yellow-500 dark:border-yellow-500"
+                            : "bg-white border-gray-300 text-gray-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-500"
+                        }`}
+                    >
+                      {currentStep > step.number ? (
+                        <Check className="w-5 h-5" />
+                      ) : (
+                        <span className="text-sm font-semibold">{step.number}</span>
+                      )}
+                    </div>
+                    <span
+                      className={`hidden md:block ml-2 text-sm font-medium transition-colors duration-300
+                        ${currentStep >= step.number ? "text-gray-900 dark:text-gray-100" : "text-gray-400 dark:text-gray-500"
+                        }`}
+                    >
+                      {step.title}
+                    </span>
+                    {index < steps.length - 2 && ( // Changed from steps.length - 1 to steps.length - 2 (since we only display 4 steps here)
+                      <div className={`w-6 md:w-12 h-0.5 ml-2 md:mx-4 transition-colors duration-300 ${currentStep > step.number ? "bg-green-500" : "bg-gray-300 dark:bg-gray-700"}`} />
                     )}
                   </div>
-                  <span
-                    className={`hidden md:block ml-2 text-sm font-medium ${
-                      currentStep >= step.number ? "text-gray-900" : "text-gray-400"
-                    }`}
-                  >
-                    {step.title}
-                  </span>
-                  {index < steps.length - 1 && (
-                    <div className={`w-6 md:w-12 h-0.5 ml-2 md:mx-4 ${currentStep > step.number ? "bg-green-500" : "bg-gray-300"}`} />
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* <div className="grid grid-cols-1 lg:grid-cols-4 gap-8"> */}
+          {/* Main Content Area */}
           <div className="">
             {/* Main Content */}
             {/* <div className="lg:col-span-4"> */}
-              <Card className="w-full md:max-w-[65vw] m-auto">
-                <CardContent className="p-6 md:p-8">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentStep}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <CurrentStepComponent
-                        bookingData={bookingData}
-                        updateBookingData={updateBookingData}
-                        nextStep={nextStep}
-                        prevStep={prevStep}
-                        currentStep={currentStep}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                </CardContent>
-              </Card>
+            <Card className="w-full md:max-w-[65vw] m-auto">
+              <CardContent className="p-6 md:p-8">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentStep}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <CurrentStepComponent
+                      bookingData={bookingData}
+                      updateBookingData={updateBookingData}
+                      nextStep={nextStep}
+                      prevStep={prevStep}
+                      currentStep={currentStep}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </CardContent>
+            </Card>
             {/* </div> */}
 
             {/* Sidebar */}
@@ -198,3 +209,5 @@ export default function BookingPage() {
     </div>
   )
 }
+
+

@@ -59,7 +59,7 @@ const itemVariants = {
 
 const HowToBookSection = () => {
   return (
-    <section className="py-20 md:py-28 bg-gray-50 overflow-hidden">
+    <section className="py-20 md:py-28 bg-gray-50 dark:bg-zinc-900 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -73,10 +73,10 @@ const HowToBookSection = () => {
           <p className="text-sm font-semibold uppercase tracking-wider text-yellow-500 mb-2">
             The EasyGoCab Way
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
             Book Your Cab in Four Simple Steps
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
             Getting an affordable, comfortable ride has never been easier. Follow our simple process to secure your next trip.
           </p>
         </motion.div>
@@ -93,21 +93,22 @@ const HowToBookSection = () => {
             <motion.div
               key={step.number}
               variants={itemVariants}
-              className="bg-white p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-yellow-400 flex items-start space-x-6"
+              // Card background, shadow, and border adjustment for Dark Mode
+              className="bg-white  dark:bg-[#0d1927] p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-yellow-400 dark:border-yellow-600 flex items-start space-x-6"
             >
               
               {/* Step Number Badge */}
-              <div className="flex-shrink-0 w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center font-extrabold text-2xl text-yellow-600 shadow-inner">
+              <div className="flex-shrink-0 w-14 h-14 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center font-extrabold text-2xl text-yellow-600 dark:text-yellow-400 shadow-inner">
                 {step.number}
               </div>
               
               {/* Content */}
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 flex items-center space-x-3">
-                  {/* <step.icon className="w-5 h-5 text-yellow-500" /> */}
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center space-x-3">
+                  {/* Icon rendering is commented out in original, but keeping the span for title */}
                   <span>{step.title}</span>
                 </h3>
-                <p className="text-gray-600">{step.description}</p>
+                <p className="text-gray-600 dark:text-gray-300">{step.description}</p>
               </div>
             </motion.div>
           ))}

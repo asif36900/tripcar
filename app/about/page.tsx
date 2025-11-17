@@ -4,15 +4,17 @@ import { motion } from "framer-motion"
 import { Shield, Users, Award, Clock, Car, Star, Target, Eye, Heart } from "lucide-react"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
+// Importing Shadcn components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen">
+    // Set the overall page background for Dark Mode
+    <div className="min-h-screen bg-white dark:bg-[#0d1927]">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Hero Section - Keep this bright as it uses a gradient */}
       <section className="relative bg-gradient-to-r from-yellow-400 to-orange-500 py-10 md:py-20">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -45,14 +47,17 @@ export default function AboutPage() {
                 className="space-y-6"
               >
                 <div>
-                  <Badge className="bg-yellow-400 text-black mb-4">About Easy Go Cab</Badge>
-                  <h2 className="text-4xl font-bold text-gray-900 mb-6">We Provide Trusted Cab Services</h2>
-                  <p className="text-lg text-gray-600 mb-6">
+                  {/* Badge adjustment for Dark Mode */}
+                  <Badge className="bg-yellow-400 text-black mb-4 dark:bg-yellow-600 dark:text-white">About Easy Go Cab</Badge>
+                  
+                  {/* Text color adjustment */}
+                  <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">We Provide Trusted Cab Services</h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                     With over a decade of experience in the transportation industry, Easy Go Cab has established itself
                     as a leading taxi service provider in India. We are committed to delivering exceptional service
                     through our fleet of well-maintained vehicles and professional drivers.
                   </p>
-                  <p className="text-lg text-gray-600 mb-8">
+                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
                     Our mission is to make transportation accessible, affordable, and reliable for everyone. Whether you
                     need a quick city ride, an outstation trip, or airport transfer, we're here to serve you 24/7 with
                     the highest standards of safety and comfort.
@@ -61,18 +66,22 @@ export default function AboutPage() {
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="text-center">
+                    {/* Icon Circle (Keep bright yellow) */}
                     <div className="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Users className="w-8 h-8 text-black" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">50K+</h3>
-                    <p className="text-gray-600">Happy Customers</p>
+                    {/* Text color adjustment */}
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">50K+</h3>
+                    <p className="text-gray-600 dark:text-gray-400">Happy Customers</p>
                   </div>
                   <div className="text-center">
+                    {/* Icon Circle (Keep bright yellow) */}
                     <div className="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Car className="w-8 h-8 text-black" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">500+</h3>
-                    <p className="text-gray-600">Vehicles</p>
+                    {/* Text color adjustment */}
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">500+</h3>
+                    <p className="text-gray-600 dark:text-gray-400">Vehicles</p>
                   </div>
                 </div>
               </motion.div>
@@ -81,7 +90,8 @@ export default function AboutPage() {
         </section>
 
         {/* Mission, Vision, Values */}
-        <section className="py-20 bg-gray-50">
+        {/* Section Background adjustment */}
+        <section className="py-20 bg-gray-50 dark:bg-black/10"> 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -89,8 +99,9 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Core Values</h2>
-              <p className="text-xl text-gray-600">What drives us to serve you better</p>
+              {/* Text color adjustment */}
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Core Values</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">What drives us to serve you better</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -120,15 +131,19 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
                 >
-                  <Card className="text-center h-full hover:shadow-lg transition-shadow">
+                  {/* Card background adjustment */}
+                  <Card className="text-center h-full hover:shadow-lg transition-shadow dark:bg-zinc-900 dark:border-zinc-800">
                     <CardHeader>
+                      {/* Icon Circle (Keep bright yellow) */}
                       <div className="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 mt-6">
                         <item.icon className="w-8 h-8 text-black" />
                       </div>
-                      <CardTitle className="text-xl">{item.title}</CardTitle>
+                      {/* Text color adjustment */}
+                      <CardTitle className="text-xl dark:text-white">{item.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-600">{item.description}</p>
+                      {/* Text color adjustment */}
+                      <p className="text-gray-600 dark:text-gray-300">{item.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -146,8 +161,9 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Easy Go Cab?</h2>
-              <p className="text-xl text-gray-600">Experience the difference with our premium services</p>
+              {/* Text color adjustment */}
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Why Choose Easy Go Cab?</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">Experience the difference with our premium services</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -180,11 +196,13 @@ export default function AboutPage() {
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                   className="text-center"
                 >
+                  {/* Icon Circle (Keep bright yellow) */}
                   <div className="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <feature.icon className="w-8 h-8 text-black" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  {/* Text color adjustment */}
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{feature.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -192,7 +210,8 @@ export default function AboutPage() {
         </section>
 
         {/* Team Section */}
-        <section className="py-20 bg-gray-50">
+        {/* Section Background adjustment */}
+        <section className="py-20 bg-gray-50 dark:bg-black/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -200,12 +219,12 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Leadership</h2>
-              <p className="text-xl text-gray-600">The people behind Easy Go Cab's success</p>
+              {/* Text color adjustment */}
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Meet Our Leadership</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">The people behind Easy Go Cab's success</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12">
-            {/* <div className="flex flex-wrap justify-center items-center gap-8"> */}
               {[
                 {
                   name: "Asif Ikbal",
@@ -214,13 +233,6 @@ export default function AboutPage() {
                   description:
                     "With 15+ years in transportation, Asif founded Easy Go Cab with a vision to revolutionize taxi services in India.",
                 },
-                // {
-                //   name: "Priya Sharma",
-                //   role: "Operations Director",
-                //   image: "/indian-professional-woman-business-executive.jpg",
-                //   description:
-                //     "Priya oversees daily operations and ensures our high service standards are maintained across all locations.",
-                // },
                 {
                   name: "Subhan Muneer",
                   role: "Technology Head",
@@ -235,16 +247,18 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
                 >
-                  <Card className="text-center hover:shadow-lg transition-shadow">
+                  {/* Card background adjustment */}
+                  <Card className="text-center hover:shadow-lg transition-shadow dark:bg-zinc-900 dark:border-zinc-800">
                     <CardContent className="p-6">
                       <img
                         src={member.image || "/placeholder.svg"}
                         alt={member.name}
                         className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
                       />
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                      <p className="text-yellow-600 font-semibold mb-3">{member.role}</p>
-                      <p className="text-gray-600 text-sm">{member.description}</p>
+                      {/* Text color adjustment */}
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{member.name}</h3>
+                      <p className="text-yellow-600 font-semibold mb-3 dark:text-yellow-400">{member.role}</p>
+                      <p className="text-gray-600 text-sm dark:text-gray-300">{member.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>

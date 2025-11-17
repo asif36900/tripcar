@@ -31,62 +31,110 @@ import Footer from "@/components/footer"
 
 export default function TermsConditionsPage() {
   const sections = [
-    // {
-    //   title: "Rental Agreement",
-    //   icon: FileText,
-    //   content: [
-    //     "Minimum age requirement: 25 years with a valid driver's license",
-    //     "Valid credit card required for security deposit and payment",
-    //     "International driving permit required for non-US license holders",
-    //     "Rental period minimum 24 hours, charged in full-day increments",
-    //     "Vehicle must be returned to the same location unless otherwise arranged",
-    //   ],
-    // },
     {
-      title: "Vehicle Usage",
+      title: "Booking Policy",
       icon: Car,
       content: [
-        "Vehicles must be used for lawful purposes only",
-        "No smoking, pets, or illegal substances allowed in vehicles",
-        "Maximum occupancy as specified for each vehicle model",
-        "Off-road driving is prohibited unless specifically authorized",
-        "Vehicle modifications or alterations are strictly forbidden",
+        "All cab bookings must be made directly through the official EasyGoCab website.",
+        "Customers must provide accurate details such as name, phone number, pickup address, and trip type.",
+        "Providing inaccurate or false information may result in cancellation without refund.",
+        "EasyGoCab reserves the right to deny service or cancel any booking at its discretion.",
       ],
     },
+
     {
       title: "Payment Terms",
       icon: CreditCard,
       content: [
-        "50% advance payment required at booking confirmation",
-        "Remaining balance due at vehicle pickup",
-        "Security deposit held on credit card during rental period",
-        "Additional charges for fuel, tolls, and parking violations",
-        "Late return fees apply after grace period expires",
+        "Customers can make payments online through Razorpay or in cash directly to the driver.",
+        "All online transactions are encrypted and securely processed via Razorpay.",
+        "Extra usage such as distance, waiting time, tolls, or night charges will be billed separately.",
       ],
     },
+
     {
-      title: "Insurance & Liability",
-      icon: Shield,
-      content: [
-        "Comprehensive insurance coverage included in rental fee",
-        "Renter liable for deductible amount in case of damage",
-        "Personal belongings not covered under our insurance policy",
-        "Third-party liability coverage as per local regulations",
-        "Additional insurance options available at extra cost",
-      ],
-    },
-    {
-      title: "Cancellation Policy",
+      title: "Cancellation & Refund",
       icon: AlertTriangle,
       content: [
-        "Free cancellation up to 24 hours before pickup time",
-        "50% refund for cancellations within 24 hours of pickup",
-        "No refund for no-shows or cancellations after pickup time",
-        "Weather-related cancellations handled case by case",
-        "Modification fees may apply for booking changes",
+        "More than 24 hours before pickup: 100% refund (minus payment gateway charges).",
+        "Between 12–24 hours before pickup: 75% refund.",
+        "Less than 12 hours before pickup or after vehicle dispatch: No refund.",
+        "For full details, refer to our dedicated Cancellation & Refund Policy.",
       ],
     },
-  ]
+
+    {
+      title: "Service Terms",
+      icon: Car,
+      content: [
+        "EasyGoCab acts only as a facilitator connecting customers with third-party independent drivers.",
+        "Vehicles listed on the platform are not owned or operated by EasyGoCab.",
+        "Responsibility for punctuality, cleanliness, behavior, and trip completion lies with the driver.",
+        "EasyGoCab is not responsible for delays due to traffic, weather, strikes, or unforeseen events.",
+        "Customers must be ready at the pickup location at the scheduled time and behave respectfully.",
+      ],
+    },
+
+    {
+      title: "Liability & Safety Disclaimer",
+      icon: Shield,
+      content: [
+        "EasyGoCab is not responsible for any accident, injury, death, property loss, or vehicle damage before, during, or after the trip.",
+        "No insurance or health coverage is provided by EasyGoCab for drivers or passengers.",
+        "All accident-related claims must be handled directly between driver and passenger.",
+        "EasyGoCab will assist law enforcement when required by law.",
+      ],
+    },
+
+    {
+      title: "Conduct & Legal Compliance",
+      icon: AlertTriangle,
+      content: [
+        "Passengers and drivers must follow all traffic and safety laws.",
+        "Illegal, unlawful, or unethical behavior by either party is strictly prohibited.",
+        "EasyGoCab is not responsible for any legal consequences arising from such actions.",
+        "Users misusing the platform may be permanently banned without prior notice.",
+      ],
+    },
+
+    {
+      title: "Limitation of Liability",
+      icon: Shield,
+      content: [
+        "EasyGoCab’s total liability is limited to the booking amount paid by the customer.",
+        "EasyGoCab is not liable for indirect or consequential damages such as missed flights, losses, or emotional distress.",
+      ],
+    },
+
+    {
+      title: "Modification of Terms",
+      icon: AlertTriangle,
+      content: [
+        "EasyGoCab may update or modify these Terms & Conditions at any time.",
+        "The latest version will always be available on the official website.",
+      ],
+    },
+
+    {
+      title: "Governing Law",
+      icon: Shield,
+      content: [
+        "All disputes are governed by the laws of India.",
+        "Legal matters fall under the exclusive jurisdiction of courts in Kolkata, West Bengal.",
+      ],
+    },
+
+    {
+      title: "Contact Information",
+      icon: CreditCard,
+      content: [
+        "Email: info@easygocab.com",
+        "Phone: +91 78900 88921",
+        "Website: www.easygocab.com",
+      ],
+    },
+  ];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -180,7 +228,7 @@ export default function TermsConditionsPage() {
             ))}
 
             {/* Contact Section */}
-            <motion.div
+            {/* <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6 }}
@@ -197,10 +245,10 @@ export default function TermsConditionsPage() {
               </p>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p>Email: info@easygocab.com</p>
-                <p>Phone: +916296443245</p>
+                <p>Phone: +917890088921</p>
                 <p>Available 24/7 for your convenience</p>
               </div>
-            </motion.div>
+            </motion.div> */}
           </div>
         </div>
       </section>

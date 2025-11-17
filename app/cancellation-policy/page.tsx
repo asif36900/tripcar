@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next";
 import { motion } from "framer-motion";
-import { Shield, CalendarClock, RefreshCw, AlertTriangle, CreditCard, Mail } from "lucide-react";
+import { Shield, Eye, Lock, Users, FileText, Mail } from "lucide-react"
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
@@ -31,83 +31,59 @@ import Footer from "@/components/footer";
 export default function CancellationPolicyPage() {
   const sections = [
     {
-      title: "1. Cancellation by Customer",
-      icon: CalendarClock,
+      title: "Customer-Initiated Cancellations",
+      icon: FileText,
       content: [
-        "You may cancel your cab booking at any time before the trip starts.",
-        "Refunds will depend on when the cancellation is made:",
-        "• More than 24 hours before pickup time: 100% refund (after small payment gateway charges).",
-        "• Between 12–24 hours before pickup: 50% refund.",
-        "• Less than 12 hours before pickup: No refund.",
-        "• After the cab has been dispatched or reached pickup location: No refund.",
-        "Note: For one-way or outstation trips, if the driver has already started traveling towards your pickup location, a driver convenience fee or fuel charge may be deducted.",
+        "More than 24 hours before scheduled pickup: 100% refund (after minimal payment gateway charges).",
+        "Between 12–24 hours before scheduled pickup: 75% refund (25% retained as cancellation fee).",
+        "Less than 12 hours before scheduled pickup or after cab dispatch: No refund.",
       ],
     },
     {
-      title: "2. Cancellation by EasyGoCab",
-      icon: AlertTriangle,
+      title: "Company-Initiated Cancellations (EasyGoCab)",
+      icon: Users,
       content: [
-        "In rare cases (vehicle breakdown, driver unavailability, natural calamities, etc.), if EasyGoCab has to cancel your booking:",
-        "• You will receive a 100% refund of the amount paid.",
-        "• We may also assist in providing an alternative cab at no extra cost (based on availability).",
+        "If EasyGoCab cancels due to unavoidable reasons (vehicle breakdown, driver unavailability, natural calamity).",
+        "You will receive a 100% refund of the amount paid.",
+        "An alternative cab may be provided at no extra cost, subject to availability.",
       ],
     },
     {
-      title: "3. Modification of Booking",
-      icon: RefreshCw,
+      title: "Booking Modifications",
+      icon: Eye,
       content: [
-        "If you wish to change the pickup time, destination, or trip type (e.g., one-way to round trip):",
-        "• Contact our support team at least 6 hours before pickup time.",
-        "• Changes are subject to vehicle and driver availability.",
-        "• Fare differences (if any) will apply.",
+        "Changes to pickup time, destination, or trip type must be requested at least 6 hours before scheduled pickup.",
+        "All modifications depend on driver and vehicle availability.",
+        "Any difference in fare must be paid by the customer.",
       ],
     },
     {
-      title: "4. No-Show Policy",
-      icon: Shield,
+      title: "No-Show Policy",
+      icon: Lock,
       content: [
-        "If the passenger fails to show up at the pickup location without prior cancellation:",
-        "• The full booking amount will be charged, and no refund will be issued.",
+        "If the customer does not show up at pickup location.",
+        "If incorrect address/contact information leads to failed pickup.",
+        "The booking will be marked as 'No Show' and no refund will be issued.",
       ],
     },
     {
-      title: "5. Refund Process",
-      icon: CreditCard,
+      title: "Refund Process",
+      icon: FileText,
       content: [
-        "Approved refunds will be initiated within 5–7 business days after confirmation.",
-        "Refunds are processed through the original payment method (UPI, bank transfer, or card payment).",
-        "In case of any delay, please contact us at info@easygocab.com.",
+        "Refunds (when applicable) will be processed to the original payment method within 5–7 business days.",
+        "Refund time may vary based on bank/payment gateway processing.",
       ],
     },
     {
-      title: "6. Payment Gateway or Service Charges",
-      icon: CreditCard,
+      title: "Contact Information",
+      icon: Users,
       content: [
-        "All refunds are subject to deduction of:",
-        "• Payment gateway transaction charges (usually 2–3%).",
-        "• Any applicable taxes or convenience fees charged by the payment processor.",
+        "Email: info@easygocab.com",
+        "Phone: +917890088921",
+        "Website: www.easygocab.com",
       ],
     },
-    // {
-    //   title: "7. Contact Information",
-    //   icon: Mail,
-    //   content: [
-    //     "For cancellations, booking modifications, or refund queries, please contact us:",
-    //     "📞 Customer Support: +916296443245",
-    //     "📧 Email: info@easygocab.com",
-    //     "🌐 Website: https://easygocab.com",
-    //   ],
-    // },
-    {
-      title: "7. Important Note",
-      icon: Shield,
-      content: [
-        "EasyGoCab reserves the right to modify this policy at any time.",
-        "Any updates will be reflected on this page with a revised 'Last Updated' date.",
-      ],
-    },
-  ];
-
+  ]
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -200,7 +176,7 @@ export default function CancellationPolicyPage() {
             ))}
 
             {/* Contact Section */}
-            <motion.div
+            {/* <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6 }}
@@ -218,10 +194,10 @@ export default function CancellationPolicyPage() {
               </p>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p>📧 Email: info@easygocab.com</p>
-                <p>📞 Phone: +916296443245</p>
+                <p>📞 Phone: +917890088921</p>
                 <p>🌐 Website: https://easygocab.com</p>
               </div>
-            </motion.div>
+            </motion.div> */}
           </div>
         </div>
       </section>
