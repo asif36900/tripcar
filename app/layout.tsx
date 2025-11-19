@@ -18,6 +18,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta name="google-site-verification" content="3KRYEF2HxC0j9uAWd2faQBVPxuf9ryeqrvEBn3AgWVM" />
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-B8GSKBD3TB"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+        gtag('config', 'G-B8GSKBD3TB');
+      </script>
       <ClientWrapper>
         <ThemeProvider>
           {children}
