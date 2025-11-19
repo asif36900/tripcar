@@ -18,7 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <meta name="google-site-verification" content="3KRYEF2HxC0j9uAWd2faQBVPxuf9ryeqrvEBn3AgWVM" />
+      <head>
+        <meta name="google-site-verification" content="3KRYEF2HxC0j9uAWd2faQBVPxuf9ryeqrvEBn3AgWVM" />
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-B8GSKBD3TB"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
@@ -27,6 +28,8 @@ export default function RootLayout({
       
         gtag('config', 'G-B8GSKBD3TB');
       </script>
+      </head>
+      
       <ClientWrapper>
         <ThemeProvider>
           {children}
