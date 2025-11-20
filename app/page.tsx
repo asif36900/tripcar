@@ -1,13 +1,23 @@
-"use client"
+
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Car } from "lucide-react"
 import HomePage from "@/components/home-page"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Best Kolkata Cab Booking & Outstation Taxi Service | Easy Go Cab",
+  description:
+    "Easy Go Cab offers reliable Kolkata cab booking, local rentals, airport transfers, and safe outstation taxis. Hire affordable, premium rides anytime with ease.",
+   alternates: {
+    canonical: "https://www.easygocab.com/",
+  },
+}
 
 export default function Page() {
   const [showSplash, setShowSplash] = useState(true)
-
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false)
