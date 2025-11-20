@@ -93,7 +93,7 @@ export default function TaxiListPage() {
           </motion.div>
         </div>
       </section>
-      <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
+      {/* <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -105,7 +105,7 @@ export default function TaxiListPage() {
               <p className="text-xl text-gray-600 dark:text-gray-300">Airport taxi booking Kolkata, Local taxi service in Kolkata, 24/7 taxi service in Kolkata, Kolkata taxi booking online, Taxi service Kolkata for tourist sightseeing, Kolkata Taxi service for tourist</p>
             </motion.div>
           </div>
-        </section>
+        </section> */}
 
       <main className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
