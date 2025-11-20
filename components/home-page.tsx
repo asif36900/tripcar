@@ -492,6 +492,19 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+         <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Full day cab hire in Kolkata</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">hire city cab in Kolkata, Full day cab hire in Kolkata, Kolkata to Digha cab service, Kolkata local rental cab service, Kolkata car rental with driver, Hire Premium sedan cab Kolkata, Hire SUV cab service Kolkata, Hire Luxury cab service Kolkata, Cheap cab service in Kolkata, Outstation cab from Kolkata one way, Multi-city cab hire from Kolkata, Event cab rental service Kolkata, Long term car hire in Kolkata, Cab rental for corporate travel Kolkata, Kolkata to Siliguri cab service, Female driver cab service Kolkata, Reliable cab service Kolkata, Safe cab service Kolkata, Best cab service in Kolkata, Kolkata cab booking online, Easy Go Cab booking in Kolkata</p>
+            </motion.div>
+          </div>
+        </section>
 
         {/* CTA Section (No change needed, already uses color gradient) */}
         <section className="py-20 bg-gradient-to-r from-yellow-400 to-orange-500 overflow-hidden">
