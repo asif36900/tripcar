@@ -54,7 +54,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/professional-woman-using-smartphone-for-taxi-booki.jpg"
+                      src="/service/1.png"
                       alt="Hourly Car Rental"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -156,7 +156,7 @@ export default function ServicesPage() {
                     className="order-1 lg:order-2"
                   >
                     <img
-                      src="/comfort-suv-car.jpg"
+                      src="/service/2.png"
                       alt="Round Trip Cab Service"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -175,7 +175,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/one-way.jpg"
+                      src="/service/7.png"
                       alt="One Way Outstation Cab"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -277,7 +277,7 @@ export default function ServicesPage() {
                     className="order-1 lg:order-2"
                   >
                     <img
-                      src="/city-ride.jpg"
+                      src="/service/11.png"
                       alt="City Ride Service"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -298,7 +298,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/adventure-trip.jpg"
+                      src="/service/12.png"
                       alt="Sightseeing Tour"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -421,7 +421,7 @@ export default function ServicesPage() {
                     className="order-1 lg:order-2"
                   >
                     <img
-                      src="/wedding-car.jpg"
+                      src="/service/13.png"
                       alt="Wedding Car Rental"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -442,7 +442,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/airpot-pickup.jpg"
+                      src="/service/4.png"
                       alt="Airport Pickup & Drop"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -501,19 +501,6 @@ export default function ServicesPage() {
                 </div>
               </div>
             </section>
-            {/* <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Airport taxi booking service Kolkata</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">Airport taxi booking service Kolkata, Kolkata airport cab service, One-way outstation cab Kolkata, Hourly rental cab service Kolkata, Drop off airport cab Kolkata, Cab service Kolkata for airport</p>
-            </motion.div>
-          </div>
-        </section> */}
 
           </div>
         </section>

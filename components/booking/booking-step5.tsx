@@ -232,7 +232,7 @@ export default function BookingStep5() {
                     {/* Dark Mode: Badge color */}
                     <Badge
                       variant="secondary"
-                      className="text-sm px-3 py-1 capitalize bg-yellow-200 text-primary border-primary/20 dark:bg-yellow-900 dark:text-yellow-300 dark:border-yellow-800"
+                      className="text-sm px-3 py-1 capitalize bg-yellow-200 text-black border-primary/20 dark:bg-yellow-900 dark:text-yellow-300 dark:border-yellow-800"
                     >
                       {bookingData.bookingType}
                     </Badge>
@@ -275,7 +275,7 @@ export default function BookingStep5() {
                       <h4 className="font-semibold text-lg mb-2 dark:text-gray-100">Route</h4>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 bg-success rounded-full dark:bg-green-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-green-400"></div>
                           <span className="text-foreground dark:text-gray-100">{bookingData.pickupLocation}</span>
                         </div>
                         {bookingData.destination && (
@@ -400,10 +400,10 @@ export default function BookingStep5() {
           <div className="text-center pt-8 animate-slide-up" style={{ animationDelay: "0.6s" }}>
             {/* Dark Mode: Footer info box background and text */}
             <div className="p-6 bg-gradient-to-r from-accent/20 to-secondary/20 rounded-2xl border border-accent/30 dark:from-gray-700/50 dark:to-gray-700/30 dark:border-gray-700">
-              <p className="text-muted-foreground mb-2 dark:text-gray-400">
-                Thank you for choosing <span className="font-semibold text-primary">Easy Go Cab</span>!
+              <p className="text-black mb-2 dark:text-gray-400">
+                Thank you for choosing <span className="font-semibold text-yellow-600">Easy Go Cab</span>!
               </p>
-              <p className="text-sm text-muted-foreground dark:text-gray-400">
+              <p className="text-sm text-black dark:text-gray-400">
                 Have a safe and comfortable journey. We're here if you need any assistance.
               </p>
             </div>

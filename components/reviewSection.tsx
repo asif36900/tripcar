@@ -150,9 +150,9 @@ const ReviewSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <img
-              src="/happy-professional-man-in-yellow-shirt-giving-thum.jpg"
+              src="/service/9.png"
               alt="Happy customer giving a thumbs up"
-              className="w-full h-auto rounded-lg shadow-lg"
+              className="w-full h-[500px] object-cover rounded-lg shadow-lg"
             />
           </motion.div>
 

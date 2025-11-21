@@ -1,13 +1,13 @@
 "use client"
+
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Car } from "lucide-react"
 import HomePage from "@/components/home-page"
 
-
 export default function Page() {
   const [showSplash, setShowSplash] = useState(true)
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false)

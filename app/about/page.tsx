@@ -37,7 +37,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <img src="/trusted.jpg" alt="Easy Go Cab Team" className="rounded-lg shadow-lg w-full h-[350px] md:h-[550px] object-cover" />
+                <img src="/service/6.png" alt="Easy Go Cab Team" className="rounded-lg shadow-lg w-full h-[350px] md:h-[550px] object-cover" />
               </motion.div>
 
               <motion.div

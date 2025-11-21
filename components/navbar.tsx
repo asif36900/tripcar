@@ -140,17 +140,28 @@ export default function Navbar() {
         animate-slideInDown transition-all duration-300
       `}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 py-1 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
-            <div className="bg-primary p-2 rounded-lg transition-transform duration-300 group-hover:scale-110">
-              <Car className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
-              Easy Go Cab
+            <img
+              src="/logo/logo-icon.png" // replace with your logo path
+              alt="Easy Go Cab Logo"
+              className="h-14 w-auto" // adjust size as needed
+            />
+            <span className="text-4xl font-extrabold text-foreground group-hover:text-primary transition-colors">
+              <span className="text-primary">Easy</span> Go
             </span>
           </Link>
+
+          {/* <Link href="/" className="flex items-center">
+            <img
+              src="/logo/logo.png" // replace with your logo path
+              alt="Easy Go Cab Logo"
+              className="h-16 w-auto" // adjust size as needed
+            />
+          </Link> */}
+
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
@@ -184,7 +195,8 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex justify-center items-center">
+            <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-foreground hover:text-primary p-2 transition-colors"
@@ -193,7 +205,6 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-
         {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (

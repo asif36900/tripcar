@@ -93,19 +93,6 @@ export default function TaxiListPage() {
           </motion.div>
         </div>
       </section>
-      {/* <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Airport taxi booking Kolkata</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">Airport taxi booking Kolkata, Local taxi service in Kolkata, 24/7 taxi service in Kolkata, Kolkata taxi booking online, Taxi service Kolkata for tourist sightseeing, Kolkata Taxi service for tourist</p>
-            </motion.div>
-          </div>
-        </section> */}
 
       <main className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

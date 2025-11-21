@@ -22,10 +22,14 @@ export default function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-yellow-400 p-2 rounded-lg">
-                <Car className="w-6 h-6 text-black" />
-              </div>
-              <span className="text-2xl font-bold">Easy Go Cab</span>
+            <img
+              src="/logo/logo-icon.png" // replace with your logo path
+              alt="Easy Go Cab Logo"
+              className="h-14 w-auto" // adjust size as needed
+            />
+            <span className="text-4xl font-extrabold text-white group-hover:text-primary transition-colors">
+              <span className="text-primary">Easy</span> Go
+            </span>
             </div>
             <p className="text-gray-300 mb-4">
               We successfully cope with tasks of varying complexity, provide long-term guarantees and regularly master

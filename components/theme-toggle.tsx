@@ -23,7 +23,7 @@ export function ThemeToggle() {
       size="sm"
       onClick={toggleTheme}
       className={`
-        w-10 h-10 p-0 rounded-full
+        w-8 h-8 md:w-10 md:h-10 p-0 rounded-full
         transition-all duration-300
         shadow-md
         border border-border/40
@@ -36,9 +36,9 @@ export function ThemeToggle() {
       aria-label="Toggle theme"
     >
       {theme === "light" ? (
-        <Moon className="w-5 h-5 transition-transform duration-300 rotate-0 scale-100" />
+        <Moon className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 rotate-0 scale-100" />
       ) : (
-        <Sun className="w-5 h-5 transition-transform duration-300 rotate-0 scale-100" />
+        <Sun className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 rotate-0 scale-100" />
       )}
     </Button>
   )
