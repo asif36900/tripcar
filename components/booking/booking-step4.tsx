@@ -272,6 +272,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
           console.log(bookingResult.data);
 
           dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
+          router.push("/booking/confirmed")
           toast.success(`Booking confirmed! Total fare ₹${totalFare} due at pickup (Cash).`)
           // nextStep()
         } else {
