@@ -29,7 +29,7 @@ export default function AboutPage() {
 
       <main>
         {/* Company Overview */}
-        <section className="py-20">
+        <section className="py-20 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <motion.div
@@ -51,13 +51,13 @@ export default function AboutPage() {
                   <Badge className="bg-yellow-400 text-black mb-4 dark:bg-yellow-600 dark:text-white">About Easy Go Cab</Badge>
                   
                   {/* Text color adjustment */}
-                  <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">We Provide Trusted Cab Services</h2>
-                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">We Provide Trusted Cab Services</h2>
+                  <p className="text-md md:text-lg text-gray-600 dark:text-gray-300 mb-6">
                     With over a decade of experience in the transportation industry, Easy Go Cab has established itself
                     as a leading taxi service provider in India. We are committed to delivering exceptional service
                     through our fleet of well-maintained vehicles and professional drivers.
                   </p>
-                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+                  <p className="text-md md:text-lg text-gray-600 dark:text-gray-300 mb-8">
                     Our mission is to make transportation accessible, affordable, and reliable for everyone. Whether you
                     need a quick city ride, an outstation trip, or airport transfer, we're here to serve you 24/7 with
                     the highest standards of safety and comfort.
@@ -91,7 +91,7 @@ export default function AboutPage() {
 
         {/* Mission, Vision, Values */}
         {/* Section Background adjustment */}
-        <section className="py-20 bg-gray-50 dark:bg-black/10"> 
+        <section className="py-20 bg-gray-50 dark:bg-black/10 overflow-hidden"> 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -100,8 +100,8 @@ export default function AboutPage() {
               className="text-center mb-16"
             >
               {/* Text color adjustment */}
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Core Values</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">What drives us to serve you better</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 md:mb-4">Our Core Values</h2>
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">What drives us to serve you better</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -153,7 +153,7 @@ export default function AboutPage() {
         </section>
 
         {/* Why Choose Us */}
-        <section className="py-20">
+        <section className="py-20 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -162,8 +162,8 @@ export default function AboutPage() {
               className="text-center mb-16"
             >
               {/* Text color adjustment */}
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Why Choose Easy Go Cab?</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">Experience the difference with our premium services</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Why Choose Easy Go Cab?</h2>
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">Experience the difference with our premium services</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -211,7 +211,7 @@ export default function AboutPage() {
 
         {/* Team Section */}
         {/* Section Background adjustment */}
-        <section className="py-20 bg-gray-50 dark:bg-black/10">
+        <section className="py-20 bg-gray-50 dark:bg-black/10 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -220,8 +220,8 @@ export default function AboutPage() {
               className="text-center mb-16"
             >
               {/* Text color adjustment */}
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Meet Our Leadership</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">The people behind Easy Go Cab's success</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Meet Our Leadership</h2>
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">The people behind Easy Go Cab's success</p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12">

@@ -147,9 +147,9 @@ export default function Navbar() {
             <img
               src="/logo/logo-icon.png" // replace with your logo path
               alt="Easy Go Cab Logo"
-              className="h-14 w-auto" // adjust size as needed
+              className=" h-12 md:h-14 w-auto" // adjust size as needed
             />
-            <span className="text-4xl font-extrabold text-foreground group-hover:text-primary transition-colors">
+            <span className="text-3xl md:text-4xl font-extrabold text-foreground group-hover:text-primary transition-colors">
               <span className="text-primary">Easy</span> Go
             </span>
           </Link>
@@ -188,7 +188,7 @@ export default function Navbar() {
                   flex items-center transition-all duration-300 shadow-md hover:shadow-lg
                 "
               >
-                <Phone className="w-4 h-4 mr-2" />
+                {/* <Phone className="w-4 h-4 mr-2" /> */}
                 Book Now
               </Button>
             </Link>
@@ -242,7 +242,7 @@ export default function Navbar() {
                         font-semibold shadow-md hover:shadow-lg flex items-center justify-center
                       "
                     >
-                      <Phone className="w-4 h-4 mr-2" />
+                      {/* <Phone className="w-4 h-4 mr-2" /> */}
                       Book Now
                     </Button>
                   </Link>

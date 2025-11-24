@@ -81,7 +81,7 @@ const ReviewSection = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="bg-yellow-400 p-8 rounded-lg relative">
-              <h2 className="text-4xl font-bold text-black mb-6">What Our Customers Say</h2>
+              <h2 className="text-3xl text-center md:text-start md:text-4xl  font-bold text-black mb-6">What Our Customers Say</h2>
 
               <div className="relative">
                 <AnimatePresence mode="wait">
@@ -152,7 +152,7 @@ const ReviewSection = () => {
             <img
               src="/service/9.png"
               alt="Happy customer giving a thumbs up"
-              className="w-full h-[500px] object-cover rounded-lg shadow-lg"
+              className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
             />
           </motion.div>
 

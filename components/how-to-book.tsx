@@ -98,17 +98,17 @@ const HowToBookSection = () => {
             >
               
               {/* Step Number Badge */}
-              <div className="flex-shrink-0 w-14 h-14 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center font-extrabold text-2xl text-yellow-600 dark:text-yellow-400 shadow-inner">
+              <div className="flex-shrink-0 w-8 h-8 md:w-14 md:h-14 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center font-extrabold text-lg md:text-2xl text-yellow-600 dark:text-yellow-400 shadow-inner">
                 {step.number}
               </div>
               
               {/* Content */}
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center space-x-3">
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center space-x-3">
                   {/* Icon rendering is commented out in original, but keeping the span for title */}
                   <span>{step.title}</span>
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">{step.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 text-md md:text-lg">{step.description}</p>
               </div>
             </motion.div>
           ))}

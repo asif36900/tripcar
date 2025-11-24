@@ -273,7 +273,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
 
           dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
           toast.success(`Booking confirmed! Total fare ₹${totalFare} due at pickup (Cash).`)
-          nextStep()
+          // nextStep()
         } else {
           toast.error("Booking creation failed. Please contact support.")
         }

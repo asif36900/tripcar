@@ -189,28 +189,24 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
                   <p className="text-sm text-gray-600 dark:text-gray-400">{car.description}</p>
 
                   {/* Features with icons */}
-                  <div className="space-y-2">
-                    {/* Dark mode text adjustment */}
+                  {/* <div className="space-y-2">
                     <h4 className="font-semibold text-gray-900 dark:text-gray-100">Features:</h4>
                     <div className="grid grid-cols-2 gap-2">
                       {car.features.map((feature, index) => (
                         <div
                           key={index}
-                          // Feature background adjustment
                           className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md"
                         >
-                          {/* Feature icons already adjusted at the top */}
                           {featureIcons[feature] || (
                             <Check className="w-4 h-4 text-gray-500 dark:text-gray-300" />
                           )}
-                          {/* Dark mode text adjustment */}
                           <span className="text-sm text-gray-700 dark:text-gray-300">
                             {feature}
                           </span>
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Dark mode text adjustment */}
                   <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
