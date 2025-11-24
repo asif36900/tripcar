@@ -155,6 +155,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   // --- END Distance Calculation Logic ---
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (step2 && step2.pickupLocation && step2.destination) {
       calculateDistance(step2.pickupLocation, step2.destination)
     }

@@ -81,7 +81,7 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
         setLoading(false)
       }
     }
-
+    window.scrollTo(0, 0);
     if (bookingDataStep2?.bookingType) fetchCars()
   }, [bookingDataStep2?.bookingType])
 

@@ -21,6 +21,8 @@ import { useSelector } from "react-redux"
 import type { RootState } from "@/store/store"
 import Navbar from "../navbar"
 import Footer from "../footer"
+import { toPng } from "html-to-image";
+
 
 // Define a type for your final booking data (adjust this to match your actual structure)
 interface FinalBookingData {
@@ -114,34 +116,51 @@ export default function BookingStep5() {
     }
   }
 
+  // const handleDownloadReceipt = () => {
+  //   const receiptData = {
+  //     bookingId: bookingData.bookingCode, // Use bookingCode
+  //     customerName: bookingData.fullName,
+  //     mobile: bookingData.phone, // Use 'phone' from the saved data
+  //     email: bookingData.email,
+  //     serviceType: bookingData.bookingType,
+  //     car: bookingData.vehicleName, // Use 'vehicleName'
+  //     pickup: bookingData.pickupLocation,
+  //     destination: bookingData.destination,
+  //     date: bookingData.pickupDate,
+  //     time: bookingData.pickupTime,
+  //     totalFare: bookingData.finalTotalFare, // Use 'finalTotalFare'
+  //     paidAmount: paymentAmount,
+  //     remainingAmount: remainingAmount,
+  //     transactionId: bookingData.payments.transactionId, // Get from nested object
+  //   }
+
+  //   const dataStr = JSON.stringify(receiptData, null, 2)
+  //   const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr)
+
+  //   const exportFileDefaultName = `booking-receipt-${bookingData.bookingCode}.json`
+
+  //   const linkElement = document.createElement("a")
+  //   linkElement.setAttribute("href", dataUri)
+  //   linkElement.setAttribute("download", exportFileDefaultName)
+  //   linkElement.click()
+  // }
+
+
   const handleDownloadReceipt = () => {
-    const receiptData = {
-      bookingId: bookingData.bookingCode, // Use bookingCode
-      customerName: bookingData.fullName,
-      mobile: bookingData.phone, // Use 'phone' from the saved data
-      email: bookingData.email,
-      serviceType: bookingData.bookingType,
-      car: bookingData.vehicleName, // Use 'vehicleName'
-      pickup: bookingData.pickupLocation,
-      destination: bookingData.destination,
-      date: bookingData.pickupDate,
-      time: bookingData.pickupTime,
-      totalFare: bookingData.finalTotalFare, // Use 'finalTotalFare'
-      paidAmount: paymentAmount,
-      remainingAmount: remainingAmount,
-      transactionId: bookingData.payments.transactionId, // Get from nested object
-    }
+    const node: any = document.getElementById("receipt-preview");
 
-    const dataStr = JSON.stringify(receiptData, null, 2)
-    const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr)
+    toPng(node)
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `receipt-${bookingData.bookingCode}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.error("Error generating image:", err);
+      });
+  };
 
-    const exportFileDefaultName = `booking-receipt-${bookingData.bookingCode}.json`
-
-    const linkElement = document.createElement("a")
-    linkElement.setAttribute("href", dataUri)
-    linkElement.setAttribute("download", exportFileDefaultName)
-    linkElement.click()
-  }
 
   const handleWhatsAppSupport = () => {
     const message = `Hi, I need support for my booking. Booking ID: ${bookingData.bookingCode}`
@@ -407,6 +426,23 @@ export default function BookingStep5() {
                 Have a safe and comfortable journey. We're here if you need any assistance.
               </p>
             </div>
+
+            <div id="receipt-preview" className="absolute left-[-9999px] top-[-9999px] p-4 bg-white text-black">
+              <h2>Booking Receipt</h2>
+              <p>Booking ID: {bookingData.bookingCode}</p>
+              <p>Name: {bookingData.fullName}</p>
+              <p>Phone: {bookingData.phone}</p>
+              <p>Email: {bookingData.email}</p>
+              <p>Pickup: {bookingData.pickupLocation}</p>
+              <p>Destination: {bookingData.destination}</p>
+              <p>Date: {bookingData.pickupDate}</p>
+              <p>Time: {bookingData.pickupTime}</p>
+              <p>Total Fare: ₹{bookingData.finalTotalFare}</p>
+              <p>Paid: ₹{paymentAmount}</p>
+              <p>Remaining: ₹{remainingAmount}</p>
+              <p>Transaction ID: {bookingData.payments.transactionId}</p>
+            </div>
+
           </div>
         </div>
       </div>
