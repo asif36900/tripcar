@@ -725,7 +725,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
           <div className="flex justify-between font-semibold text-base pt-2">
             <span className="dark:text-gray-100">Remaining Amount Due at Pickup/Drop-off</span>
             <span className="text-xl text-red-600 dark:text-red-400">
-              ₹{remainingAmount}
+              ₹{remainingAmount.toFixed(2)}
             </span>
           </div>
 
