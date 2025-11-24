@@ -40,6 +40,48 @@ declare global {
   }
 }
 
+// const calculateFareStructure = (
+//   step2: BookingDataStep2,
+//   step3: BookingDataStep3,
+//   effectiveDistance: number,
+//   paymentPercentage: number,
+//   paymentMethod: string
+// ) => {
+//   const region = step2?.tripType?.toLowerCase().includes("hill") ? "hill" : "local";
+
+//   // ✅ Dynamically fetch rate
+//   const dynamicBaseRate = getFareRate(effectiveDistance, step3.name, region);
+
+//   // 💰 Fare calculations
+//   const baseFare = dynamicBaseRate * effectiveDistance;
+//   const tollTax = step2.bookingType !== "local" ? 200 : 0;
+//   const totalBaseAndToll = baseFare + tollTax;
+
+//   // 🔖 Discount logic
+//   let discountRate = 0;
+//   if (paymentMethod === "razorpay") {
+//     if (paymentPercentage === 100) discountRate = 0.05;
+//     else if (paymentPercentage === 50) discountRate = 0.02;
+//   }
+
+//   const calculatedDiscount = Math.round(totalBaseAndToll * discountRate);
+//   const discountedFare = totalBaseAndToll - calculatedDiscount;
+//   const gst = 0.05; // adjust later
+//   const totalFare = discountedFare + gst;
+
+//   return {
+//     baseFare,
+//     tollTax,
+//     discountRate,
+//     calculatedDiscount,
+//     discountedFare,
+//     gst,
+//     totalFare,
+//     dynamicBaseRate,
+//   };
+// };
+
+
 const calculateFareStructure = (
   step2: BookingDataStep2,
   step3: BookingDataStep3,
@@ -60,14 +102,23 @@ const calculateFareStructure = (
   // 🔖 Discount logic
   let discountRate = 0;
   if (paymentMethod === "razorpay") {
-    if (paymentPercentage === 100) discountRate = 0.05;
-    else if (paymentPercentage === 50) discountRate = 0.02;
+    if (paymentPercentage === 100) discountRate = 0.02;
+    else if (paymentPercentage === 50) discountRate = 0.01;
   }
 
   const calculatedDiscount = Math.round(totalBaseAndToll * discountRate);
   const discountedFare = totalBaseAndToll - calculatedDiscount;
-  const gst = 0; // adjust later
-  const totalFare = discountedFare + gst;
+
+  // 🆕 FIX: Calculate GST as 5% of the discountedFare
+  const gstRate = 0.05;
+  const calculatedGst = discountedFare * gstRate; // 5% of the subtotal (discountedFare)
+
+  // 🆕 FIX: Calculate Total Fare
+  const totalFare = discountedFare + calculatedGst;
+
+  // 🆕 Ensure GST and Total Fare are returned as numbers, rounded to 2 decimal places
+  const finalGst = Number(calculatedGst.toFixed(2));
+  const finalTotalFare = Number(totalFare.toFixed(2));
 
   return {
     baseFare,
@@ -75,12 +126,11 @@ const calculateFareStructure = (
     discountRate,
     calculatedDiscount,
     discountedFare,
-    gst,
-    totalFare,
+    gst: finalGst, // Use the correctly calculated GST amount
+    totalFare: finalTotalFare, // Use the correctly calculated Total Fare
     dynamicBaseRate,
   };
 };
-
 
 const icons = {
   razorpay: CreditCard,
@@ -247,7 +297,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       extraKmRate: step3?.extraKmRate,
       features: step3?.features,
       // Fare & Payment Details
-      finalTotalFare: totalFare,
+      finalTotalFare: totalFare.toFixed(2),
       discountApplied: calculatedDiscount,
       distance: effectiveDistance,
       paymentMethod: paymentMethod,
@@ -274,7 +324,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
 
           dispatch(setFinalBooking(bookingResult.data)) // 🆕 save in Redux
           router.push("/booking/confirmed")
-          toast.success(`Booking confirmed! Total fare ₹${totalFare} due at pickup (Cash).`)
+          toast.success(`Booking confirmed! Total fare ₹${totalFare.toFixed(2)} due at pickup (Cash).`)
           // nextStep()
         } else {
           toast.error("Booking creation failed. Please contact support.")
@@ -579,7 +629,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
           <div className="border-t pt-3 dark:border-gray-600">
             <div className="flex justify-between font-semibold text-lg text-gray-900 dark:text-gray-50">
               <span>Total Payable Fare</span>
-              <span>₹{totalFare}</span>
+              <span>₹{totalFare.toFixed(2)}</span>
             </div>
           </div>
         </CardContent>
@@ -612,7 +662,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                     <Label htmlFor={`pay${perc}`} className="cursor-pointer flex flex-col p-3 border rounded-md hover:bg-gray-50 transition-colors dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700">
                       <div className="text-sm font-semibold">
                         <span className="dark:text-gray-100">{perc}% Advance</span>
-                        {perc > 25 && <span className="text-green-600 dark:text-green-400">({perc === 100 ? '5%' : '2%'} Discount)</span>}
+                        {perc > 25 && <span className="text-green-600 dark:text-green-400">({perc === 100 ? '2%' : '1%'} Discount)</span>}
                         {paymentMethod === 'cash' && <span className="text-red-500 dark:text-red-400 ml-2">(N/A - Cash)</span>}
                       </div>
                       <div className="text-gray-600 dark:text-gray-300">₹{advanceAmount}</div>

@@ -146,20 +146,158 @@ export default function BookingStep5() {
   // }
 
 
-  const handleDownloadReceipt = () => {
-    const node: any = document.getElementById("receipt-preview");
+// helper: build an SVG string for the receipt
+function buildReceiptSVG(data: any, width = 800) {
+  const pad = 40;
+  const line = 26;
+  const contentWidth = width - pad * 2;
 
-    toPng(node)
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = `receipt-${bookingData.bookingCode}.png`;
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error("Error generating image:", err);
-      });
-  };
+  const fmt = (v: any) => (v === null || v === undefined ? "N/A" : String(v));
+
+  const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="${width}">
+    <style>
+      .title { font-size: 32px; font-weight: 700; fill: #111; font-family: Inter, sans-serif; }
+      .header { font-size: 18px; font-weight: 600; fill: #111; font-family: Inter, sans-serif; }
+      .label { font-size: 16px; font-weight: 600; fill: #444; font-family: Inter, sans-serif; }
+      .value { font-size: 16px; fill: #000; font-family: Inter, sans-serif; }
+      .section-title { font-size: 20px; font-weight: 700; fill: #222; font-family: Inter, sans-serif; }
+    </style>
+
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="#ffffff" />
+
+    <!-- Logo Row -->
+    <rect x="${pad}" y="25" width="50" height="28" rx="6" fill="#f6c94d" />
+    <text x="${pad + 65}" y="46" class="header">Easy Go Cab</text>
+    <text x="${pad}" y="90" class="title">Booking Receipt</text>
+
+    <!-- Booking Details -->
+    <text x="${pad}" y="140" class="section-title">Booking Information</text>
+
+    <text x="${pad}" y="180" class="label">Booking ID:</text>
+    <text x="${pad + 160}" y="180" class="value">${fmt(data.bookingId)}</text>
+
+    <text x="${pad}" y="210" class="label">Name:</text>
+    <text x="${pad + 160}" y="210" class="value">${fmt(data.customerName)}</text>
+
+    <text x="${pad}" y="240" class="label">Phone:</text>
+    <text x="${pad + 160}" y="240" class="value">${fmt(data.mobile)}</text>
+
+    <text x="${pad}" y="270" class="label">Email:</text>
+    <text x="${pad + 160}" y="270" class="value">${fmt(data.email)}</text>
+
+    <text x="${pad}" y="300" class="label">Service:</text>
+    <text x="${pad + 160}" y="300" class="value">${fmt(data.serviceType)}</text>
+
+    <text x="${pad}" y="330" class="label">Car:</text>
+    <text x="${pad + 160}" y="330" class="value">${fmt(data.car)}</text>
+
+    <text x="${pad}" y="360" class="label">Pickup:</text>
+    <text x="${pad + 160}" y="360" class="value">${fmt(data.pickup)}</text>
+
+    <text x="${pad}" y="390" class="label">Destination:</text>
+    <text x="${pad + 160}" y="390" class="value">${fmt(data.destination)}</text>
+
+    <text x="${pad}" y="420" class="label">Date:</text>
+    <text x="${pad + 160}" y="420" class="value">${fmt(data.date)} ${fmt(data.time)}</text>
+
+    <!-- Fare Section -->
+    <text x="${pad}" y="480" class="section-title">Fare Summary</text>
+
+    <text x="${pad}" y="520" class="label">Total Fare:</text>
+    <text x="${pad + 160}" y="520" class="value">₹${fmt(data.totalFare)}</text>
+
+    <text x="${pad}" y="550" class="label">Paid:</text>
+    <text x="${pad + 160}" y="550" class="value">₹${fmt(data.paidAmount)}</text>
+
+    <text x="${pad}" y="580" class="label">Remaining:</text>
+    <text x="${pad + 160}" y="580" class="value">₹${fmt(data.remainingAmount)}</text>
+
+    <!-- Transaction -->
+    <text x="${pad}" y="640" class="section-title">Transaction</text>
+
+    <text x="${pad}" y="680" class="label">Transaction ID:</text>
+    <text x="${pad + 160}" y="680" class="value">${fmt(data.transactionId)}</text>
+
+    <!-- Footer -->
+    <text x="${pad}" y="760" class="value">Thank you for choosing Easy Go Cab!</text>
+  </svg>
+  `;
+
+  return { svg, width, height: 850 };
+}
+
+// helper: convert svg -> png Blob (returns Promise<Blob>)
+function svgToPngBlob(svgStr: string, width: number, height: number, scale = 2) {
+  return new Promise<Blob>((resolve, reject) => {
+    const svg64 = btoa(unescape(encodeURIComponent(svgStr))); // base64
+    const b64Start = "data:image/svg+xml;base64,";
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+        const ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("Canvas context not available");
+        // white background
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // draw the SVG as an image (scale for better DPI)
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (!blob) return reject(new Error("Failed to create blob"));
+          resolve(blob);
+        }, "image/png");
+      } catch (err) {
+        reject(err);
+      }
+    };
+    img.onerror = (e) => reject(new Error("Failed to load SVG as image"));
+    img.src = b64Start + svg64;
+  });
+}
+
+// replace your handleDownloadReceipt with this:
+const handleDownloadReceipt = async () => {
+  try {
+    const receiptData = {
+      bookingId: bookingData.bookingCode,
+      customerName: bookingData.fullName,
+      mobile: bookingData.phone,
+      email: bookingData.email,
+      serviceType: bookingData.bookingType,
+      car: bookingData.vehicleName,
+      pickup: bookingData.pickupLocation,
+      destination: bookingData.destination,
+      date: bookingData.pickupDate,
+      time: bookingData.pickupTime,
+      totalFare: bookingData.finalTotalFare,
+      paidAmount: paymentAmount,
+      remainingAmount: remainingAmount,
+      transactionId: bookingData.payments?.transactionId || '',
+    };
+
+    const { svg, width, height } = buildReceiptSVG(receiptData, 800);
+
+    // convert SVG -> PNG blob (scale=2 for crispness)
+    const blob = await svgToPngBlob(svg, width, height, 2);
+
+    // download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `receipt-${receiptData.bookingId || "receipt"}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Receipt PNG error:", err);
+    alert("Failed to generate receipt image. See console for details.");
+  }
+};
 
 
   const handleWhatsAppSupport = () => {
@@ -427,21 +565,39 @@ export default function BookingStep5() {
               </p>
             </div>
 
-            <div id="receipt-preview" className="absolute left-[-9999px] top-[-9999px] p-4 bg-white text-black">
-              <h2>Booking Receipt</h2>
-              <p>Booking ID: {bookingData.bookingCode}</p>
-              <p>Name: {bookingData.fullName}</p>
-              <p>Phone: {bookingData.phone}</p>
-              <p>Email: {bookingData.email}</p>
-              <p>Pickup: {bookingData.pickupLocation}</p>
-              <p>Destination: {bookingData.destination}</p>
-              <p>Date: {bookingData.pickupDate}</p>
-              <p>Time: {bookingData.pickupTime}</p>
-              <p>Total Fare: ₹{bookingData.finalTotalFare}</p>
-              <p>Paid: ₹{paymentAmount}</p>
-              <p>Remaining: ₹{remainingAmount}</p>
-              <p>Transaction ID: {bookingData.payments.transactionId}</p>
-            </div>
+<div
+  id="receipt-preview"
+  style={{
+    position: "fixed",
+    top: "0",
+    left: "0",
+    opacity: 0,
+    pointerEvents: "none",
+    background: "white",
+    color: "black",
+    padding: "20px",
+    width: "350px",
+    border: "1px solid #ccc",
+    fontSize: "14px",
+    lineHeight: "20px",
+    zIndex: -1
+  }}
+>
+  <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>Booking Receipt</h2>
+
+  <p><strong>Booking ID:</strong> {bookingData.bookingCode}</p>
+  <p><strong>Name:</strong> {bookingData.fullName}</p>
+  <p><strong>Phone:</strong> {bookingData.phone}</p>
+  <p><strong>Email:</strong> {bookingData.email}</p>
+  <p><strong>Pickup:</strong> {bookingData.pickupLocation}</p>
+  <p><strong>Destination:</strong> {bookingData.destination}</p>
+  <p><strong>Date:</strong> {bookingData.pickupDate}</p>
+  <p><strong>Time:</strong> {bookingData.pickupTime}</p>
+  <p><strong>Total Fare:</strong> ₹{bookingData.finalTotalFare}</p>
+  <p><strong>Paid:</strong> ₹{paymentAmount}</p>
+  <p><strong>Remaining:</strong> ₹{remainingAmount}</p>
+  <p><strong>Transaction ID:</strong> {bookingData.payments.transactionId}</p>
+</div>
 
           </div>
         </div>
