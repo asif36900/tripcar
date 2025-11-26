@@ -6,8 +6,24 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 
 export default function ServicesPage() {
+
+  useEffect(() => {
+          document.title = "Airport Taxi Booking & Cab Services in Kolkata | Easy Go Cab";
+          document.querySelector("meta[name='description']")?.setAttribute("content", "Reliable airport taxi booking service in Kolkata with quick pick-up, drop-off, hourly rental cabs, and one-way outstation rides. Book trusted Kolkata cab services.");
+  
+          const canonicalUrl = "https://www.easygocab.com/services"; 
+  
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement("link");
+      link.setAttribute("rel", "canonical");
+      document.head.appendChild(link);
+    }
+    link.setAttribute("href", canonicalUrl);
+        }, []);
 
   return (
     // Set the overall page background for Dark Mode

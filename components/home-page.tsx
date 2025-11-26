@@ -28,7 +28,17 @@ export default function HomePage() {
   const [loadingRoute, setLoadingRoute] = useState<number | null>(null);
   const router = useRouter();
   useEffect(() => {
-    document.title = "Citycar - Professional Taxi Service";
+    document.title = "Best Kolkata Cab Booking & Outstation Taxi Service | Easy Go Cab";
+    document.querySelector("meta[name='description']")?.setAttribute("content", "Easy Go Cab offers reliable Kolkata cab booking, local rentals, airport transfers, and safe outstation taxis. Hire affordable, premium rides anytime with ease.");
+    const canonicalUrl = "https://www.easygocab.com/"; 
+
+  let link = document.querySelector("link[rel='canonical']");
+  if (!link) {
+    link = document.createElement("link");
+    link.setAttribute("rel", "canonical");
+    document.head.appendChild(link);
+  }
+  link.setAttribute("href", canonicalUrl);
     dispatch(clearBookingDetails());
   }, []);
 

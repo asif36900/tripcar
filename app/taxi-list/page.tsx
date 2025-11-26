@@ -28,6 +28,20 @@ export default function TaxiListPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterType, setFilterType] = useState("all")
   const [sortBy, setSortBy] = useState("price")
+    useEffect(() => {
+        document.title = "Kolkata Taxi List – Local & Airport Cab Booking | Easy Go Cab";
+        document.querySelector("meta[name='description']")?.setAttribute("content", "Find Kolkata taxi options for local rides, airport trips, 24/7 cab booking, and tourist sightseeing. Book safe, reliable, and comfortable taxis online with Easy Go Cab.");
+
+        const canonicalUrl = "https://www.easygocab.com/taxi-list"; 
+
+  let link = document.querySelector("link[rel='canonical']");
+  if (!link) {
+    link = document.createElement("link");
+    link.setAttribute("rel", "canonical");
+    document.head.appendChild(link);
+  }
+  link.setAttribute("href", canonicalUrl);
+      }, []);
 
   useEffect(() => {
     const fetchCars = async () => {
