@@ -229,7 +229,7 @@ export default function AboutPage() {
                 {
                   name: "Asif Ikbal",
                   role: "Founder & CEO",
-                  image: "/indian-business-executive-man-professional.png",
+                  image: "/asifIkbal.jpeg",
                   description:
                     "With 15+ years in transportation, Asif founded Easy Go Cab with a vision to revolutionize taxi services in India.",
                 },

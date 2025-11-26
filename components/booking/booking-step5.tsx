@@ -1,10 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import {
   CheckCircle,
   Download,
   MessageCircle,
   Phone,
+  Loader2,
   Calendar,
   MapPin,
   Car,
@@ -97,6 +99,10 @@ export default function BookingStep5() {
     (state: RootState) => state.booking.finalBooking || defaultBooking
   )
 
+  // State to handle loading for receipt download
+  const [isDownloading, setIsDownloading] = useState(false)
+
+
   // 2. Use the data from Redux instead of mock data
   const bookingData = finalBookingData
   const paymentAmount = bookingData.amountPaid
@@ -146,15 +152,15 @@ export default function BookingStep5() {
   // }
 
 
-// helper: build an SVG string for the receipt
-function buildReceiptSVG(data: any, width = 800) {
-  const pad = 40;
-  const line = 26;
-  const contentWidth = width - pad * 2;
+  // helper: build an SVG string for the receipt
+  function buildReceiptSVG(data: any, width = 800) {
+    const pad = 40;
+    const line = 26;
+    const contentWidth = width - pad * 2;
 
-  const fmt = (v: any) => (v === null || v === undefined ? "N/A" : String(v));
+    const fmt = (v: any) => (v === null || v === undefined ? "N/A" : String(v));
 
-  const svg = `
+    const svg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="${width}">
     <style>
       .title { font-size: 32px; font-weight: 700; fill: #111; font-family: Inter, sans-serif; }
@@ -225,80 +231,130 @@ function buildReceiptSVG(data: any, width = 800) {
   </svg>
   `;
 
-  return { svg, width, height: 850 };
-}
-
-// helper: convert svg -> png Blob (returns Promise<Blob>)
-function svgToPngBlob(svgStr: string, width: number, height: number, scale = 2) {
-  return new Promise<Blob>((resolve, reject) => {
-    const svg64 = btoa(unescape(encodeURIComponent(svgStr))); // base64
-    const b64Start = "data:image/svg+xml;base64,";
-    const img = new Image();
-    img.onload = () => {
-      try {
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(width * scale);
-        canvas.height = Math.round(height * scale);
-        const ctx = canvas.getContext("2d");
-        if (!ctx) throw new Error("Canvas context not available");
-        // white background
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // draw the SVG as an image (scale for better DPI)
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((blob) => {
-          if (!blob) return reject(new Error("Failed to create blob"));
-          resolve(blob);
-        }, "image/png");
-      } catch (err) {
-        reject(err);
-      }
-    };
-    img.onerror = (e) => reject(new Error("Failed to load SVG as image"));
-    img.src = b64Start + svg64;
-  });
-}
-
-// replace your handleDownloadReceipt with this:
-const handleDownloadReceipt = async () => {
-  try {
-    const receiptData = {
-      bookingId: bookingData.bookingCode,
-      customerName: bookingData.fullName,
-      mobile: bookingData.phone,
-      email: bookingData.email,
-      serviceType: bookingData.bookingType,
-      car: bookingData.vehicleName,
-      pickup: bookingData.pickupLocation,
-      destination: bookingData.destination,
-      date: bookingData.pickupDate,
-      time: bookingData.pickupTime,
-      totalFare: bookingData.finalTotalFare,
-      paidAmount: paymentAmount,
-      remainingAmount: remainingAmount,
-      transactionId: bookingData.payments?.transactionId || '',
-    };
-
-    const { svg, width, height } = buildReceiptSVG(receiptData, 800);
-
-    // convert SVG -> PNG blob (scale=2 for crispness)
-    const blob = await svgToPngBlob(svg, width, height, 2);
-
-    // download
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `receipt-${receiptData.bookingId || "receipt"}.png`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error("Receipt PNG error:", err);
-    alert("Failed to generate receipt image. See console for details.");
+    return { svg, width, height: 850 };
   }
-};
 
+  // helper: convert svg -> png Blob (returns Promise<Blob>)
+  function svgToPngBlob(svgStr: string, width: number, height: number, scale = 2) {
+    return new Promise<Blob>((resolve, reject) => {
+      const svg64 = btoa(unescape(encodeURIComponent(svgStr))); // base64
+      const b64Start = "data:image/svg+xml;base64,";
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(width * scale);
+          canvas.height = Math.round(height * scale);
+          const ctx = canvas.getContext("2d");
+          if (!ctx) throw new Error("Canvas context not available");
+          // white background
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          // draw the SVG as an image (scale for better DPI)
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob) => {
+            if (!blob) return reject(new Error("Failed to create blob"));
+            resolve(blob);
+          }, "image/png");
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.onerror = (e) => reject(new Error("Failed to load SVG as image"));
+      img.src = b64Start + svg64;
+    });
+  }
+
+  // replace your handleDownloadReceipt with this:
+  // const handleDownloadReceipt = async () => {
+  //   try {
+  //     const receiptData = {
+  //       bookingId: bookingData.bookingCode,
+  //       customerName: bookingData.fullName,
+  //       mobile: bookingData.phone,
+  //       email: bookingData.email,
+  //       serviceType: bookingData.bookingType,
+  //       car: bookingData.vehicleName,
+  //       pickup: bookingData.pickupLocation,
+  //       destination: bookingData.destination,
+  //       date: bookingData.pickupDate,
+  //       time: bookingData.pickupTime,
+  //       totalFare: bookingData.finalTotalFare,
+  //       paidAmount: paymentAmount,
+  //       remainingAmount: remainingAmount,
+  //       transactionId: bookingData.payments?.transactionId || '',
+  //     };
+
+  //     const { svg, width, height } = buildReceiptSVG(receiptData, 800);
+
+  //     // convert SVG -> PNG blob (scale=2 for crispness)
+  //     const blob = await svgToPngBlob(svg, width, height, 2);
+
+  //     // download
+  //     const url = URL.createObjectURL(blob);
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = `receipt-${receiptData.bookingId || "receipt"}.png`;
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     a.remove();
+  //     URL.revokeObjectURL(url);
+  //   } catch (err) {
+  //     console.error("Receipt PNG error:", err);
+  //     alert("Failed to generate receipt image. See console for details.");
+  //   }
+  // };
+
+
+  const handleDownloadReceipt = async () => {
+    if (isDownloading) return // Prevent multiple clicks
+    setIsDownloading(true)
+    try {
+      const receiptData = {
+        bookingId: bookingData.bookingCode,
+        customerName: bookingData.fullName,
+        mobile: bookingData.phone,
+        email: bookingData.email,
+        serviceType: bookingData.bookingType,
+        car: bookingData.vehicleName,
+        pickup: bookingData.pickupLocation,
+        destination: bookingData.destination,
+        date: bookingData.pickupDate,
+        time: bookingData.pickupTime,
+        totalFare: bookingData.finalTotalFare,
+        paidAmount: paymentAmount,
+        remainingAmount: remainingAmount,
+        transactionId: bookingData.payments?.transactionId || "",
+      };
+
+      // Call API to generate receipt
+      const response = await fetch("/api/generate-receipt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ receiptData }),
+      });
+
+      if (!response.ok) throw new Error("Failed to generate receipt");
+
+      // Get image blob
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      // Trigger download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `receipt-${receiptData.bookingId || "receipt"}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Receipt download error:", err);
+      alert("Failed to download receipt. See console for details.");
+    } finally {
+      setIsDownloading(false)
+    }
+  };
 
   const handleWhatsAppSupport = () => {
     const message = `Hi, I need support for my booking. Booking ID: ${bookingData.bookingCode}`
@@ -526,9 +582,13 @@ const handleDownloadReceipt = async () => {
             <Button
               className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900"
               onClick={handleDownloadReceipt}
+              disabled={isDownloading}
             >
-              <Download className="w-5 h-5 mr-2" />
-              Download Receipt
+              {isDownloading ? (
+                <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Downloading...</>
+              ) : (
+                <><Download className="w-5 h-5 mr-2" /> Download Receipt</>
+              )}
             </Button>
 
             {/* WhatsApp Button (Green Outline) */}
@@ -564,41 +624,6 @@ const handleDownloadReceipt = async () => {
                 Have a safe and comfortable journey. We're here if you need any assistance.
               </p>
             </div>
-
-<div
-  id="receipt-preview"
-  style={{
-    position: "fixed",
-    top: "0",
-    left: "0",
-    opacity: 0,
-    pointerEvents: "none",
-    background: "white",
-    color: "black",
-    padding: "20px",
-    width: "350px",
-    border: "1px solid #ccc",
-    fontSize: "14px",
-    lineHeight: "20px",
-    zIndex: -1
-  }}
->
-  <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>Booking Receipt</h2>
-
-  <p><strong>Booking ID:</strong> {bookingData.bookingCode}</p>
-  <p><strong>Name:</strong> {bookingData.fullName}</p>
-  <p><strong>Phone:</strong> {bookingData.phone}</p>
-  <p><strong>Email:</strong> {bookingData.email}</p>
-  <p><strong>Pickup:</strong> {bookingData.pickupLocation}</p>
-  <p><strong>Destination:</strong> {bookingData.destination}</p>
-  <p><strong>Date:</strong> {bookingData.pickupDate}</p>
-  <p><strong>Time:</strong> {bookingData.pickupTime}</p>
-  <p><strong>Total Fare:</strong> ₹{bookingData.finalTotalFare}</p>
-  <p><strong>Paid:</strong> ₹{paymentAmount}</p>
-  <p><strong>Remaining:</strong> ₹{remainingAmount}</p>
-  <p><strong>Transaction ID:</strong> {bookingData.payments.transactionId}</p>
-</div>
-
           </div>
         </div>
       </div>

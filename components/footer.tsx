@@ -22,14 +22,14 @@ export default function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-            <img
-              src="/logo/logo-icon.png" // replace with your logo path
-              alt="Easy Go Cab Logo"
-              className="h-14 w-auto" // adjust size as needed
-            />
-            <span className="text-4xl font-extrabold text-white group-hover:text-primary transition-colors">
-              <span className="text-primary">Easy</span> Go
-            </span>
+              <img
+                src="/logo/logo-icon.png" // replace with your logo path
+                alt="Easy Go Cab Logo"
+                className="h-14 w-auto" // adjust size as needed
+              />
+              <span className="text-4xl font-extrabold text-white group-hover:text-primary transition-colors">
+                <span className="text-primary">Easy</span> Go
+              </span>
             </div>
             <p className="text-gray-300 mb-4">
               We successfully cope with tasks of varying complexity, provide long-term guarantees and regularly master
@@ -49,11 +49,11 @@ export default function Footer() {
                   About Company
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/taxi-list" className="hover:text-yellow-400 transition-colors">
                   Taxi List
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/contact" className="hover:text-yellow-400 transition-colors">
                   Help Center
@@ -72,6 +72,11 @@ export default function Footer() {
               <li>
                 <Link href="/cancellation-policy" className="hover:text-yellow-400 transition-colors">
                   Cancellation Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/disclaimer" className="hover:text-yellow-400 transition-colors">
+                  Disclaimer
                 </Link>
               </li>
             </ul>

@@ -103,6 +103,7 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
     }
 
     dispatch(setBookingDataStep3(carData))
+    nextStep()
   }
 
   const handleNext = () => {
