@@ -185,13 +185,13 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">© Copyright 2025 Easy Go Cab. All Rights Reserved.</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
-              <Link href="https://youtube.com/@easygocab?si=jLARQ7CUAgcApi5n" className="text-gray-400 hover:text-yellow-400 transition-colors">
+              <Link href="https://youtube.com/@easygocab?si=jLARQ7CUAgcApi5n" target="_blank" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Youtube className="w-5 h-5" />
               </Link>
-              <Link href="https://www.facebook.com/EasyGoCab.0" className="text-gray-400 hover:text-yellow-400 transition-colors">
+              <Link href="https://www.facebook.com/EasyGoCab.0" target="_blank" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Facebook className="w-5 h-5" />
               </Link>
-              <Link href="https://www.instagram.com/easygo.cab?igsh=OXk4dnVtOG05azc3" className="text-gray-400 hover:text-yellow-400 transition-colors">
+              <Link href="https://www.instagram.com/easygo.cab?igsh=OXk4dnVtOG05azc3" target="_blank" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Instagram className="w-5 h-5" />
               </Link>
             </div>
