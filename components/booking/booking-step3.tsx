@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge"
 import { setBookingDataStep3 } from "@/store/Slices/bookingSlice"
 import type { RootState } from "@/store/store"
 import type { BookingDataStep3 } from "@/store/Slices/bookingSlice"
+import { useRef } from "react";
+import { getRentalFare } from "@/lib/utils"
 
 interface Car {
   id: number
@@ -53,7 +55,7 @@ const featureIcons = {
 
 export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) {
   const dispatch = useDispatch()
-  const bookingDataStep2 = useSelector(
+  const bookingDataStep2: any = useSelector(
     (state: RootState) => state.booking.bookingDataStep2
   )
   const bookingDataStep3 = useSelector(
@@ -84,6 +86,7 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
     window.scrollTo(0, 0);
     if (bookingDataStep2?.bookingType) fetchCars()
   }, [bookingDataStep2?.bookingType])
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // Handle selecting a car (original logic remains)
   const handleCarSelection = (car: Car) => {
@@ -98,13 +101,35 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
         car.features.find((f) => f.includes("Seats"))?.split(" ")[0] || "4",
       image: car.image,
       baseRate: car.basePrice.toString(),
-      extraKmRate: car.basePrice.toString(),
+      // For rentals, the fare is fixed, so we can use it for baseRate and extraKmRate
+      extraKmRate: (bookingDataStep2?.bookingType === 'rental'
+        ? getRentalFare(bookingDataStep2.rentalPackage, car.name)
+        : car.basePrice
+      )?.toString() || "0",
       features: car.features,
     }
 
     dispatch(setBookingDataStep3(carData))
-    nextStep()
+    if (bottomRef.current) {
+      const top =
+        bottomRef.current.getBoundingClientRect().top +
+        window.scrollY -
+        300; // 200px offset
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+
   }
+
+  const scrollToBottomOffset = (offset = 500) => {
+    const scrollHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+    window.scrollTo({
+      top: scrollHeight - offset,
+      behavior: "smooth",
+    });
+  };
 
   const handleNext = () => {
     if (selectedCarId) {
@@ -151,13 +176,21 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
               car.features.find((f) => f.includes("Seats"))?.split(" ")[0] ||
               "4"
             ) || 4
+
+          // Get the specific fare for this car and the selected rental package
+          const rentalFare = bookingDataStep2?.bookingType === 'rental'
+            ? getRentalFare(bookingDataStep2.rentalPackage, car.name)
+            : null;
+
+          // Determine the price to display
+          const displayPrice = rentalFare !== null ? rentalFare : car.basePrice;
           return (
             <Card
               key={car.id}
               // Card background, ring, and hover effects for dark mode
               className={`cursor-pointer transition-all hover:shadow-lg dark:bg-gray-800 dark:border-gray-700 dark:hover:shadow-xl ${selectedCarId === car.id.toString()
-                  ? "ring-2 ring-yellow-400 bg-yellow-50 dark:bg-yellow-950 dark:ring-yellow-500"
-                  : "dark:hover:border-yellow-500"
+                ? "ring-2 ring-yellow-400 bg-yellow-50 dark:bg-yellow-950 dark:ring-yellow-500"
+                : "dark:hover:border-yellow-500"
                 }`}
               onClick={() => handleCarSelection(car)}
             >
@@ -219,9 +252,9 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
                       <Snowflake className="w-4 h-4 mr-1" />
                       AC
                     </div>
-                    <div className="flex items-center">
+                    {/* <div className="flex items-center">
                       <Fuel className="w-4 h-4 mr-1" />₹{car.basePrice}/km
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Separator adjustment */}
@@ -232,7 +265,8 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
                         <p className="text-sm text-gray-600 dark:text-gray-400">Starting from</p>
                         {/* Rate maintains visibility with yellow color */}
                         <p className="text-xl font-bold text-yellow-600 dark:text-yellow-500">
-                          ₹{car.basePrice}/km
+                          {/* Show rental fare if applicable, otherwise show per/km rate */}
+                          ₹{displayPrice}{rentalFare === null ? '/km' : ''}
                         </p>
                       </div>
                       <Button
@@ -299,6 +333,7 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
+      <div ref={bottomRef} />
     </div>
   )
 }

@@ -69,7 +69,29 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
         { id: "rental", label: "Rental", description: "Hourly car rental packages" },
     ]
 
-    const rentalPackages = ["1hr/10km - ₹299", "2hr/20km - ₹599", "4hr/40km - ₹999", "8hr/80km - ₹1799"]
+    // NEW: Structured rental packages with starting fares
+    const rentalPackages = [
+        {
+            id: "2hr/25km",
+            label: "2 Hours / 25 km",
+            startingFare: 796,
+        },
+        {
+            id: "3hr/35km",
+            label: "3 Hours / 35 km",
+            startingFare: 1095,
+        },
+        {
+            id: "4hr/45km",
+            label: "4 Hours / 45 km",
+            startingFare: 1292,
+        },
+        {
+            id: "6hr/70km",
+            label: "6 Hours / 70 km",
+            startingFare: 1800,
+        },
+    ];
 
     // Sync Redux whenever local state changes
     const updateBookingData = (data: any) => {
@@ -176,7 +198,7 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Trip Details</h2>
                 <p className="text-gray-600 dark:text-gray-400">Provide your travel information and preferences</p>
             </div>
-            
+
             <div className="space-y-4"> {/* Added container for consistent spacing with Step 1 */}
 
                 {/* Booking Type Selection */}
@@ -189,8 +211,8 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
                                 variant={bookingData.bookingType === type.id ? "default" : "outline"}
                                 className={`h-auto p-4 text-left border-2 transition-all duration-200
                                 ${bookingData.bookingType === type.id
-                                    ? "bg-yellow-500 text-black hover:bg-yellow-600 dark:bg-yellow-600 dark:text-white dark:hover:bg-yellow-700 border-yellow-500 dark:border-yellow-600 shadow-md"
-                                    : "hover:border-yellow-500 bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700"
+                                        ? "bg-yellow-500 text-black hover:bg-yellow-600 dark:bg-yellow-600 dark:text-white dark:hover:bg-yellow-700 border-yellow-500 dark:border-yellow-600 shadow-md"
+                                        : "hover:border-yellow-500 bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700"
                                     }`}
                                 onClick={() => {
                                     updateBookingData({ bookingType: type.id as any, destination: (type.id === 'local' || type.id === 'rental') ? '' : bookingData.destination })
@@ -329,11 +351,12 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
                             {/* Assuming SelectContent/SelectItem components are styled for dark mode internally */}
                             <SelectContent className="dark:bg-gray-800 dark:border-gray-700 dark:text-white">
                                 {rentalPackages.map((pkg) => (
-                                    <SelectItem key={pkg} value={pkg}>
-                                        {pkg}
+                                    <SelectItem key={pkg.id} value={pkg.id}>
+                                        {pkg.label} - ₹{pkg.startingFare}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
+
                         </Select>
                         {errors.rentalPackage && <p className={errorTextClasses}>{errors.rentalPackage}</p>}
                     </div>
@@ -432,16 +455,16 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
             </div>
 
             <div className="flex justify-between pt-6 border-t dark:border-gray-700">
-                <Button 
-                    variant="outline" 
-                    onClick={prevStep} 
+                <Button
+                    variant="outline"
+                    onClick={prevStep}
                     className="flex items-center space-x-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     <span>Back</span>
                 </Button>
-                <Button 
-                    onClick={handleNext} 
+                <Button
+                    onClick={handleNext}
                     className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-600 text-black dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:text-white font-semibold"
                 >
                     <span>Next</span>

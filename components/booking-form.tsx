@@ -76,6 +76,30 @@ export default function BookingForm() {
     }, 1000) // 1 second delay
   }
 
+      const rentalPackages = [
+        {
+            id: "2hr/25km",
+            label: "2 Hours / 25 km",
+            startingFare: 796,
+        },
+        {
+            id: "3hr/35km",
+            label: "3 Hours / 35 km",
+            startingFare: 1095,
+        },
+        {
+            id: "4hr/45km",
+            label: "4 Hours / 45 km",
+            startingFare: 1292,
+        },
+        {
+            id: "6hr/70km",
+            label: "6 Hours / 70 km",
+            startingFare: 1800,
+        },
+    ];
+
+
 
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}>
@@ -213,11 +237,22 @@ export default function BookingForm() {
                       <SelectTrigger className="dark:bg-black dark:text-white dark:border-gray-700">
                         <SelectValue placeholder="Select package" />
                       </SelectTrigger>
-                      <SelectContent className="dark:bg-black dark:text-white dark:border-gray-700">
+                      {/* <SelectContent className="dark:bg-black dark:text-white dark:border-gray-700">
                         <SelectItem value="1hr/10km - ₹299" className="dark:hover:bg-gray-900">1hr/10km - ₹299</SelectItem>
                         <SelectItem value="2hr/20km - ₹599" className="dark:hover:bg-gray-900">2hr/20km - ₹599</SelectItem>
                         <SelectItem value="4hr/40km - ₹999" className="dark:hover:bg-gray-900">4hr/40km - ₹999</SelectItem>
                         <SelectItem value="8hr/80km - ₹1799" className="dark:hover:bg-gray-900">8hr/80km - ₹1799</SelectItem>
+                      </SelectContent> */}
+                      <SelectContent className="dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                        {rentalPackages.map((pkg) => (
+                          <SelectItem
+                            key={pkg.id}
+                            value={`${pkg.id} - ₹${pkg.startingFare}`}
+                            className="dark:hover:bg-gray-900"
+                          >
+                            {`${pkg.label} - ₹${pkg.startingFare}`}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )}

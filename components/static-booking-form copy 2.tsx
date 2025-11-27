@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { User, MapPin, DollarSign, Car, CreditCard, Banknote, CheckCircle, Car as CarIcon, Info, Users, AirVent, Fuel, Sun, Moon } from 'lucide-react'
+// Assuming these imports are available in your project environment
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -37,29 +38,6 @@ async function loadRazorpayScript() {
     })
 }
 
-// --- Helper Component for Step Navigation ---
-const StepIndicator = ({ currentStep, setStep }: { currentStep: number, setStep: (step: number) => void }) => {
-    const steps = [
-        { number: 1, title: "Your Details", icon: <User className="w-5 h-5" /> },
-        { number: 2, title: "Select Cab", icon: <CarIcon className="w-5 h-5" /> },
-        { number: 3, title: "Payment", icon: <CreditCard className="w-5 h-5" /> },
-        { number: 4, title: "Confirm", icon: <CheckCircle className="w-5 h-5" /> },
-    ];
-
-    return (
-        <div className="flex items-center justify-center space-x-4 md:space-x-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-inner">
-            {steps.map((step, index) => (
-                <div key={step.number} className="flex items-center text-sm md:text-base">
-                    <div className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full transition-all duration-300 ${currentStep >= step.number ? 'bg-yellow-500 text-white' : 'bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}`}>
-                        {step.icon}
-                    </div>
-                    <span className={`ml-2 font-medium hidden md:block ${currentStep >= step.number ? 'text-gray-800 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>{step.title}</span>
-                    {index < steps.length - 1 && <div className="ml-4 md:ml-8 w-8 md:w-16 h-0.5 bg-gray-300 dark:bg-gray-700" />}
-                </div>
-            ))}
-        </div>
-    );
-};
 // --- Main Component ---
 export default function RouteBookingForm({ id }: any) {
 
@@ -120,7 +98,6 @@ export default function RouteBookingForm({ id }: any) {
     const [paymentMethod, setPaymentMethod] = useState('Razor Pay')
     const [isConfirmed, setIsConfirmed] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false);
-    const [step, setStep] = useState(1); // Step management
     const dispatch = useDispatch()
     const router = useRouter()
 
@@ -168,21 +145,6 @@ export default function RouteBookingForm({ id }: any) {
             razorpayDiscountRate,
         }
     }, [DYNAMIC_TRIP_DETAILS.baseAmount, paymentMethod])
-
-    // Step Navigation
-    const nextStep = () => setStep(prev => prev < 4 ? prev + 1 : prev);
-    const prevStep = () => setStep(prev => prev > 1 ? prev - 1 : prev);
-
-    const handleNext = () => {
-        if (step === 1) {
-            if (!userInfo.name || !userInfo.phone) {
-                toast.error("Please fill in your name and phone number to proceed.");
-                return;
-            }
-        }
-        // No validation needed for step 2 (car is pre-selected) or 3 (payment is pre-selected)
-        nextStep();
-    };
 
     // Handle Booking Submission
     async function handleConfirmBooking(e: React.FormEvent) {
@@ -350,164 +312,203 @@ export default function RouteBookingForm({ id }: any) {
             <div className="min-h-screen bg-white dark:bg-gray-900 p-4 md:p-8 transition-colors duration-300">
                 
                 {/* 🆕 Temporary Theme Toggle Button (If Navbar doesn't handle it) */}
-                {/* <div className="fixed top-24 right-4 z-50">
+                <div className="fixed top-24 right-4 z-50">
                     <Button onClick={handleThemeToggle} className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                         {theme === 'light' ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
                     </Button>
-                </div> */}
+                </div>
                 {/* End Theme Toggle */}
 
-                <div className="max-w-4xl mx-auto space-y-8">
+                <form onSubmit={handleConfirmBooking} className="max-w-4xl mx-auto space-y-8">
+
+                    {/* Header */}
                     <header className="text-center py-4">
                         <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
                             Secure Your Ride Now 🚀
                         </h1>
                         <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-                            Follow the steps below to complete your booking.
+                            Confirm your details and select your preferred car and payment method.
                         </p>
                     </header>
 
-                    <StepIndicator currentStep={step} setStep={setStep} />
+                    {/* --- SECTION 1: User Details --- */}
+                    <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800">
+                        <CardContent className="p-6 md:p-8 space-y-6">
+                            <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
+                                <User className="w-6 h-6 mr-3 text-yellow-600" />
+                                1. Your Details
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">Full Name *</Label>
+                                    <Input id="name" type="text" placeholder="John Doe" required onChange={handleUserInfoChange} value={userInfo.name} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">Phone Number *</Label>
+                                    <Input id="phone" type="tel" placeholder="+91 98765 43210" required onChange={handleUserInfoChange} value={userInfo.phone} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">Email Address</Label>
+                                    <Input id="email" type="email" placeholder="john@example.com" onChange={handleUserInfoChange} value={userInfo.email} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4 col-span-1 md:col-span-2">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="pickupDate" className="text-gray-700 dark:text-gray-300">Pickup Date</Label>
+                                        <Input id="pickupDate" type="date" onChange={handleUserInfoChange} value={userInfo.pickupDate} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="pickupTime" className="text-gray-700 dark:text-gray-300">Pickup Time</Label>
+                                        <Input id="pickupTime" type="time" onChange={handleUserInfoChange} value={userInfo.pickupTime} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                    <form onSubmit={handleConfirmBooking}>
-                        {/* --- STEP 1: User Details --- */}
-                        {step === 1 && (
-                            <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800 animate-fade-in">
-                                <CardContent className="p-6 md:p-8 space-y-6">
-                                    <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
-                                        <User className="w-6 h-6 mr-3 text-yellow-600" />
-                                        1. Your Details
-                                    </h2>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">Full Name *</Label>
-                                            <Input id="name" type="text" placeholder="John Doe" required onChange={handleUserInfoChange} value={userInfo.name} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">Phone Number *</Label>
-                                            <Input id="phone" type="tel" placeholder="+91 98765 43210" required onChange={handleUserInfoChange} value={userInfo.phone} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">Email Address</Label>
-                                            <Input id="email" type="email" placeholder="john@example.com" onChange={handleUserInfoChange} value={userInfo.email} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4 col-span-1 md:col-span-2">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="pickupDate" className="text-gray-700 dark:text-gray-300">Pickup Date</Label>
-                                                <Input id="pickupDate" type="date" onChange={handleUserInfoChange} value={userInfo.pickupDate} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="pickupTime" className="text-gray-700 dark:text-gray-300">Pickup Time</Label>
-                                                <Input id="pickupTime" type="time" onChange={handleUserInfoChange} value={userInfo.pickupTime} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" />
-                                            </div>
-                                        </div>
+                    {/* --- SECTION 3: Car Selection --- */}
+                    <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800">
+                        <CardContent className="p-6 md:p-8 space-y-6">
+                            <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
+                                <CarIcon className="w-6 h-6 mr-3 text-yellow-600" />
+                                3. Select Your Cab
+                            </h2>
+                            <RadioGroup
+                                value={selectedCar}
+                                onValueChange={setSelectedCar}
+                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                            >
+                                {DYNAMIC_CAR_OPTIONS_FULL.map(car => (
+                                    <CarSelectOption key={car.name} car={car} currentCar={selectedCar} onSelect={setSelectedCar} />
+                                ))}
+                            </RadioGroup>
+                        </CardContent>
+                    </Card>
+
+                    {/* --- SECTION 2: Trip & Pricing Details --- */}
+                    <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800">
+                        <CardContent className="p-6 md:p-8 space-y-6">
+                            <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
+                                <MapPin className="w-6 h-6 mr-3 text-yellow-600" />
+                                2. Trip & Pricing Summary
+                            </h2>
+
+                            {/* Trip Info */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                <DetailBox label="Pickup" value={DYNAMIC_TRIP_DETAILS.pickup.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
+                                <DetailBox label="Destination" value={DYNAMIC_TRIP_DETAILS.destination.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
+                                <DetailBox label="Distance" value={`${DYNAMIC_TRIP_DETAILS.distance} km`} icon={<DollarSign className="w-5 h-5 text-yellow-500" />} />
+                                <DetailBox label="Extra Fare/km" value={`₹${DYNAMIC_TRIP_DETAILS.carBaseFarePerKm}/km`} icon={<DollarSign className="w-5 h-5 text-yellow-500" />} />
+                            </div>
+
+                            <div className="bg-yellow-50 dark:bg-yellow-950 p-3 rounded-lg flex items-start text-sm text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800">
+                                <Info className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-yellow-600 dark:text-yellow-400" />
+                                <div>
+                                    All essential charges are **included** in the final fare:
+                                    <span className="font-semibold ml-1">Fuel: Included</span>,
+                                    <span className="font-semibold ml-2">Driver: Included</span>,
+                                    <span className="font-semibold ml-2">Toll/Taxes: Included</span>.
+                                </div>
+                            </div>
+
+
+                            <Separator className="dark:bg-gray-700"/>
+
+                            {/* Price Breakdown */}
+                            <div className="space-y-3">
+                                <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300">Cost Breakdown</h3>
+                                <div className="space-y-2">
+                                    <CostRow label={`Car Market Price (${currentCarDetails.name})`} value={DYNAMIC_TRIP_DETAILS.baseAmount} />
+
+                                    <div className={`flex justify-between items-center text-gray-600 dark:text-gray-300`}>
+                                        <span className='text-sm'>Included Trip Fixed Charges (Fuel, Driver, Toll)</span>
+                                        <span className='text-green-600 font-semibold'>
+                                            Included
+                                        </span>
                                     </div>
-                                    <div className="flex justify-end pt-4">
-                                        <Button type="button" onClick={handleNext} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Select Cab &rarr;</Button>
+
+                                    <Separator className="my-2 dark:bg-gray-700" />
+
+                                    <CostRow label="Subtotal (Car Price + Fixed Charges)" value={billingDetails.totalFare} isTotal={true} />
+
+                                    {billingDetails.discountAmount > 0 && (
+                                        <CostRow label="Razorpay Discount (2% OFF)" value={-billingDetails.discountAmount} isDiscount={true} />
+                                    )}
+
+                                    <Separator className="my-2 border-dashed border-gray-400 dark:border-gray-600" />
+
+                                    <div className="flex justify-between items-center text-2xl font-bold text-yellow-600 pt-2">
+                                        <span>FINAL AMOUNT PAYABLE</span>
+                                        <span>₹{billingDetails.finalAmount.toLocaleString('en-IN')}</span>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* --- SECTION 4: Payment Method --- */}
+                    <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800">
+                        <CardContent className="p-6 md:p-8 space-y-6">
+                            <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
+                                <CreditCard className="w-6 h-6 mr-3 text-yellow-600" />
+                                4. Choose Payment Method
+                            </h2>
+                            <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg flex items-start text-sm text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800">
+                                <Info className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                                <div>
+                                    💳 <span className="font-semibold">Choose Razorpay</span> as your payment method to get
+                                    <span className="font-semibold ml-1">2% OFF</span> on every ride!
+                                </div>
+                            </div>
+                            <RadioGroup
+                                value={paymentMethod}
+                                onValueChange={setPaymentMethod}
+                                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                            >
+                                <PaymentOption
+                                    name="Razor Pay"
+                                    value="Razor Pay"
+                                    icon={<CreditCard className="w-6 h-6" />}
+                                    highlight="Get 2% OFF instantly!"
+                                    isChecked={paymentMethod === 'Razor Pay'}
+                                    onSelect={setPaymentMethod}
+                                />
+                                <PaymentOption
+                                    name="Cash On Ride"
+                                    value="Cash On Ride"
+                                    icon={<Banknote className="w-6 h-6" />}
+                                    highlight="Pay after your trip."
+                                    isChecked={paymentMethod === 'Cash On Ride'}
+                                    onSelect={setPaymentMethod}
+                                />
+                            </RadioGroup>
+                        </CardContent>
+                    </Card>
+
+                    {/* --- Final Button --- */}
+                    <Button
+                        type="submit"
+                        disabled={isProcessing}
+                        className={`w-full py-7 text-xl font-semibold shadow-2xl transition-all disabled:opacity-50
+                        ${isConfirmed
+                                ? "bg-green-500 hover:bg-green-600 text-white"
+                                : "bg-yellow-500 hover:bg-yellow-600 text-gray-900"
+                            }`}
+                    >
+                        {isProcessing ? (
+                            <span className="flex items-center justify-center">
+                                Processing...
+                            </span>
+                        ) : isConfirmed ? (
+                            <span className="flex items-center justify-center">
+                                <CheckCircle className="w-6 h-6 mr-2" /> Booking Confirmed!
+                            </span>
+                        ) : (
+                            `Confirm Booking (Pay ₹${billingDetails.finalAmount.toLocaleString('en-IN')})`
                         )}
+                    </Button>
 
-                        {/* --- STEP 2: Car Selection --- */}
-                        {step === 2 && (
-                            <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800 animate-fade-in">
-                                <CardContent className="p-6 md:p-8 space-y-6">
-                                    <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
-                                        <CarIcon className="w-6 h-6 mr-3 text-yellow-600" />
-                                        2. Select Your Cab
-                                    </h2>
-                                    <RadioGroup value={selectedCar} onValueChange={setSelectedCar} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {DYNAMIC_CAR_OPTIONS_FULL.map(car => (
-                                            <CarSelectOption key={car.name} car={car} currentCar={selectedCar} onSelect={setSelectedCar} />
-                                        ))}
-                                    </RadioGroup>
-                                    <div className="flex justify-between pt-4">
-                                        <Button type="button" onClick={prevStep} variant="outline" className="font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
-                                        <Button type="button" onClick={nextStep} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Payment &rarr;</Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
 
-                        {/* --- STEP 3: Payment Method --- */}
-                        {step === 3 && (
-                            <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800 animate-fade-in">
-                                <CardContent className="p-6 md:p-8 space-y-6">
-                                    <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
-                                        <CreditCard className="w-6 h-6 mr-3 text-yellow-600" />
-                                        3. Choose Payment Method
-                                    </h2>
-                                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg flex items-start text-sm text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800">
-                                        <Info className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-                                        <div>
-                                            💳 <span className="font-semibold">Choose Razorpay</span> to get <span className="font-semibold ml-1">2% OFF</span> on your ride!
-                                        </div>
-                                    </div>
-                                    <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <PaymentOption name="Razor Pay" icon={<CreditCard className="w-6 h-6" />} highlight="Get 2% OFF instantly!" isChecked={paymentMethod === 'Razor Pay'} onSelect={setPaymentMethod} />
-                                        <PaymentOption name="Cash On Ride" icon={<Banknote className="w-6 h-6" />} highlight="Pay after your trip." isChecked={paymentMethod === 'Cash On Ride'} onSelect={setPaymentMethod} />
-                                    </RadioGroup>
-                                    <div className="flex justify-between pt-4">
-                                        <Button type="button" onClick={prevStep} variant="outline" className="font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
-                                        <Button type="button" onClick={nextStep} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Review & Confirm &rarr;</Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
-
-                        {/* --- STEP 4: Trip & Pricing Summary --- */}
-                        {step === 4 && (
-                            <Card className="shadow-2xl rounded-xl border-t-4 border-yellow-500 bg-white dark:bg-gray-800 animate-fade-in">
-                                <CardContent className="p-6 md:p-8 space-y-6">
-                                    <h2 className="flex items-center text-2xl font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
-                                        <MapPin className="w-6 h-6 mr-3 text-yellow-600" />
-                                        4. Review & Confirm Booking
-                                    </h2>
-
-                                    {/* Trip Info */}
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                                        <DetailBox label="Pickup" value={DYNAMIC_TRIP_DETAILS.pickup.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
-                                        <DetailBox label="Destination" value={DYNAMIC_TRIP_DETAILS.destination.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
-                                        <DetailBox label="Distance" value={`${DYNAMIC_TRIP_DETAILS.distance} km`} icon={<DollarSign className="w-5 h-5 text-yellow-500" />} />
-                                        <DetailBox label="Car" value={currentCarDetails.name} icon={<CarIcon className="w-5 h-5 text-yellow-500" />} />
-                                    </div>
-
-                                    <div className="bg-yellow-50 dark:bg-yellow-950 p-3 rounded-lg flex items-start text-sm text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800">
-                                        <Info className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-yellow-600 dark:text-yellow-400" />
-                                        <div>All essential charges are **included**: <span className="font-semibold ml-1">Fuel, Driver, Toll/Taxes</span>.</div>
-                                    </div>
-
-                                    <Separator className="dark:bg-gray-700" />
-
-                                    {/* Price Breakdown */}
-                                    <div className="space-y-3">
-                                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300">Cost Breakdown</h3>
-                                        <div className="space-y-2">
-                                            <CostRow label={`Base Price (${currentCarDetails.name})`} value={DYNAMIC_TRIP_DETAILS.baseAmount} />
-                                            <div className={`flex justify-between items-center text-gray-600 dark:text-gray-300`}><span className='text-sm'>Included Trip Fixed Charges</span><span className='text-green-600 font-semibold'>Included</span></div>
-                                            <Separator className="my-2 dark:bg-gray-700" />
-                                            <CostRow label="Subtotal" value={billingDetails.totalFare} isTotal={true} />
-                                            {billingDetails.discountAmount > 0 && (<CostRow label="Razorpay Discount (2% OFF)" value={-billingDetails.discountAmount} isDiscount={true} />)}
-                                            <Separator className="my-2 border-dashed border-gray-400 dark:border-gray-600" />
-                                            <div className="flex justify-between items-center text-2xl font-bold text-yellow-600 pt-2">
-                                                <span>FINAL AMOUNT PAYABLE</span>
-                                                <span>₹{billingDetails.finalAmount.toLocaleString('en-IN')}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-between pt-6">
-                                        <Button type="button" onClick={prevStep} variant="outline" className="font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
-                                        <Button type="submit" disabled={isProcessing || isConfirmed} className={`py-3 px-6 text-lg font-semibold shadow-2xl transition-all disabled:opacity-50 ${isConfirmed ? "bg-green-500 hover:bg-green-600 text-white" : "bg-yellow-500 hover:bg-yellow-600 text-gray-900"}`}>
-                                            {isProcessing ? "Processing..." : isConfirmed ? <><CheckCircle className="w-6 h-6 mr-2" /> Confirmed!</> : `Confirm & Book`}
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
-                    </form>
-                </div>
+                </form>
             </div>
             <Footer />
         </div>
@@ -551,7 +552,7 @@ const CostRow = ({ label, value, isTotal = false, isDiscount = false, isPositive
     )
 }
 
-const CarSelectOption = ({ car, currentCar, onSelect }: any) => {
+const CarSelectOption = ({ car, currentCar }: any) => {
     const surchargePercent = ((car.baseMultiplier - 1) * 100).toFixed(0);
     const marketPriceDisplay = car.marketPrice.toLocaleString('en-IN');
 
@@ -562,7 +563,7 @@ const CarSelectOption = ({ car, currentCar, onSelect }: any) => {
 
 
     return (
-        <div className="relative" onClick={() => onSelect(car.name)}>
+        <div className="relative">
             <RadioGroupItem value={car.name} id={car.name} className="peer hidden" />
             <Label
                 htmlFor={car.name}
@@ -630,22 +631,34 @@ const CarSelectOption = ({ car, currentCar, onSelect }: any) => {
     )
 }
 
-const PaymentOption = ({ name, icon, highlight, isChecked, onSelect }: any) => (
+const PaymentOption = ({ name, icon, highlight }: any) => (
     <div className="relative">
         <RadioGroupItem value={name} id={name} className="peer hidden" />
         <Label
             htmlFor={name}
             className={`
             flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all h-full
-            border-gray-200 hover:border-yellow-300 dark:border-gray-700 dark:hover:border-yellow-500
-            ${isChecked ? 'border-yellow-500 bg-yellow-50 dark:bg-gray-800 ring-2 ring-yellow-500' : 'bg-white dark:bg-gray-900'}
+            
+            // Light Mode:
+            ${name === 'Razor Pay' ? 'bg-purple-50 shadow-lg' : 'bg-white'} 
+            border-gray-200 hover:border-yellow-300
+            
+            // Dark Mode:
+            dark:border-gray-700 dark:hover:border-yellow-500
+            ${name === 'Razor Pay' ? 'dark:bg-gray-900 dark:shadow-none' : 'dark:bg-gray-800'}
+
+            // Peer Checked State (Applies in both themes):
+            peer-data-[state=checked]:border-yellow-600 peer-data-[state=checked]:shadow-xl peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-yellow-500
+
             `}
         >
             <span className="text-yellow-600 mr-4">{icon}</span>
             <div>
                 {/* Text color changes based on theme */}
                 <span className="text-base font-bold text-gray-800 dark:text-white">{name}</span>
-                <p className={`text-sm mt-1 ${name === 'Razor Pay' ? 'text-yellow-700 font-semibold dark:text-yellow-400' : 'text-gray-500 dark:text-gray-400'}`}>
+                <p className={`text-sm mt-1 
+                    ${name === 'Razor Pay' ? 'text-yellow-700 font-semibold dark:text-yellow-400' : 'text-gray-500 dark:text-gray-400'}
+                `}>
                     {highlight}
                 </p>
             </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   CheckCircle,
   Download,
@@ -23,7 +23,8 @@ import { useSelector } from "react-redux"
 import type { RootState } from "@/store/store"
 import Navbar from "../navbar"
 import Footer from "../footer"
-import { ReceiptGenerator } from "@/lib/recieptGenrator"
+import { toPng } from "html-to-image";
+
 
 // Define a type for your final booking data (adjust this to match your actual structure)
 interface FinalBookingData {
@@ -91,6 +92,7 @@ const defaultBooking: FinalBookingData = {
   }
 }
 
+
 export default function BookingStep5() {
   // 1. Get the final booking data from Redux
   const finalBookingData: FinalBookingData = useSelector(
@@ -106,7 +108,6 @@ export default function BookingStep5() {
   const paymentAmount = bookingData.amountPaid
   const remainingAmount = bookingData.remainingAmount
 
-
   // Helper to format date strings (e.g., '2024-01-15' to 'Jan 15, 2024')
   const formatDate = (dateString: string) => {
     if (!dateString || dateString === 'N/A') return 'N/A'
@@ -117,30 +118,243 @@ export default function BookingStep5() {
         day: 'numeric',
       })
     } catch {
-      return dateString
+      return dateString // return raw string if formatting fails
     }
   }
 
-  const handleDownloadReceipt = () => {
-    const receiptData = {
-      bookingId: bookingData.bookingCode,
-      customerName: bookingData.fullName,
-      mobile: bookingData.phone,
-      email: bookingData.email,
-      serviceType: bookingData.bookingType,
-      car: bookingData.vehicleName,
-      pickup: bookingData.pickupLocation,
-      destination: bookingData.destination,
-      date: bookingData.pickupDate,
-      time: bookingData.pickupTime,
-      totalFare: bookingData.finalTotalFare,
-      paidAmount: paymentAmount,
-      remainingAmount: remainingAmount,
-      transactionId: bookingData.payments?.transactionId || "",
-    }
+  // const handleDownloadReceipt = () => {
+  //   const receiptData = {
+  //     bookingId: bookingData.bookingCode, // Use bookingCode
+  //     customerName: bookingData.fullName,
+  //     mobile: bookingData.phone, // Use 'phone' from the saved data
+  //     email: bookingData.email,
+  //     serviceType: bookingData.bookingType,
+  //     car: bookingData.vehicleName, // Use 'vehicleName'
+  //     pickup: bookingData.pickupLocation,
+  //     destination: bookingData.destination,
+  //     date: bookingData.pickupDate,
+  //     time: bookingData.pickupTime,
+  //     totalFare: bookingData.finalTotalFare, // Use 'finalTotalFare'
+  //     paidAmount: paymentAmount,
+  //     remainingAmount: remainingAmount,
+  //     transactionId: bookingData.payments.transactionId, // Get from nested object
+  //   }
 
-    ReceiptGenerator(receiptData)
+  //   const dataStr = JSON.stringify(receiptData, null, 2)
+  //   const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr)
+
+  //   const exportFileDefaultName = `booking-receipt-${bookingData.bookingCode}.json`
+
+  //   const linkElement = document.createElement("a")
+  //   linkElement.setAttribute("href", dataUri)
+  //   linkElement.setAttribute("download", exportFileDefaultName)
+  //   linkElement.click()
+  // }
+
+
+  // helper: build an SVG string for the receipt
+  function buildReceiptSVG(data: any, width = 800) {
+    const pad = 40;
+    const line = 26;
+    const contentWidth = width - pad * 2;
+
+    const fmt = (v: any) => (v === null || v === undefined ? "N/A" : String(v));
+
+    const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="${width}">
+    <style>
+      .title { font-size: 32px; font-weight: 700; fill: #111; font-family: Inter, sans-serif; }
+      .header { font-size: 18px; font-weight: 600; fill: #111; font-family: Inter, sans-serif; }
+      .label { font-size: 16px; font-weight: 600; fill: #444; font-family: Inter, sans-serif; }
+      .value { font-size: 16px; fill: #000; font-family: Inter, sans-serif; }
+      .section-title { font-size: 20px; font-weight: 700; fill: #222; font-family: Inter, sans-serif; }
+    </style>
+
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="#ffffff" />
+
+    <!-- Logo Row -->
+    <rect x="${pad}" y="25" width="50" height="28" rx="6" fill="#f6c94d" />
+    <text x="${pad + 65}" y="46" class="header">Easy Go Cab</text>
+    <text x="${pad}" y="90" class="title">Booking Receipt</text>
+
+    <!-- Booking Details -->
+    <text x="${pad}" y="140" class="section-title">Booking Information</text>
+
+    <text x="${pad}" y="180" class="label">Booking ID:</text>
+    <text x="${pad + 160}" y="180" class="value">${fmt(data.bookingId)}</text>
+
+    <text x="${pad}" y="210" class="label">Name:</text>
+    <text x="${pad + 160}" y="210" class="value">${fmt(data.customerName)}</text>
+
+    <text x="${pad}" y="240" class="label">Phone:</text>
+    <text x="${pad + 160}" y="240" class="value">${fmt(data.mobile)}</text>
+
+    <text x="${pad}" y="270" class="label">Email:</text>
+    <text x="${pad + 160}" y="270" class="value">${fmt(data.email)}</text>
+
+    <text x="${pad}" y="300" class="label">Service:</text>
+    <text x="${pad + 160}" y="300" class="value">${fmt(data.serviceType)}</text>
+
+    <text x="${pad}" y="330" class="label">Car:</text>
+    <text x="${pad + 160}" y="330" class="value">${fmt(data.car)}</text>
+
+    <text x="${pad}" y="360" class="label">Pickup:</text>
+    <text x="${pad + 160}" y="360" class="value">${fmt(data.pickup)}</text>
+
+    <text x="${pad}" y="390" class="label">Destination:</text>
+    <text x="${pad + 160}" y="390" class="value">${fmt(data.destination)}</text>
+
+    <text x="${pad}" y="420" class="label">Date:</text>
+    <text x="${pad + 160}" y="420" class="value">${fmt(data.date)} ${fmt(data.time)}</text>
+
+    <!-- Fare Section -->
+    <text x="${pad}" y="480" class="section-title">Fare Summary</text>
+
+    <text x="${pad}" y="520" class="label">Total Fare:</text>
+    <text x="${pad + 160}" y="520" class="value">₹${fmt(data.totalFare)}</text>
+
+    <text x="${pad}" y="550" class="label">Paid:</text>
+    <text x="${pad + 160}" y="550" class="value">₹${fmt(data.paidAmount)}</text>
+
+    <text x="${pad}" y="580" class="label">Remaining:</text>
+    <text x="${pad + 160}" y="580" class="value">₹${fmt(data.remainingAmount)}</text>
+
+    <!-- Transaction -->
+    <text x="${pad}" y="640" class="section-title">Transaction</text>
+
+    <text x="${pad}" y="680" class="label">Transaction ID:</text>
+    <text x="${pad + 160}" y="680" class="value">${fmt(data.transactionId)}</text>
+
+    <!-- Footer -->
+    <text x="${pad}" y="760" class="value">Thank you for choosing Easy Go Cab!</text>
+  </svg>
+  `;
+
+    return { svg, width, height: 850 };
   }
+
+  // helper: convert svg -> png Blob (returns Promise<Blob>)
+  function svgToPngBlob(svgStr: string, width: number, height: number, scale = 2) {
+    return new Promise<Blob>((resolve, reject) => {
+      const svg64 = btoa(unescape(encodeURIComponent(svgStr))); // base64
+      const b64Start = "data:image/svg+xml;base64,";
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(width * scale);
+          canvas.height = Math.round(height * scale);
+          const ctx = canvas.getContext("2d");
+          if (!ctx) throw new Error("Canvas context not available");
+          // white background
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          // draw the SVG as an image (scale for better DPI)
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob) => {
+            if (!blob) return reject(new Error("Failed to create blob"));
+            resolve(blob);
+          }, "image/png");
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.onerror = (e) => reject(new Error("Failed to load SVG as image"));
+      img.src = b64Start + svg64;
+    });
+  }
+
+  // replace your handleDownloadReceipt with this:
+  // const handleDownloadReceipt = async () => {
+  //   try {
+  //     const receiptData = {
+  //       bookingId: bookingData.bookingCode,
+  //       customerName: bookingData.fullName,
+  //       mobile: bookingData.phone,
+  //       email: bookingData.email,
+  //       serviceType: bookingData.bookingType,
+  //       car: bookingData.vehicleName,
+  //       pickup: bookingData.pickupLocation,
+  //       destination: bookingData.destination,
+  //       date: bookingData.pickupDate,
+  //       time: bookingData.pickupTime,
+  //       totalFare: bookingData.finalTotalFare,
+  //       paidAmount: paymentAmount,
+  //       remainingAmount: remainingAmount,
+  //       transactionId: bookingData.payments?.transactionId || '',
+  //     };
+
+  //     const { svg, width, height } = buildReceiptSVG(receiptData, 800);
+
+  //     // convert SVG -> PNG blob (scale=2 for crispness)
+  //     const blob = await svgToPngBlob(svg, width, height, 2);
+
+  //     // download
+  //     const url = URL.createObjectURL(blob);
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = `receipt-${receiptData.bookingId || "receipt"}.png`;
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     a.remove();
+  //     URL.revokeObjectURL(url);
+  //   } catch (err) {
+  //     console.error("Receipt PNG error:", err);
+  //     alert("Failed to generate receipt image. See console for details.");
+  //   }
+  // };
+
+
+  const handleDownloadReceipt = async () => {
+    if (isDownloading) return // Prevent multiple clicks
+    setIsDownloading(true)
+    try {
+      const receiptData = {
+        bookingId: bookingData.bookingCode,
+        customerName: bookingData.fullName,
+        mobile: bookingData.phone,
+        email: bookingData.email,
+        serviceType: bookingData.bookingType,
+        car: bookingData.vehicleName,
+        pickup: bookingData.pickupLocation,
+        destination: bookingData.destination,
+        date: bookingData.pickupDate,
+        time: bookingData.pickupTime,
+        totalFare: bookingData.finalTotalFare,
+        paidAmount: paymentAmount,
+        remainingAmount: remainingAmount,
+        transactionId: bookingData.payments?.transactionId || "",
+      };
+
+      // Call API to generate receipt
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/booking/generate-receipt`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ receiptData }),
+      });
+
+      if (!response.ok) throw new Error("Failed to generate receipt");
+
+      // Get image blob
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob); 
+
+      // Trigger download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `receipt-${receiptData.bookingId || "receipt"}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Receipt download error:", err);
+      alert("Failed to download receipt. See console for details.");
+    } finally {
+      setIsDownloading(false)
+    }
+  };
 
   const handleWhatsAppSupport = () => {
     const message = `Hi, I need support for my booking. Booking ID: ${bookingData.bookingCode}`
@@ -365,7 +579,11 @@ export default function BookingStep5() {
             style={{ animationDelay: "0.4s" }}
           >
             {/* Download Button (Yellow) - Needs dark background for black text */}
-            <Button onClick={handleDownloadReceipt} disabled={isDownloading}>
+            <Button
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900"
+              onClick={handleDownloadReceipt}
+              disabled={isDownloading}
+            >
               {isDownloading ? (
                 <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Downloading...</>
               ) : (

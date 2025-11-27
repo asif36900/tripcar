@@ -152,7 +152,6 @@ export default function HomePage() {
         </section>
       )}
 
-
         {/* Services Overview */}
         <section className="py-20 bg-gray-50 dark:bg-zinc-900 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -410,7 +409,6 @@ export default function HomePage() {
               </Button></Link>
           </div>
         </section>
-
 
         {/* Client's Reviews (Assuming ReviewSection handles its own Dark Mode) */}
         <ReviewSection />

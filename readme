@@ -1,16 +1,54 @@
 1) popular routes ka booking design change hoga 
 2) page refresh or back karne se home page first page pe aaraha hai 
-3) Mera image add karna hai
-4) gari select karne ke baad scroll down karna hota hai tu ye problem solve karo ya tu car select karne ke baad automatic payment page pe chala jayega ya tu niche next button ayega 
-5) disclaimer page add 
+3) Mera image add karna hai (done)
+4) gari select karne ke baad scroll down karna hota hai tu ye problem solve karo ya tu car select karne ke baad automatic payment page pe chala jayega ya tu niche next button ayega   (done)
+5) disclaimer page add  (done)
 6) cab with luggage space , pet allowed optaion add karna hai 
 7) social media link karna hai 
-8) har route 200toll tax add ho raha hai usku remove karo 
-9) reciept design bekar hai usku thik karo
+8) har route 200toll tax add ho raha hai usku remove karo  (done)
+9) reciept design bekar hai usku thik karo (done)
 
 
 
 Easy go cab ka logo add karlo aur kitna km ka ride hai wo mail pe nahi aaya ( IN EMAIL )
 
-[9:32 PM, 11/24/2025] Asif IN: Toll tax 200 route har route pe show ho raha hai
-[9:32 PM, 11/24/2025] Asif IN: Gst 5% clculate nahi ho raha hai
+===========================
+
+Round Trip Chart 
+
+1) one way Agar 170 km hai tu aagar koye round trip book karta hai tu 170km × 2x = 340 km show hoga (done)  
+
+2) lakin Fare 2X Charge nahi karna 1.70X charge karna hai 30% disscount price aagar next day or same day return aaya tu & agr wo after 2 days return aaya tu 2X fare rahega (done)
+
+
+===========================
+
+Local Under 10 km -  Scorpio - 58, inova - 63
+
+Under 20km - Suv - 47/km , Scorpio - 53, inova - 60
+
+Under 50km - suv -- 44/km, Scorpio - 50, inova - 58
+
+================================
+
+Airport Booking pe 100 parking charges add karna ha (done)
+
+================================== 
+
+Car Rental Chart :- 
+
+2Hour ----- 25km ----- Wagnor --- 796 Fare ( 398/hr) ----- Dzire ---- 898 Fare ( 449/hr) -----Eartiga ----- 1140 fare ( 570/hr ) -------Scorpio ------ 1520 fare ( 760/hr)-----------inova ------ 1820 fare ( 910/hr) ........
+
+------------
+
+3Hour ----- 35km ----- Wagnor --- 1095 Fare ( 365/hr) ----- Dzire ---- 1230 Fare ( 410/hr) -----Eartiga ----- 1695 fare ( 565/hr ) -------Scorpio ------ 2145 fare ( 715/hr)-----------inova ------ 2595 fare ( 865/hr) ........
+
+----‐----------------
+
+4Hour ----- 45km ----- Wagnor --- 1292 Fare ( 323/hr) ----- Dzire ---- 1480 Fare ( 370/hr) -----Eartiga ----- 1980 fare ( 495/hr ) -------Scorpio ------ 2584 fare ( 646/hr)-----------inova ------ 3184 fare ( 796/hr) ........
+
+-------------------
+
+6Hour ----- 70km ----- Wagnor --- 1800 Fare ( 300/hr) ----- Dzire ---- 2100 Fare ( 350/hr) -----Eartiga ----- 2700 fare ( 450/hr ) -------Scorpio ------ 3180 fare ( 530/hr)-----------inova ------ 4080 fare ( 680/hr) ........
+
+========================================
