@@ -328,7 +328,7 @@ export default function BookingStep5() {
       };
 
       // Call API to generate receipt
-      const response = await fetch("/api/generate-receipt", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/booking/generate-receipt`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ receiptData }),
