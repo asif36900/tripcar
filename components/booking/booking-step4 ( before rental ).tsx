@@ -12,7 +12,7 @@ import { setFinalBooking, type BookingDataStep1, type BookingDataStep2, type Boo
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { getFareRate } from "@/lib/helper"
-import { getRentalFare } from "@/lib/utils"
+// import { setPaymentDetails } from "@/store/Slices/bookingSlice" 
 
 interface BookingStep4Props {
   nextStep: () => void
@@ -108,13 +108,9 @@ const calculateFareStructure = (
     const timeDiff = returnDateObj.getTime() - pickupDateObj.getTime();
     const dayDiff = timeDiff / (1000 * 3600 * 24);
 
-    if (dayDiff < 2) { // Same day or next day return //FIX:  can be configurable
+    if (dayDiff < 2) { // Same day or next day return
       const theoreticalTwoWayFare = oneWayBaseFare * 2;
       effectiveBaseFareForTrip = oneWayBaseFare * 1.7; // The actual base for the roundtrip
-      roundTripDiscountAmount = theoreticalTwoWayFare - effectiveBaseFareForTrip; // Discount compared to two one-way trips
-    } else {
-      const theoreticalTwoWayFare = oneWayBaseFare * 2;
-      effectiveBaseFareForTrip = oneWayBaseFare * 2; // The actual base for the roundtrip
       roundTripDiscountAmount = theoreticalTwoWayFare - effectiveBaseFareForTrip; // Discount compared to two one-way trips
     }
   }
@@ -157,26 +153,6 @@ const calculateFareStructure = (
     gst: finalGst, // Use the correctly calculated GST amount
     totalFare: finalTotalFare, // Use the correctly calculated Total Fare
     dynamicBaseRate,
-  };
-};
-
-// NEW: Simplified fare structure for rental bookings
-const calculateRentalFare = (step3: BookingDataStep3) => {
-  // The rental package price is stored in extraKmRate from Step 3
-  const totalFare = Number(step3.extraKmRate) || 0;
-
-  return {
-    oneWayBaseFare: 0,
-    roundTripDiscountAmount: 0,
-    effectiveBaseFareForTrip: totalFare, // The entire fare is the base
-    tollTax: 0,
-    airportParking: 0,
-    paymentMethodDiscountRate: 0,
-    calculatedPaymentDiscount: 0,
-    discountedFare: totalFare,
-    gst: 0, // No GST for rentals as per requirement
-    totalFare: totalFare,
-    dynamicBaseRate: 0,
   };
 };
 
@@ -255,10 +231,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (step2 && step2.pickupLocation && step2.destination) {
-      // MODIFIED: Do not calculate distance for rental bookings
-      if (step2.bookingType !== "rental") {
-        calculateDistance(step2.pickupLocation, step2.destination)
-      }
+      calculateDistance(step2.pickupLocation, step2.destination)
     }
     // Only run when location changes. `calculateDistance` is stable due to useCallback.
   }, [step2?.pickupLocation, step2?.destination, calculateDistance])
@@ -283,12 +256,8 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
     dynamicBaseRate // 🆕 add this
   } = useMemo(() => {
     // Calculate the fare structure based on the latest distance, selected percentage, and payment method
-    // MODIFIED: Use different calculation for rentals
-    if (step2.bookingType === "rental") {
-      return calculateRentalFare(step3);
-    }
-    return calculateFareStructure(step2, step3, effectiveDistance, paymentPercentage, paymentMethod)
-  }, [step2, step3, effectiveDistance, paymentPercentage, paymentMethod])
+    return calculateFareStructure(step2, step3, effectiveDistance, paymentPercentage, paymentMethod);
+  }, [step2, step3, effectiveDistance, paymentPercentage, paymentMethod]);
   const router = useRouter()
   console.log("====== Adjust BAse RAte ======");
   console.log(dynamicBaseRate);
@@ -602,23 +571,21 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                 <p className="font-semibold dark:text-gray-100">{step2.destination}</p>
               </div>
             )}
-            {step2.bookingType !== "rental" && (
-              <div>
-                <p className="text-gray-600 dark:text-gray-400">Distance</p>
-                {isDistanceLoading ? (
-                  <p className="font-semibold flex items-center text-blue-600 dark:text-blue-400"><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Calculating...</p>
-                ) : distanceError ? (
-                  <p className="font-semibold text-red-500 dark:text-red-400">{effectiveDistance} km (Est.)</p>
-                ) : (
-                  <p className="font-semibold flex items-center dark:text-gray-100">
-                    <Route className="w-4 h-4 mr-1 text-green-600 dark:text-green-400" />
-                    {step2.bookingType === "roundtrip" ? effectiveDistance * 2 : effectiveDistance} km
-                  </p>
-                )}
-              </div>
-            )}
             <div>
-              <p className="text-gray-600 dark:text-gray-400">{step2.bookingType === 'rental' ? 'Package Start' : 'Pickup Date & Time'}</p>
+              <p className="text-gray-600 dark:text-gray-400">Distance</p>
+              {isDistanceLoading ? (
+                <p className="font-semibold flex items-center text-blue-600 dark:text-blue-400"><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Calculating...</p>
+              ) : distanceError ? (
+                <p className="font-semibold text-red-500 dark:text-red-400">{effectiveDistance} km (Est.)</p>
+              ) : (
+                <p className="font-semibold flex items-center dark:text-gray-100">
+                  <Route className="w-4 h-4 mr-1 text-green-600 dark:text-green-400" />
+                  {effectiveDistance} km
+                </p>
+              )}
+            </div>
+            <div>
+              <p className="text-gray-600 dark:text-gray-400">Pickup Date & Time</p>
               <p className="font-semibold dark:text-gray-100">
                 {step2.pickupDate} at {step2.pickupTime}
               </p>
@@ -646,11 +613,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
               <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-300">
                 <div className="flex items-center"><Users className="w-4 h-4 mr-1" />{step3.seats} Seats</div>
                 <div className="flex items-center"><Snowflake className="w-4 h-4 mr-1" />AC</div>
-                {step2.bookingType !== "rental" && (
-                  <div className="flex items-center">
-                    <Fuel className="w-4 h-4 mr-1" />₹{dynamicBaseRate ? dynamicBaseRate : step3.baseRate}/km
-                  </div>
-                )}
+                <div className="flex items-center"><Fuel className="w-4 h-4 mr-1" />₹{dynamicBaseRate ? dynamicBaseRate : step3.baseRate}/km</div>
               </div>
             </div>
           </div>
@@ -663,69 +626,60 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
           <CardTitle className="pt-4 dark:text-gray-100">Fare Breakdown</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 dark:text-gray-300">
-          {step2.bookingType === "rental" ? (
+          {/* Base Fare */}
+          <div className="flex justify-between text-sm">
+            <span>
+              Base Fare ({step2.bookingType === "roundtrip" ? "Roundtrip" : "One-way"})
+            </span>
+            <span className="dark:text-gray-100">₹{effectiveBaseFareForTrip.toFixed(2)}</span>
+          </div>
+
+          {/* Roundtrip Discount */}
+          {step2.bookingType === "roundtrip" && roundTripDiscountAmount > 0 && (
             <>
-              {/* Simplified view for Rental */}
               <div className="flex justify-between text-sm">
-                <span>Package Price</span>
-                <span className="dark:text-gray-100">₹{totalFare.toFixed(2)}</span>
+                <span>Theoretical Two-way Fare</span>
+                <span className="dark:text-gray-100">₹{(oneWayBaseFare * 2).toFixed(2)}</span>
               </div>
-            </>
-          ) : (
-            <>
-              {/* Detailed view for other booking types */}
-              <div className="flex justify-between text-sm">
-                <span>Base Fare ({step2.bookingType === "roundtrip" ? "Roundtrip" : "One-way"})</span>
-                <span className="dark:text-gray-100">₹{effectiveBaseFareForTrip.toFixed(2)}</span>
-              </div>
-
-              {step2.bookingType === "roundtrip" && roundTripDiscountAmount > 0 && (
-                <>
-                  <div className="flex justify-between text-sm">
-                    <span>Theoretical Two-way Fare</span>
-                    <span className="dark:text-gray-100">₹{(oneWayBaseFare * 2).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-semibold">
-                    <span>Roundtrip Discount</span>
-                    <span>- ₹{roundTripDiscountAmount.toFixed(2)}</span>
-                  </div>
-                </>
-              )}
-
-              {airportParking > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span>Airport Parking</span>
-                  <span className="dark:text-gray-100">₹{airportParking}</span>
-                </div>
-              )}
-
-              {paymentMethodDiscountRate > 0 && (
-                <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-semibold border-t border-dashed pt-2 dark:border-gray-600">
-                  <span>Payment Method Discount ({paymentMethodDiscountRate * 100}%)</span>
-                  <span>- ₹{calculatedPaymentDiscount}</span>
-                </div>
-              )}
-
-              <div className="flex justify-between text-sm border-t pt-2 dark:border-gray-700">
-                <span>Subtotal (After Discount)</span>
-                <span className="dark:text-gray-100">₹{discountedFare}</span>
-              </div>
-
-              <div className="flex justify-between text-sm">
-                <span>GST (5% on Subtotal)</span>
-                <span className="dark:text-gray-100">₹{gst}</span>
+              <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-semibold">
+                <span>Roundtrip Discount</span>
+                <span>- ₹{roundTripDiscountAmount.toFixed(2)}</span>
               </div>
             </>
           )}
 
+          {/* Airport Parking */}
+          {airportParking > 0 && (
+            <div className="flex justify-between text-sm">
+              <span>Airport Parking</span>
+              <span className="dark:text-gray-100">₹{airportParking}</span>
+            </div>
+          )}
+
+          {/* Payment Method Discount */}
+          {paymentMethodDiscountRate > 0 && (
+            <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-semibold border-t border-dashed pt-2 dark:border-gray-600">
+              <span>Payment Method Discount ({paymentMethodDiscountRate * 100}%)</span>
+              <span>- ₹{calculatedPaymentDiscount}</span>
+            </div>
+          )}
+
+          {/* Subtotal */}
+          <div className="flex justify-between text-sm border-t pt-2 dark:border-gray-700">
+            <span>Subtotal (After Discount)</span>
+            <span className="dark:text-gray-100">₹{discountedFare}</span>
+          </div>
+
+          {/* GST */}
+          <div className="flex justify-between text-sm">
+            <span>GST (5% on Subtotal)</span>
+            <span className="dark:text-gray-100">₹{gst}</span>
+          </div>
+
           {/* Total Payable Fare */}
           <div className="border-t pt-3 dark:border-gray-600">
             <div className="flex justify-between font-semibold text-lg text-gray-900 dark:text-gray-50">
-              <span>
-                {step2.bookingType === "rental"
-                  ? "Total Package Price"
-                  : "Total Payable Fare"}
-              </span>
+              <span>Total Payable Fare</span>
               <span>₹{totalFare.toFixed(2)}</span>
             </div>
           </div>

@@ -108,13 +108,9 @@ const calculateFareStructure = (
     const timeDiff = returnDateObj.getTime() - pickupDateObj.getTime();
     const dayDiff = timeDiff / (1000 * 3600 * 24);
 
-    if (dayDiff < 2) { // Same day or next day return //FIX:  can be configurable
+    if (dayDiff < 2) { // Same day or next day return
       const theoreticalTwoWayFare = oneWayBaseFare * 2;
       effectiveBaseFareForTrip = oneWayBaseFare * 1.7; // The actual base for the roundtrip
-      roundTripDiscountAmount = theoreticalTwoWayFare - effectiveBaseFareForTrip; // Discount compared to two one-way trips
-    } else {
-      const theoreticalTwoWayFare = oneWayBaseFare * 2;
-      effectiveBaseFareForTrip = oneWayBaseFare * 2; // The actual base for the roundtrip
       roundTripDiscountAmount = theoreticalTwoWayFare - effectiveBaseFareForTrip; // Discount compared to two one-way trips
     }
   }
@@ -612,7 +608,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                 ) : (
                   <p className="font-semibold flex items-center dark:text-gray-100">
                     <Route className="w-4 h-4 mr-1 text-green-600 dark:text-green-400" />
-                    {step2.bookingType === "roundtrip" ? effectiveDistance * 2 : effectiveDistance} km
+                    {effectiveDistance} km
                   </p>
                 )}
               </div>
