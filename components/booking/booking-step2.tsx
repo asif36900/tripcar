@@ -2,7 +2,7 @@
 
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { MapPin, Calendar, Clock, Users, ArrowRight, ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -92,6 +92,10 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
             startingFare: 1800,
         },
     ];
+
+    useEffect(() => {
+            window.scrollTo(0, 0);
+    }, []);
 
     // Sync Redux whenever local state changes
     const updateBookingData = (data: any) => {

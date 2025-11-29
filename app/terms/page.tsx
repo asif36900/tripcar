@@ -168,7 +168,7 @@ export default function TermsConditionsPage() {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance"
             >
-              RENTAL TERMS &
+              TERMS &
               <br />
               <span className="gradient-text">CONDITIONS</span>
             </motion.h1>

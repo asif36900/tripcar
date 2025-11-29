@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useMemo } from 'react'
-import { User, MapPin, DollarSign, Car, CreditCard, Banknote, CheckCircle, Car as CarIcon, Info, Users, AirVent, Fuel, Sun, Moon } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { User, MapPin, DollarSign, Car, CreditCard, Banknote, CheckCircle, Car as CarIcon, Info, Users, AirVent, Fuel, Sun, Moon, Map } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -18,7 +18,7 @@ import Navbar from './navbar'
 
 // --- Static Values (Fixed Charges & GST) ---
 const STATIC_GST_RATE = 0.00; // 5% GST
-const FIXED_CHARGES_INCLUDED = 0; 
+const FIXED_CHARGES_INCLUDED = 0;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_xxxxxxxxxxxxxx';
 
@@ -66,6 +66,10 @@ export default function RouteBookingForm({ id }: any) {
     // 🆕 1. THEME STATE MANAGEMENT
     const [theme, setTheme] = useState('light'); // 'light' or 'dark'
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const handleThemeToggle = () => {
         setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
     };
@@ -74,7 +78,7 @@ export default function RouteBookingForm({ id }: any) {
 
     // 2. DYNAMIC DATA FETCHING & SETUP
     // NOTE: This assumes 'popularRoutes' is correctly imported and available
-    const selectedRoute = popularRoutes.find(route => route.id === Number(id)); 
+    const selectedRoute = popularRoutes.find(route => route.id === Number(id));
 
     if (!selectedRoute) {
         return (
@@ -181,6 +185,7 @@ export default function RouteBookingForm({ id }: any) {
             }
         }
         // No validation needed for step 2 (car is pre-selected) or 3 (payment is pre-selected)
+        window.scrollTo(0, 0);
         nextStep();
     };
 
@@ -274,8 +279,8 @@ export default function RouteBookingForm({ id }: any) {
             // 1) Create order on the server (Your /api/order route) - MOCKING RESPONSE
             // In a real app, this would be a server fetch:
             // const orderRes = await fetch("/api/order", {...}) 
-            const order = { id: `order_mock_${Date.now()}`, amount: finalAmountInPaise, currency: "INR", receipt: `rcpt_${Date.now()}` }; 
-            
+            const order = { id: `order_mock_${Date.now()}`, amount: finalAmountInPaise, currency: "INR", receipt: `rcpt_${Date.now()}` };
+
             // 2) Open Razorpay Checkout - NOTE: This will fail outside a real Next.js/Razorpay setup.
             const rzp = new (window as any).Razorpay({
                 key: RAZORPAY_KEY_ID,
@@ -286,11 +291,11 @@ export default function RouteBookingForm({ id }: any) {
                 order_id: order.id,
                 prefill: { name: userInfo.name, email: userInfo.email, contact: userInfo.phone },
                 notes: { receipt: order.receipt },
-                theme: { color: "#f59e0b" }, 
+                theme: { color: "#f59e0b" },
                 handler: async (response: any) => {
                     // 3) Verify signature on the server - MOCKING SUCCESS
                     // const verifyRes = await fetch("/api/verify", {...})
-                    const verificationSuccess = true; 
+                    const verificationSuccess = true;
 
                     if (!verificationSuccess) {
                         setIsProcessing(false)
@@ -341,14 +346,14 @@ export default function RouteBookingForm({ id }: any) {
             toast.error("There was a problem processing your payment. Please try again.")
         }
     }
-    
+
     // --- Rendering ---
     // Apply 'dark' class to the main container when theme is 'dark'
     return (
         <div className={theme === 'dark' ? 'dark' : ''}>
-            <Navbar  /> {/* Assuming Navbar accepts theme props */}
+            <Navbar /> {/* Assuming Navbar accepts theme props */}
             <div className="min-h-screen bg-white dark:bg-gray-900 p-4 md:p-8 transition-colors duration-300">
-                
+
                 {/* 🆕 Temporary Theme Toggle Button (If Navbar doesn't handle it) */}
                 {/* <div className="fixed top-24 right-4 z-50">
                     <Button onClick={handleThemeToggle} className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
@@ -402,8 +407,8 @@ export default function RouteBookingForm({ id }: any) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex justify-end pt-4">
-                                        <Button type="button" onClick={handleNext} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Select Cab &rarr;</Button>
+                                    <div className="flex-wrap md:flex justify-end pt-4">
+                                        <Button type="button" onClick={handleNext} className="bg-yellow-500 hover:bg-yellow-600 w-full md:w-fit text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Select Cab &rarr;</Button>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -422,9 +427,9 @@ export default function RouteBookingForm({ id }: any) {
                                             <CarSelectOption key={car.name} car={car} currentCar={selectedCar} onSelect={setSelectedCar} />
                                         ))}
                                     </RadioGroup>
-                                    <div className="flex justify-between pt-4">
-                                        <Button type="button" onClick={prevStep} variant="outline" className="font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
-                                        <Button type="button" onClick={nextStep} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Payment &rarr;</Button>
+                                    <div className="flex-wrap md:flex justify-between pt-4">
+                                        <Button type="button" onClick={prevStep} variant="outline" className="w-full md:w-fit font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
+                                        <Button type="button" onClick={nextStep} className="bg-yellow-500 w-full md:w-fit mt-2 md:mt-0 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Payment &rarr;</Button>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -448,9 +453,9 @@ export default function RouteBookingForm({ id }: any) {
                                         <PaymentOption name="Razor Pay" icon={<CreditCard className="w-6 h-6" />} highlight="Get 2% OFF instantly!" isChecked={paymentMethod === 'Razor Pay'} onSelect={setPaymentMethod} />
                                         <PaymentOption name="Cash On Ride" icon={<Banknote className="w-6 h-6" />} highlight="Pay after your trip." isChecked={paymentMethod === 'Cash On Ride'} onSelect={setPaymentMethod} />
                                     </RadioGroup>
-                                    <div className="flex justify-between pt-4">
-                                        <Button type="button" onClick={prevStep} variant="outline" className="font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
-                                        <Button type="button" onClick={nextStep} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Review & Confirm &rarr;</Button>
+                                    <div className="flex-wrap md:flex justify-between pt-4">
+                                        <Button type="button" onClick={prevStep} variant="outline" className="w-full md:w-fit font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
+                                        <Button type="button" onClick={nextStep} className="bg-yellow-500 w-full md:w-fit mt-2 md:mt-0 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg">Next: Review & Confirm &rarr;</Button>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -469,7 +474,7 @@ export default function RouteBookingForm({ id }: any) {
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                                         <DetailBox label="Pickup" value={DYNAMIC_TRIP_DETAILS.pickup.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
                                         <DetailBox label="Destination" value={DYNAMIC_TRIP_DETAILS.destination.split('(')[0]} icon={<MapPin className="w-5 h-5 text-yellow-500" />} />
-                                        <DetailBox label="Distance" value={`${DYNAMIC_TRIP_DETAILS.distance} km`} icon={<DollarSign className="w-5 h-5 text-yellow-500" />} />
+                                        <DetailBox label="Distance" value={`${DYNAMIC_TRIP_DETAILS.distance} km`} icon={<Map className="w-5 h-5 text-yellow-500" />} />
                                         <DetailBox label="Car" value={currentCarDetails.name} icon={<CarIcon className="w-5 h-5 text-yellow-500" />} />
                                     </div>
 
@@ -497,9 +502,9 @@ export default function RouteBookingForm({ id }: any) {
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-between pt-6">
-                                        <Button type="button" onClick={prevStep} variant="outline" className="font-bold py-3 px-6 rounded-lg">&larr; Previous</Button>
-                                        <Button type="submit" disabled={isProcessing || isConfirmed} className={`py-3 px-6 text-lg font-semibold shadow-2xl transition-all disabled:opacity-50 ${isConfirmed ? "bg-green-500 hover:bg-green-600 text-white" : "bg-yellow-500 hover:bg-yellow-600 text-gray-900"}`}>
+                                    <div className="flex-wrap  md:flex justify-between pt-6">
+                                        <Button type="button" onClick={prevStep} variant="outline" className="font-bold py-3 px-6 rounded-lg w-full md:w-fit">&larr; Previous</Button>
+                                        <Button type="submit" disabled={isProcessing || isConfirmed} className={`py-3 px-6 text-lg font-semibold w-full md:w-fit mt-2 md:mt-0 shadow-2xl transition-all disabled:opacity-50 ${isConfirmed ? "bg-green-500 hover:bg-green-600 text-white" : "bg-yellow-500 hover:bg-yellow-600 text-gray-900"}`}>
                                             {isProcessing ? "Processing..." : isConfirmed ? <><CheckCircle className="w-6 h-6 mr-2" /> Confirmed!</> : `Confirm & Book`}
                                         </Button>
                                     </div>
@@ -537,8 +542,8 @@ const CostRow = ({ label, value, isTotal = false, isDiscount = false, isPositive
         textColor = 'text-red-500 dark:text-red-400';
     }
 
-    const displayValue = isDiscount ? 
-        `- ₹${Math.abs(value).toLocaleString('en-IN', { minimumFractionDigits: 2 })}` 
+    const displayValue = isDiscount ?
+        `- ₹${Math.abs(value).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`
         : `₹${Math.abs(value).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
 
     return (
@@ -570,15 +575,15 @@ const CarSelectOption = ({ car, currentCar, onSelect }: any) => {
                 flex flex-col p-4 border-2 rounded-xl cursor-pointer transition-all h-full
 
                 // Default (Light) Styles
-                ${currentCar === car.name 
-                    ? 'border-yellow-500 bg-yellow-50 shadow-xl ring-2 ring-yellow-500 scale-[1.02]' 
-                    : 'border-gray-200 hover:border-yellow-300 bg-white'}
+                ${currentCar === car.name
+                        ? 'border-yellow-500 bg-yellow-50 shadow-xl ring-2 ring-yellow-500 scale-[1.02]'
+                        : 'border-gray-200 hover:border-yellow-300 bg-white'}
 
                 // Dark Mode Overrides
                 dark:border-gray-700 dark:hover:border-yellow-500
-                ${currentCar === car.name 
-                    ? 'dark:bg-gray-800 dark:shadow-none' 
-                    : 'dark:bg-gray-900'}
+                ${currentCar === car.name
+                        ? 'dark:bg-gray-800 dark:shadow-none'
+                        : 'dark:bg-gray-900'}
                 
                 `}
             >

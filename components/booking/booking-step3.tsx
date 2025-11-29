@@ -70,6 +70,7 @@ export default function BookingStep3({ nextStep, prevStep }: BookingStep3Props) 
 
   // Fetch cars based on booking type (original logic remains)
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchCars = async () => {
       try {
         const response = await fetch(`/api/cars?serviceType=${bookingDataStep2?.bookingType}`)

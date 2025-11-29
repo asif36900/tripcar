@@ -115,7 +115,7 @@
 
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { User, Phone, Mail, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -132,6 +132,10 @@ interface BookingStep1Props {
 export default function BookingStep1({ nextStep }: BookingStep1Props) {
     const dispatch = useDispatch()
     const step1Data = useSelector((state: RootState) => state.booking.bookingDataStep1)
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const [localData, setLocalData] = useState<BookingDataStep1>({
         fullName: step1Data?.fullName || "",
@@ -231,8 +235,8 @@ export default function BookingStep1({ nextStep }: BookingStep1Props) {
 
             <div className="flex justify-end pt-6">
                 {/* Button colors updated for Dark Mode consistency (yellow remains primary) */}
-                <Button 
-                    onClick={handleNext} 
+                <Button
+                    onClick={handleNext}
                     className="bg-yellow-500 hover:bg-yellow-600 text-black dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:text-white font-semibold"
                 >
                     Next <ArrowRight className="w-4 h-4 ml-2" />
