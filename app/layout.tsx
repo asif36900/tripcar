@@ -27,6 +27,22 @@ export default function RootLayout({
     type="image/svg+xml" 
     href="/splash.png" 
   />
+
+  {/* Primary Open Graph Meta Tags */}
+        <meta property="og:title" content="Easy Go Cab - Your Trusted Taxi Service" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/splash.png" />
+        <meta property="og:url" content="https://www.easygocab.com/" />
+        <meta property="og:description" content="Book reliable taxi services for local rides, outstation trips, airport transfers and more. Easy Go Cab provides safe and comfortable transportation." />
+        <meta property="og:site_name" content="EasyGoCab" />
+
+        {/* Additional Recommended OG Tags */}
+        <meta property="og:locale" content="en_IN" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="EasyGoCab - Taxi Booking Service" />
+
+
         {/* Google Analytics */}
         <script
           async
