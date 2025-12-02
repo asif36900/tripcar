@@ -938,6 +938,7 @@ export const FARE_RATES = {
     { maxKm: 200, mini: 19, sedan: 19.75, suv: 29, suvP: 34.78 },
     { maxKm: 300, mini: 17, sedan: 17.77, suv: 24, suvP: 30 },
     { maxKm: 500, mini: 15, sedan: 16, suv: 22, suvP: 28 },
+    { maxKm: 550, mini: 14, sedan: 15, suv: 21, suvP: 26 },
   ],
   hill: [
     { maxKm: 100, mini: 33.33, sedan: 34.2, suv: 66.69, suvP: 94.99 },

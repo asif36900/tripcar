@@ -97,6 +97,10 @@ export default function BookingStep5() {
     (state: RootState) => state.booking.finalBooking || defaultBooking
   )
 
+  console.log("====== Final Booking Data ======");
+  console.log(finalBookingData);
+  
+
   // State to handle loading for receipt download
   const [isDownloading, setIsDownloading] = useState(false)
 
@@ -133,6 +137,13 @@ export default function BookingStep5() {
       destination: bookingData.destination,
       date: bookingData.pickupDate,
       time: bookingData.pickupTime,
+      distance: bookingData.distance,
+      returnDate: bookingData.returnDate,
+      returnTime: bookingData.returnTime,
+      rentalPackage: bookingData.rentalPackage,
+      passengers: bookingData.passengers,
+      seats: bookingData.seats,
+      vehicleType: bookingData.vehicleType,
       totalFare: bookingData.finalTotalFare,
       paidAmount: paymentAmount,
       remainingAmount: remainingAmount,

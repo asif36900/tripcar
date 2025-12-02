@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { toast } from 'sonner'
 import { popularRoutes } from '@/lib/popularRoutes'
 import { useDispatch } from 'react-redux'
+import { useRef } from 'react';
 import { setFinalBooking } from '@/store/Slices/bookingSlice'
 import { useRouter } from 'next/navigation'
 import Footer from './footer'
@@ -66,9 +67,6 @@ export default function RouteBookingForm({ id }: any) {
     // 🆕 1. THEME STATE MANAGEMENT
     const [theme, setTheme] = useState('light'); // 'light' or 'dark'
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
 
     const handleThemeToggle = () => {
         setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
@@ -126,7 +124,21 @@ export default function RouteBookingForm({ id }: any) {
     const [isProcessing, setIsProcessing] = useState(false);
     const [step, setStep] = useState(1); // Step management
     const dispatch = useDispatch()
+    const bottomRef = useRef<HTMLDivElement>(null);
     const router = useRouter()
+
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [step]);
+
+    const handleCarSelect = (carName: string) => {
+        setSelectedCar(carName);
+        if (bottomRef.current) {
+            const top = bottomRef.current.getBoundingClientRect().top + window.scrollY - 300; // 300px offset
+            window.scrollTo({ top, behavior: "smooth" });
+        }
+    };
 
 
     const currentCarDetails = useMemo(() => {
@@ -422,9 +434,9 @@ export default function RouteBookingForm({ id }: any) {
                                         <CarIcon className="w-6 h-6 mr-3 text-yellow-600" />
                                         2. Select Your Cab
                                     </h2>
-                                    <RadioGroup value={selectedCar} onValueChange={setSelectedCar} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {DYNAMIC_CAR_OPTIONS_FULL.map(car => (
-                                            <CarSelectOption key={car.name} car={car} currentCar={selectedCar} onSelect={setSelectedCar} />
+                                    <RadioGroup value={selectedCar} onValueChange={handleCarSelect} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {DYNAMIC_CAR_OPTIONS_FULL.map((car) => (
+                                            <CarSelectOption key={car.name} car={car} currentCar={selectedCar} onSelect={handleCarSelect} />
                                         ))}
                                     </RadioGroup>
                                     <div className="flex-wrap md:flex justify-between pt-4">
@@ -434,6 +446,7 @@ export default function RouteBookingForm({ id }: any) {
                                 </CardContent>
                             </Card>
                         )}
+                        <div ref={bottomRef}></div>
 
                         {/* --- STEP 3: Payment Method --- */}
                         {step === 3 && (

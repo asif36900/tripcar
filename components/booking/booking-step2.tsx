@@ -93,8 +93,15 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
         },
     ];
 
+    // Get today's date in YYYY-MM-DD format for the min attribute of date inputs
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const dd = String(today.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+
     useEffect(() => {
-            window.scrollTo(0, 0);
+        window.scrollTo(0, 0);
     }, []);
 
     // Sync Redux whenever local state changes
@@ -377,6 +384,7 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
                             id="pickupDate"
                             type="date"
                             value={bookingData.pickupDate}
+                            min={minDate}
                             onChange={(e) => updateBookingData({ pickupDate: e.target.value })}
                             className={`${errors.pickupDate ? "border-red-500" : ""} ${inputClasses}`}
                         />
@@ -411,6 +419,7 @@ export default function BookingStep2({ nextStep, prevStep }: BookingStep2Props) 
                                 type="date"
                                 value={bookingData.returnDate || ""}
                                 onChange={(e) => updateBookingData({ returnDate: e.target.value })}
+                                min={minDate}
                                 className={`${errors.returnDate ? "border-red-500" : ""} ${inputClasses}`}
                             />
                             {errors.returnDate && <p className={errorTextClasses}>{errors.returnDate}</p>}

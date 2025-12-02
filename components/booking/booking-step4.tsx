@@ -9,9 +9,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import type { RootState } from "@/store/store"
 import { setFinalBooking, type BookingDataStep1, type BookingDataStep2, type BookingDataStep3 } from "@/store/Slices/bookingSlice"
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { useRouter } from "next/navigation"
-import { getFareRate } from "@/lib/helper"
+import { getFareRate, rentalPackages } from "@/lib/helper"
 import { getRentalFare } from "@/lib/utils"
 
 interface BookingStep4Props {
@@ -110,7 +110,7 @@ const calculateFareStructure = (
 
     if (dayDiff < 2) { // Same day or next day return //FIX:  can be configurable
       const theoreticalTwoWayFare = oneWayBaseFare * 2;
-      effectiveBaseFareForTrip = oneWayBaseFare * 1.7; // The actual base for the roundtrip
+      effectiveBaseFareForTrip = oneWayBaseFare * 1.6; // The actual base for the roundtrip
       roundTripDiscountAmount = theoreticalTwoWayFare - effectiveBaseFareForTrip; // Discount compared to two one-way trips
     } else {
       const theoreticalTwoWayFare = oneWayBaseFare * 2;
@@ -121,8 +121,9 @@ const calculateFareStructure = (
 
 
   // 🅿️ Airport Parking Charges
-  const airportParking = step2.bookingType === "airport" ? 100 : 0;
-  const totalBaseAndToll = effectiveBaseFareForTrip + tollTax + airportParking; // Use the effective base fare
+  const airportParking = step2.bookingType === "airport" ? 100 : 0
+  const localParking = step2.bookingType === "local" ? 50 : 0
+  const totalBaseAndToll = effectiveBaseFareForTrip + tollTax + airportParking + localParking // Use the effective base fare
 
   // 🔖 Discount logic
   let paymentMethodDiscountRate = 0; // Renamed for clarity
@@ -151,6 +152,7 @@ const calculateFareStructure = (
     effectiveBaseFareForTrip, // New: the base fare used for the trip
     tollTax,
     airportParking,
+    localParking,
     paymentMethodDiscountRate, // Renamed
     calculatedPaymentDiscount, // Renamed
     discountedFare,
@@ -171,6 +173,7 @@ const calculateRentalFare = (step3: BookingDataStep3) => {
     effectiveBaseFareForTrip: totalFare, // The entire fare is the base
     tollTax: 0,
     airportParking: 0,
+    localParking: 0,
     paymentMethodDiscountRate: 0,
     calculatedPaymentDiscount: 0,
     discountedFare: totalFare,
@@ -205,6 +208,12 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
   const [distanceError, setDistanceError] = useState<string | null>(null)
 
   // Use effectiveDistance immediately for fare calculations
+  const selectedRentalPackage = useMemo(() => {
+    if (step2?.bookingType === "rental" && step2.rentalPackage) {
+      return rentalPackages.find(pkg => pkg.id === step2.rentalPackage);
+    }
+    return null;
+  }, [step2?.bookingType, step2?.rentalPackage]);
   const effectiveDistance = (calculatedDistance || (step2?.bookingType === "local" ? 20 : 250));
 
   // --- Distance Calculation Logic (API Integration) ---
@@ -275,6 +284,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
     effectiveBaseFareForTrip, // New
     tollTax,
     airportParking,
+    localParking,
     paymentMethodDiscountRate, // Renamed from discountRate
     calculatedPaymentDiscount, // Renamed from calculatedDiscount
     discountedFare,
@@ -342,6 +352,7 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
       pickupTime: step2?.pickupTime,
       tripType: step2?.tripType,
       returnDate: step2?.returnDate,
+      returnTime: step2?.returnTime,
       rentalPackage: step2?.rentalPackage,
       passengers: step2?.passengers,
       id: step3?.id,
@@ -602,6 +613,12 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                 <p className="font-semibold dark:text-gray-100">{step2.destination}</p>
               </div>
             )}
+            {selectedRentalPackage && (
+              <div>
+                <p className="text-gray-600 dark:text-gray-400">Rental Package</p>
+                <p className="font-semibold dark:text-gray-100">{`${selectedRentalPackage.label}`}</p>
+              </div>
+            )}
             {step2.bookingType !== "rental" && (
               <div>
                 <p className="text-gray-600 dark:text-gray-400">Distance</p>
@@ -623,6 +640,12 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                 {step2.pickupDate} at {step2.pickupTime}
               </p>
             </div>
+            {step2.bookingType === "roundtrip" && step2.returnDate && (
+              <div>
+                <p className="text-gray-600 dark:text-gray-400">Return Date & Time</p>
+                <p className="font-semibold dark:text-gray-100">{step2.returnDate} at {step2.returnTime}</p>
+              </div>
+            )}
             <div>
               <p className="text-gray-600 dark:text-gray-400">Passengers</p>
               <p className="font-semibold dark:text-gray-100">{step2.passengers}</p>
@@ -696,6 +719,13 @@ export default function BookingStep4({ nextStep, prevStep }: BookingStep4Props) 
                 <div className="flex justify-between text-sm">
                   <span>Airport Parking</span>
                   <span className="dark:text-gray-100">₹{airportParking}</span>
+                </div>
+              )}
+
+              {localParking > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span>Parking</span>
+                  <span className="dark:text-gray-100">₹{localParking}</span>
                 </div>
               )}
 

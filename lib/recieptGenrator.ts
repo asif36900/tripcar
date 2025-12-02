@@ -7,7 +7,7 @@ export function ReceiptGenerator(
   // Create a temporary canvas
   const canvas = document.createElement("canvas");
   const width = 600;
-  const height = 1000; // Increased height for payment & spacing
+  const height = 1100; // Increased height for payment & spacing
   canvas.width = width;
   canvas.height = height;
 
@@ -27,15 +27,15 @@ export function ReceiptGenerator(
 
   // --- Header ---
   ctx.fillStyle = PRIMARY_COLOR;
-  ctx.fillRect(0, 0, width, 140);
+  ctx.fillRect(0, 0, width, 80);
 
   ctx.fillStyle = "#ffffff";
   ctx.font = `bold 24px ${FONT_FAMILY}`;
   ctx.textAlign = "center";
-  ctx.fillText(companyName, width / 2, 95);
+  // ctx.fillText(companyName, width / 2, 95);
 
   ctx.font = `14px ${FONT_FAMILY}`;
-  ctx.fillText(companyAddress, width / 2, 115);
+  // ctx.fillText(companyAddress, width / 2, 115);
 
   // --- Receipt Title ---
   ctx.fillStyle = SECONDARY_COLOR;
@@ -56,6 +56,38 @@ export function ReceiptGenerator(
   const COL_2_X = width - 50;
   const ROW_HEIGHT = 35;
 
+  // --- Helper: Wrap Text ---
+  const wrapText = (
+    text: string,
+    x: number,
+    y: number,
+    maxWidth: number,
+    lineHeight: number,
+  ) => {
+    if (!ctx) return 0;
+    const words = text.split(" ");
+    let line = "";
+    let lines = [];
+
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + " ";
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        lines.push(line);
+        line = words[n] + " ";
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+
+    lines.forEach((line, index) => {
+      ctx.fillText(line.trim(), x, y + index * lineHeight);
+    });
+    return lines.length;
+  };
+
   const drawRow = (label: string, value: string, highlight = false) => {
     const paddingY = 10;
     if (highlight) {
@@ -74,9 +106,20 @@ export function ReceiptGenerator(
     ctx.fillStyle = SECONDARY_COLOR;
     ctx.font = `bold 16px ${FONT_FAMILY}`;
     ctx.textAlign = "right";
-    ctx.fillText(value, COL_2_X, yPos);
+    // ctx.fillText(value, COL_2_X, yPos);
 
-    yPos += ROW_HEIGHT;
+    // yPos += ROW_HEIGHT;
+
+    const valueMaxWidth = width / 2 - 20; // Max width for the value text
+    const valueMetrics = ctx.measureText(value);
+
+    if (valueMetrics.width > valueMaxWidth) {
+      const lineCount = wrapText(value, COL_2_X, yPos, valueMaxWidth, 20); // 20 is line height
+      yPos += lineCount * 20; // Adjust yPos based on number of lines
+    } else {
+      ctx.fillText(value, COL_2_X, yPos);
+      yPos += ROW_HEIGHT;
+    }
   };
 
   // --- Booking Info ---
@@ -91,6 +134,11 @@ export function ReceiptGenerator(
   drawRow("Transaction ID:", receiptData.transactionId || "N/A");
   drawRow("Date:", receiptData.date || "N/A");
   drawRow("Time:", receiptData.time || "N/A");
+  if (receiptData.serviceType === "roundtrip") {
+    drawRow("Return Date:", receiptData.returnDate || "N/A");
+    drawRow("Return Time:", receiptData.returnTime || "N/A");
+  }
+
 
   // --- Customer Info ---
   yPos += 15;
@@ -115,7 +163,14 @@ export function ReceiptGenerator(
   drawRow("Service Type:", receiptData.serviceType || "N/A");
   drawRow("Vehicle:", receiptData.car || "N/A");
   drawRow("Pickup:", receiptData.pickup || "N/A");
-  drawRow("Destination:", receiptData.destination || "N/A");
+
+  if (receiptData.serviceType.toLowerCase() != "rental") {
+    drawRow("Destination:", receiptData.destination || "N/A");
+    drawRow("Total Distance:", receiptData.distance + 'km' || "N/A");
+  }
+  if (receiptData.serviceType.toLowerCase() === "rental") {
+    drawRow("Rental Package:", receiptData.rentalPackage  || "N/A");
+  }
 
   // --- Payment Summary ---
   yPos += 15;
