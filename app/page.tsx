@@ -11,7 +11,7 @@ export default function Page() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false)
-    }, 3000)
+    }, 1500)
 
     return () => clearTimeout(timer)
   }, [])
@@ -24,7 +24,7 @@ export default function Page() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
           className="fixed inset-0 bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center z-50"
         >
           <div className="text-center">
@@ -53,7 +53,7 @@ export default function Page() {
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.3 }}
               className="text-4xl font-bold text-white mb-2"
             >
               Easy Go Cab
@@ -61,7 +61,7 @@ export default function Page() {
             <motion.p
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7 }}
+              transition={{ delay: 0.5 }}
               className="text-white/90 text-lg"
             >
               Your trusted ride partner
@@ -77,10 +77,11 @@ export default function Page() {
           </div>
         </motion.div>
       ) : (
-        <motion.div key="main" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <motion.div key="main" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           <HomePage />
         </motion.div>
       )}
     </AnimatePresence>
   )
 }
+

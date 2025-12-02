@@ -6,28 +6,6 @@ import { Shield, Eye, Lock, Users, FileText, Mail } from "lucide-react"
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
-// export const metadata: Metadata = {
-//   title: "Refund & Cancellation Policy - EasyGoCab",
-//   description:
-//     "Learn about EasyGoCab's refund and cancellation process. Find details about cancellation timelines, refunds, and booking modification policies.",
-//   keywords: [
-//     "EasyGoCab cancellation policy",
-//     "refund policy",
-//     "cab booking refund",
-//     "trip modification policy",
-//     "booking cancellation rules",
-//   ],
-//   openGraph: {
-//     title: "Refund & Cancellation Policy - EasyGoCab",
-//     description:
-//       "Understand EasyGoCab’s flexible refund and cancellation policy for a smooth travel experience.",
-//     images: ["/luxury-red-sports-car-hero.jpg"],
-//   },
-//   alternates: {
-//     canonical: "/cancellation-policy",
-//   },
-// };
-
 export default function CancellationPolicyPage() {
   const sections = [
     {
@@ -174,30 +152,6 @@ export default function CancellationPolicyPage() {
                 </ul>
               </motion.div>
             ))}
-
-            {/* Contact Section */}
-            {/* <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-yellow-400 border border-primary/20 rounded-2xl p-8 text-center text-white"
-            >
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Mail className="w-8 h-8 text-primary" />
-              </div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">
-                Need Help with Cancellations or Refunds?
-              </h2>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Our support team is always here to assist with booking changes, cancellations, and refund queries.
-              </p>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <p>📧 Email: info@easygocab.com</p>
-                <p>📞 Phone: +917890088921</p>
-                <p>🌐 Website: https://easygocab.com</p>
-              </div>
-            </motion.div> */}
           </div>
         </div>
       </section>

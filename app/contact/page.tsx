@@ -40,21 +40,22 @@ export default function ContactPage() {
     try {
       // NOTE: process.env.NEXT_PUBLIC_BACKEND_URL is not accessible in the immersive environment.
       // We will mock a successful response for demonstration.
-      // const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/contact-us/create`, formData)
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/contact-us/create`, formData)
+      console.log(res);
       
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API delay
-      const mockSuccess = Math.random() > 0.1; // 90% success rate mock
+      // await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API delay
+      // const mockSuccess = Math.random() > 0.1; // 90% success rate mock
 
-      if (mockSuccess) {
-        setResponseMessage("✅ Message sent successfully! (Mocked Response)")
+      if (res.status) {
+        setResponseMessage("✅ Message sent successfully.")
         setFormData({ name: "", email: "", phone: "", subject: "", message: "" })
       } else {
-        setResponseMessage("⚠️ Failed to send message. Please try again. (Mocked Response)")
+        setResponseMessage("⚠️ Failed to send message. Please try again.")
       }
       
     } catch (error) {
       console.error("Error sending contact form:", error)
-      setResponseMessage("❌ Server error. Please try again later. (Mocked Response)")
+      setResponseMessage("❌ Server error. Please try again later.")
     } finally {
       setLoading(false)
     }
@@ -81,7 +82,7 @@ export default function ContactPage() {
       <Navbar />
 
       {/* 🌟 Hero Section - Gradient works well, text is white */}
-      <section className="relative bg-gradient-to-r from-yellow-400 to-orange-500 py-10 md:py-20">
+      <section className="relative bg-gradient-to-r from-yellow-400 to-orange-500 py-10 md:py-20 overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <motion.div
@@ -100,7 +101,7 @@ export default function ContactPage() {
       {/* 🌐 Main Content */}
       <main>
         {/* 2. Main Content Section Background */}
-        <section className="py-10 md:py-20 bg-white dark:bg-gray-900">
+        <section className="py-10 md:py-20 bg-white dark:bg-gray-900 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
             
             {/* 📨 Contact Form */}
@@ -278,7 +279,7 @@ export default function ContactPage() {
                     {/* Detail Title Color */}
                     <h4 className="font-semibold text-gray-900 mb-1 dark:text-white">Have any question?</h4>
                     {/* Detail Value Color */}
-                    <p className="text-gray-600 dark:text-gray-300">Free +91 62964 43245</p>
+                    <p className="text-gray-600 dark:text-gray-300">Free +91 78900 88921</p>
                   </div>
                 </div>
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { CheckCircle, Shield, Clock, Star, ArrowRight } from "lucide-react"
+import { CheckCircle, Shield, Clock, Star, ArrowRight, Phone } from "lucide-react"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -70,7 +70,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/professional-woman-using-smartphone-for-taxi-booki.jpg"
+                      src="/service/1.png"
                       alt="Hourly Car Rental"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -172,7 +172,7 @@ export default function ServicesPage() {
                     className="order-1 lg:order-2"
                   >
                     <img
-                      src="/comfort-suv-car.jpg"
+                      src="/service/2.png"
                       alt="Round Trip Cab Service"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -191,7 +191,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/one-way.jpg"
+                      src="/service/7.png"
                       alt="One Way Outstation Cab"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -293,7 +293,7 @@ export default function ServicesPage() {
                     className="order-1 lg:order-2"
                   >
                     <img
-                      src="/city-ride.jpg"
+                      src="/service/11.png"
                       alt="City Ride Service"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -314,7 +314,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/adventure-trip.jpg"
+                      src="/service/12.png"
                       alt="Sightseeing Tour"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -362,7 +362,7 @@ export default function ServicesPage() {
                       ))}
                     </div>
 
-                    <Link href={'/booking'}> 
+                    <Link href={'/booking'}>
                       {/* Button kept standard */}
                       <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
                         Book Now
@@ -437,7 +437,7 @@ export default function ServicesPage() {
                     className="order-1 lg:order-2"
                   >
                     <img
-                      src="/wedding-car.jpg"
+                      src="/service/13.png"
                       alt="Wedding Car Rental"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -458,7 +458,7 @@ export default function ServicesPage() {
                     transition={{ duration: 0.8 }}
                   >
                     <img
-                      src="/airpot-pickup.jpg"
+                      src="/service/4.png"
                       alt="Airport Pickup & Drop"
                       className="w-full h-[250px] md:h-[500px] object-cover rounded-lg shadow-lg"
                     />
@@ -517,51 +517,37 @@ export default function ServicesPage() {
                 </div>
               </div>
             </section>
-            {/* <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Airport taxi booking service Kolkata</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">Airport taxi booking service Kolkata, Kolkata airport cab service, One-way outstation cab Kolkata, Hourly rental cab service Kolkata, Drop off airport cab Kolkata, Cab service Kolkata for airport</p>
-            </motion.div>
-          </div>
-        </section> */}
 
           </div>
         </section>
 
         {/* CTA Section - Keep the gradient */}
-        <section className="py-20 bg-gradient-to-r from-yellow-400 to-orange-500">
+        <section className="py-12 md:py-20 bg-gradient-to-r from-yellow-400 to-orange-500 overflow-hidden">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl font-bold text-white mb-6">Ready to Book Your Service?</h2>
-              <p className="text-xl text-white/90 mb-8">
-                Choose from our wide range of services and experience premium transportation
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-6">Ready to Book Your Ride?</h2>
+              <p className="text-md md:text-xl text-white/90 mb-8">
+                Experience the best taxi service in the city. Book now and travel with confidence.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href={'/booking'}>
-                  <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold">
-                    Book Now
-                  </Button>
-                </Link>
+              <div className="flex gap-4 justify-center">
                 <a href="tel:+917890088921">
-                  {/* Button adjusted for Dark Mode hover effect to maintain visibility against the gradient */}
+                  <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold">
+                    <Phone className="w-5 h-5 mr-2" />
+                    +917890088921
+                  </Button>
+                </a>
+                <Link href={'/booking'}>
                   <Button
                     size="lg"
                     variant="outline"
                     className="border-white text-white hover:bg-white hover:text-black bg-transparent"
                   >
-                    Call: +917890088921
-                  </Button>
-                </a>
+                    Book Online
+                  </Button></Link>
               </div>
             </motion.div>
           </div>

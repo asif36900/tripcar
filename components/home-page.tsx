@@ -21,12 +21,15 @@ import PopularRoutes from "./popular-routes"
 import { popularRoutes } from "@/lib/popularRoutes"
 import { useRouter } from "next/navigation"
 import { carBasePrice } from "@/lib/helper"
+import MobileBookForm from "./mobileBooking/mobileBookForm"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 
 export default function HomePage() {
   const dispatch = useDispatch()
   const [loadingRoute, setLoadingRoute] = useState<number | null>(null);
   const router = useRouter();
+  const isMobile = useIsMobile()
   useEffect(() => {
     document.title = "Best Kolkata Cab Booking & Outstation Taxi Service | Easy Go Cab";
     document.querySelector("meta[name='description']")?.setAttribute("content", "Easy Go Cab offers reliable Kolkata cab booking, local rentals, airport transfers, and safe outstation taxis. Hire affordable, premium rides anytime with ease.");
@@ -52,9 +55,9 @@ export default function HomePage() {
     <div className="min-h-screen">
       <Navbar />
       <main>
-        {/* Hero Section (Already Dark) */}
+      {/* Desktop Hero Section */}
+      {!isMobile && (
         <section className="relative min-h-screen bg-black overflow-hidden">
-          {/* Background Image */}
           <div className="absolute inset-0">
             <img
               src="/car-location2.jpg"
@@ -65,7 +68,7 @@ export default function HomePage() {
           </div>
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 md:pt-32 pb-20">
-            <div className=" relative flex flex-wrap items-center min-h-[70vh]">
+            <div className="relative flex flex-wrap items-center min-h-[70vh]">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -109,12 +112,15 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+      )}
 
-        {/* Booking Form and Info Section */}
+      {/* Mobile Only Form */}
+      {isMobile && <MobileBookForm />}
+
+      {/* Booking Form Section (Desktop Only) */}
+      {!isMobile && (
         <section className="py-20 relative overflow-hidden bg-white dark:bg-[#0d1927]">
-          {/* Background Gradient */}
           <div className="absolute inset-0 bg-white dark:bg-[#0d1927]"></div>
-
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left Form */}
@@ -133,8 +139,6 @@ export default function HomePage() {
                     outstation journey, or an airport transfer — we’ve got you covered.
                   </p>
                 </div>
-
-                {/* Car Image */}
                 <motion.img
                   src="/right-car.jpg"
                   alt="Car Right"
@@ -145,7 +149,7 @@ export default function HomePage() {
                 />
               </motion.div>
 
-              {/* Right Info & Car */}
+              {/* Right Booking Form */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -156,7 +160,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
+      )}
 
         {/* Services Overview */}
         <section className="py-20 bg-gray-50 dark:bg-zinc-900 overflow-hidden">
@@ -168,7 +172,7 @@ export default function HomePage() {
                 transition={{ duration: 0.8 }}
               >
                 <img
-                  src="/professional-woman-using-smartphone-for-taxi-booki.jpg"
+                  src="/service/6.png"
                   alt="Professional taxi booking"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
@@ -237,7 +241,7 @@ export default function HomePage() {
                   title: "Business Transfer",
                   description:
                     "Professional business transportation with executive vehicles and experienced drivers for corporate clients.",
-                  image: "/business-executive-in-suit-with-luxury-car.jpg",
+                  image: "/service/3.png",
                 },
                 {
                   icon: Calendar,
@@ -251,7 +255,7 @@ export default function HomePage() {
                   title: "City Transport",
                   description:
                     "Reliable city transportation services covering all major areas with competitive rates and professional service.",
-                  image: "/yellow-taxi-in-busy-city-street-with-modern-buildi.jpg",
+                  image: "/service/5.png",
                 },
               ].map((service, index) => (
                 <motion.div
@@ -416,7 +420,6 @@ export default function HomePage() {
           </div>
         </section>
 
-
         {/* Client's Reviews (Assuming ReviewSection handles its own Dark Mode) */}
         <ReviewSection />
         {/* How To Book Section (Assuming HowToBookSection handles its own Dark Mode) */}
@@ -494,45 +497,32 @@ export default function HomePage() {
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black transform -rotate-12 -translate-x-5 translate-y-5 rounded-2xl"></div>
                 {/* Image */}
                 <img
-                  src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=500&fit=crop"
+                  src="service/5.png"
                   alt="Yellow taxi on city street"
-                  className="relative z-10 w-full max-w-md mx-auto rounded-lg h-[400px] object-cover"
+                  className="relative z-10 w-full max-w-md mx-auto rounded-lg h-[250px] md:h-[400px] object-cover"
                 />
               </div>
             </div>
           </div>
         </section>
-         {/* <section className="py-20 bg-white dark:bg-[#0d1927] overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Full day cab hire in Kolkata</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">hire city cab in Kolkata, Full day cab hire in Kolkata, Kolkata to Digha cab service, Kolkata local rental cab service, Kolkata car rental with driver, Hire Premium sedan cab Kolkata, Hire SUV cab service Kolkata, Hire Luxury cab service Kolkata, Cheap cab service in Kolkata, Outstation cab from Kolkata one way, Multi-city cab hire from Kolkata, Event cab rental service Kolkata, Long term car hire in Kolkata, Cab rental for corporate travel Kolkata, Kolkata to Siliguri cab service, Female driver cab service Kolkata, Reliable cab service Kolkata, Safe cab service Kolkata, Best cab service in Kolkata, Kolkata cab booking online, Easy Go Cab booking in Kolkata</p>
-            </motion.div>
-          </div>
-        </section> */}
 
         {/* CTA Section (No change needed, already uses color gradient) */}
-        <section className="py-20 bg-gradient-to-r from-yellow-400 to-orange-500 overflow-hidden">
+        <section className="py-12 md:py-20 bg-gradient-to-r from-yellow-400 to-orange-500 overflow-hidden">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl font-bold text-white mb-6">Ready to Book Your Ride?</h2>
-              <p className="text-xl text-white/90 mb-8">
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-6">Ready to Book Your Ride?</h2>
+              <p className="text-md md:text-xl text-white/90 mb-8">
                 Experience the best taxi service in the city. Book now and travel with confidence.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex gap-4 justify-center">
                 <a href="tel:+917890088921">
                   <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold">
                     <Phone className="w-5 h-5 mr-2" />
-                    Call: +917890088921
+                    +917890088921
                   </Button>
                 </a>
                 <Link href={'/booking'}>

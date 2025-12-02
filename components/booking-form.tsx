@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { setBookingDataStep2 } from "@/store/Slices/bookingSlice"
 import type { BookingDataStep2 } from "@/store/Slices/bookingSlice"
 import AutocompleteInput from "./AutocompleteInput/autocompleteInput"
+import { rentalPackages } from "@/lib/helper"
 
 export default function BookingForm() {
   const router = useRouter()
@@ -49,6 +50,13 @@ export default function BookingForm() {
 
   const watchBookingType = watch("bookingType", "local")
 
+  // Get today's date in YYYY-MM-DD format for the min attribute of date inputs
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const dd = String(today.getDate()).padStart(2, '0');
+  const minDate = `${yyyy}-${mm}-${dd}`;
+
   // When Redux data updates, populate the form
   useEffect(() => {
     if (bookingDataFromRedux) {
@@ -75,7 +83,6 @@ export default function BookingForm() {
 
     }, 1000) // 1 second delay
   }
-
 
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}>
@@ -154,25 +161,27 @@ export default function BookingForm() {
             </div>
 
             {/* Destination */}
-            <div>
-              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                {watchBookingType === "airport" ? "Airport Destination *" : "Destination *"}
-              </Label>
-              <Controller
-                control={control}
-                name="destination"
-                rules={{ required: "Destination is required" }}
-                render={({ field }) => (
-                  <AutocompleteInput
-                    field={field}
-                    placeholder={watchBookingType === "airport" ? "Enter airport name" : "Enter destination"}
-                  />
+            {watchBookingType !== "rental" && (
+              <div>
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                  {watchBookingType === "airport" ? "Airport Destination *" : "Destination *"}
+                </Label>
+                <Controller
+                  control={control}
+                  name="destination"
+                  rules={{ required: watchBookingType !== "rental" ? "Destination is required" : false }}
+                  render={({ field }) => (
+                    <AutocompleteInput
+                      field={field}
+                      placeholder={watchBookingType === "airport" ? "Enter airport name" : "Enter destination"}
+                    />
+                  )}
+                />
+                {errors.destination && (
+                  <p className="text-red-500 text-sm mt-1">{errors.destination.message}</p>
                 )}
-              />
-              {errors.destination && (
-                <p className="text-red-500 text-sm mt-1">{errors.destination.message}</p>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Airport Trip Type */}
             {watchBookingType === "airport" && (
@@ -213,11 +222,22 @@ export default function BookingForm() {
                       <SelectTrigger className="dark:bg-black dark:text-white dark:border-gray-700">
                         <SelectValue placeholder="Select package" />
                       </SelectTrigger>
-                      <SelectContent className="dark:bg-black dark:text-white dark:border-gray-700">
+                      {/* <SelectContent className="dark:bg-black dark:text-white dark:border-gray-700">
                         <SelectItem value="1hr/10km - ₹299" className="dark:hover:bg-gray-900">1hr/10km - ₹299</SelectItem>
                         <SelectItem value="2hr/20km - ₹599" className="dark:hover:bg-gray-900">2hr/20km - ₹599</SelectItem>
                         <SelectItem value="4hr/40km - ₹999" className="dark:hover:bg-gray-900">4hr/40km - ₹999</SelectItem>
                         <SelectItem value="8hr/80km - ₹1799" className="dark:hover:bg-gray-900">8hr/80km - ₹1799</SelectItem>
+                      </SelectContent> */}
+                      <SelectContent className="dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                        {rentalPackages.map((pkg) => (
+                          <SelectItem
+                            key={pkg.id}
+                            value={`${pkg.id}`}
+                            className="dark:hover:bg-gray-900"
+                          >
+                            {`${pkg.label} - ₹${pkg.startingFare}`}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )}
@@ -237,6 +257,7 @@ export default function BookingForm() {
                 <Input
                   type="date"
                   className="dark:bg-black dark:text-white dark:border-gray-700"
+                  min={minDate}
                   {...register("pickupDate", { required: "Pickup date is required" })}
                 />
                 {errors.pickupDate && <p className="text-red-500 text-sm mt-1">{errors.pickupDate.message}</p>}
@@ -269,6 +290,7 @@ export default function BookingForm() {
                   <Input
                     type="date"
                     className="dark:bg-black dark:text-white dark:border-gray-700"
+                    min={watch("pickupDate") || minDate}
                     {...register("returnDate", { required: "Return date is required" })}
                   />
                   {errors.returnDate && <p className="text-red-500 text-sm mt-1">{errors.returnDate.message}</p>}

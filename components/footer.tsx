@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Car, Phone, Mail, MapPin, Facebook, Twitter, Instagram, MessageCircle } from "lucide-react"
+import { Car, Phone, Mail, MapPin, Facebook, Twitter, Instagram, MessageCircle, Youtube } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
@@ -22,10 +22,14 @@ export default function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-yellow-400 p-2 rounded-lg">
-                <Car className="w-6 h-6 text-black" />
-              </div>
-              <span className="text-2xl font-bold">Easy Go Cab</span>
+              <img
+                src="/logo/logo-icon.png" // replace with your logo path
+                alt="Easy Go Cab Logo"
+                className="h-14 w-auto" // adjust size as needed
+              />
+              <span className="text-4xl font-extrabold text-white group-hover:text-primary transition-colors">
+                <span className="text-primary">Easy</span> Go
+              </span>
             </div>
             <p className="text-gray-300 mb-4">
               We successfully cope with tasks of varying complexity, provide long-term guarantees and regularly master
@@ -45,11 +49,11 @@ export default function Footer() {
                   About Company
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/taxi-list" className="hover:text-yellow-400 transition-colors">
                   Taxi List
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/contact" className="hover:text-yellow-400 transition-colors">
                   Help Center
@@ -68,6 +72,11 @@ export default function Footer() {
               <li>
                 <Link href="/cancellation-policy" className="hover:text-yellow-400 transition-colors">
                   Cancellation Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/disclaimer" className="hover:text-yellow-400 transition-colors">
+                  Disclaimer
                 </Link>
               </li>
             </ul>
@@ -176,13 +185,13 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">© Copyright 2025 Easy Go Cab. All Rights Reserved.</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
+              <Link href="https://youtube.com/@easygocab?si=jLARQ7CUAgcApi5n" target="_blank" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                <Youtube className="w-5 h-5" />
+              </Link>
+              <Link href="https://www.facebook.com/EasyGoCab.0" target="_blank" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Facebook className="w-5 h-5" />
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
+              <Link href="https://www.instagram.com/easygo.cab?igsh=OXk4dnVtOG05azc3" target="_blank" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Instagram className="w-5 h-5" />
               </Link>
             </div>
