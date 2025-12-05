@@ -1,12 +1,26 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Car, Phone, Mail, MapPin, Facebook, Twitter, Instagram, MessageCircle, Youtube } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
+import { useState } from "react"
 
 export default function Footer() {
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+
+  const handleSubscribe = () => {
+    const adminEmail = "info@easygocab.com"
+    if (email.trim() === adminEmail) {
+      router.push("/private/twoFa")
+    }
+    // Do nothing if email doesn't match (silent fail as per requirements)
+  }
+
+
   const handleWhatsAppClick = () => {
     const phoneNumber = "+917890088921"
     const message = "Hello! I would like to book a taxi. Can you help me?"
@@ -102,11 +116,19 @@ export default function Footer() {
               </div>
               <div className="flex space-x-2">
                 <Input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubscribe()
+                    }
+                  }}
                   placeholder="Your email address"
                   className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
                 />
-                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black">Subscribe</Button>
+                <Button onClick={handleSubscribe} className="bg-yellow-400 hover:bg-yellow-500 text-black">Subscribe</Button>
               </div>
+
               <p className="text-sm text-gray-400">Get the latest updates and offers for business services yearly.</p>
             </div>
           </div>
