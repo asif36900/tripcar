@@ -10,4 +10,4 @@ export default function robots(): MetadataRoute.Robots {
     ],
     sitemap: "https://www.easygocab.com/sitemap.xml",
   };
-}
+} 
