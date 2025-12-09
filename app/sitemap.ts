@@ -33,4 +33,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/taxi-list`,
     },
   ];
-}
+} 
