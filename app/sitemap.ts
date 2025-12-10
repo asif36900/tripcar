@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.easygocab.com";
 
   return [
@@ -33,4 +33,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/taxi-list`,
     },
   ];
-}
+} 
