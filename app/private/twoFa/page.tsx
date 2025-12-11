@@ -26,7 +26,7 @@ export default function TwoFaPage() {
                 // Set authentication flag and timestamp in sessionStorage
                 sessionStorage.setItem("adminAuthenticated", "true")
                 sessionStorage.setItem("authTimestamp", Date.now().toString())
-                router.push("/private/notify")
+                router.push("/private/admin")
             } else {
                 setError("Invalid OTP code. Please try again.")
                 setOtp("")
